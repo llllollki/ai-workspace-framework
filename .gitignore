@@ -1,0 +1,36 @@
+# App repos — never commit application code into the framework repo
+# Anchored to repo root (/) so nested ai-context/*/AssistedLivingHelp/ dirs are NOT excluded.
+/AssistedLivingHelp/
+
+# Claude Code machine-local memory — not portable, not framework content
+# Anchored to repo root (/) so only top-level .claude/ is excluded.
+/.claude/
+
+# Environment and secrets
+.env
+.env.*
+*.local
+
+# Node / build output
+node_modules/
+.next/
+dist/
+build/
+coverage/
+*.log
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor config
+.vscode/
+.idea/
+
+# Not ignored (tracked by this repo):
+# CLAUDE.md
+# AGENTS.md
+# ai-context/
+# setup/
+# README.md
+# .gitignore
