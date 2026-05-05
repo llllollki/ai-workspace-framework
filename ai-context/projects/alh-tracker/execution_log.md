@@ -17,3 +17,7 @@ For durable decisions, use `decisions\`.
 - Updated `ai-context\README.md` to add alh-tracker to the Projects Index and Start Here use-case table.
 - Updated `ai-context\CHANGELOG.md` with v0.2 entry.
 - Updated `ai-context\orchestration\context_rules.md` to generalize the Default Context Loading Sequence and add alh-tracker context file references.
+- Conducted Phase 0 planning assessment: identified task dependencies, recommended activation order, and listed key owner-answered questions for tasks 0001–0004.
+- Activated tasks 0001, 0002, and 0004: moved from `tasks\backlog\alh-tracker\` to `tasks\active\alh-tracker\`; updated status field to active and added planning notes in each task document reflecting strategic direction.
+- Task 0003 (shift model and caregiver auth) remains in backlog pending design partner site visit from task 0002.
+- Updated `projects\alh-tracker\ai_memory.md`: added working direction entry for business model, design partner profile, caregiver auth instinct, and Title 22 research posture.

@@ -79,3 +79,11 @@ For durable, finalized decisions, use `decisions\` (ADR format). For retrospecti
 **Assumption (2026-05-05):** Observed care tasks are caregiver observations only — no MAR/eMAR structure — until compliance and legal review confirms a safe, appropriate path forward.
 
 **Assumption (2026-05-05):** Family access architecture stubs (ResidentContact, FamilyAccessConsent) are included in the data model design reference but are not built in MVP. Task 0006 must resolve the full architecture before Phase 2 implementation begins.
+
+**Working direction (2026-05-05 — tasks 0001, 0002, 0004 activated):**
+
+- **Business model:** alh-tracker is positioned primarily as a stickiness tool for ALH facility relationships, not a standalone SaaS-first business. ALH facility partners: bundled or heavily discounted during early rollout. Non-ALH RCFEs: flat monthly rate in the $99–$199/month working range. Per-resident pricing explicitly deferred — adds complexity at onboarding and harder to justify for sole-operator homes. Refines commercial assumption above dated 2026-05-05.
+- **BD timing:** alh-tracker may be introduced in ALH BD conversations now as a "coming soon / design partner invitation" signal only — not a finished-product promise.
+- **Design partner target:** California RCFE, 6–20 residents, paper/whiteboard/text/verbal handoff workflow, owner accessible, at least one active caregiver willing to test phone/tablet during a real shift. Preferred geography: Temecula, Murrieta, Menifee, or nearby Inland Empire/Southwest Riverside County. Refines MVP target assumption above dated 2026-05-05.
+- **Caregiver auth starting instinct:** Named individual accounts for regular caregivers (audit-sensitive actions require traceable identity). Shared tablet mode with quick per-session PIN switch for shared-device facilities. Not finalized — design partner site visit (task 0002) must validate before task 0003 locks the model.
+- **Title 22 research posture:** Desk research begins as preliminary work for counsel review. Output is labeled preliminary research only — not legal advice. Language hard-stops confirmed: no compliance claims, no MAR/eMAR claims, no clinical monitoring claims, no medication safety claims, no legal sufficiency claims.

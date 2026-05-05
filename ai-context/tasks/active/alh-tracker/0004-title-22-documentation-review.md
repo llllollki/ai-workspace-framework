@@ -1,7 +1,7 @@
 # Task 0004 — Title 22 Documentation Review
 
 **Project:** alh-tracker
-**Status:** backlog
+**Status:** active
 **Created:** 2026-05-05
 **Owner role:** Compliance / Privacy Counsel (lead); Product / Program Lead (review)
 **Reviewers:** Technical Architect
@@ -51,6 +51,22 @@ This task should be completed before task 0005 (MVP data model finalization) is 
 - Do not invent legal requirements or present conclusions without source-backed review. Cite specific Title 22 section numbers in the output.
 - If counsel identifies that alh-tracker creates any mandatory reporting obligations for the vendor (not just the operator), escalate immediately to Product / Program Lead.
 - Secondary research sources: CDSS RCFE licensing guides, California RCFE Advocate publications, CALCASA resources.
+
+---
+
+## Planning Notes
+
+**Activated 2026-05-05.** Research posture and language constraints confirmed at task activation:
+
+- **Research posture:** Desk research output produced under this task is preliminary research for compliance/privacy counsel review. All output must be clearly labeled as preliminary research, not legal advice or legal interpretation. AI-assisted research is approved to produce a structured brief; counsel must review and sign off before any findings are treated as authoritative.
+- **Language hard stops — confirmed at activation:** The product must not claim, imply, or suggest any of the following in marketing copy, product UI, task output, or counsel briefs:
+  - Regulatory compliance, CDSS compliance, or Title 22 compliance
+  - MAR, eMAR, or medication administration record equivalence
+  - Clinical monitoring, clinical decision support, or clinical record status
+  - Medication safety, dose validation, drug interaction checking, or prescribing guidance
+  - Legal sufficiency for any Title 22 documentation requirement
+- **Desk research scope:** Map alh-tracker's seven log categories (meal, hydration, sleep, pain/mood, activity, incident, observed care task) against the four identified Title 22 sections. Flag any category where a logged entry could be misread as satisfying a regulatory documentation obligation. Flag data model fields or retention periods that may need adjustment to not conflict with CDSS requirements.
+- **Completion gate:** Counsel sign-off is required to close this task. Desk research output should be formatted as a reviewable brief — section-by-section mapping with specific flagged risk items — so counsel can engage efficiently rather than starting from scratch.
 
 ---
 

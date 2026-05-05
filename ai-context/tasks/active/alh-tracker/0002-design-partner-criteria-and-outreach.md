@@ -1,7 +1,7 @@
 # Task 0002 — Design Partner Criteria and Outreach
 
 **Project:** alh-tracker
-**Status:** backlog
+**Status:** active
 **Created:** 2026-05-05
 **Owner role:** Product / Program Lead
 **Reviewers:** Operations / Concierge Workflow Lead
@@ -52,6 +52,18 @@ A design partner is a real California RCFE that will:
 - Observing one real shift before building anything is more valuable than ten post-hoc user interviews.
 - The design partner agreement should be simple. Focus on trust and mutual benefit, not legal formality. A one-page letter of intent is enough for now.
 - Float caregiver or agency staff are common in small RCFEs. Ask the owner how they handle shift coverage gaps — this will inform the caregiver authentication model (task 0003).
+
+---
+
+## Planning Notes
+
+**Activated 2026-05-05.** Target profile and channel priority confirmed at task activation:
+
+- **Target facility profile:** California RCFE, 6–20 residents, currently operating with paper binders, whiteboards, text chains, or verbal handoffs. Not currently using any digital shift log or care management software. Sole-operator or small team strongly preferred for Phase 0 — simpler workflow to observe, faster to build trust with.
+- **Geography priority:** Temecula, Murrieta, or Menifee first; nearby Inland Empire / Southwest Riverside County acceptable. Alignment with ALH Phase 1 markets creates commercial synergy and a potential warm introduction path via ALH facility contacts.
+- **Engagement requirements:** Owner or operator accessible and willing to allow a site visit and at least one observed shift. At least one active caregiver willing to test a phone or tablet logging flow during a real shift — not a simulated walkthrough. Both owner and caregiver personas must be represented.
+- **ALH BD channel:** The "coming soon / design partner invitation" framing from task 0001 may surface candidate facilities through ALH Phase 1 facility contacts. Route promising contacts through the design partner brief framing — not the ALH listing pitch.
+- **Critical dependency forward:** This task must deliver at least one committed design partner and one completed shift observation before task 0003 (shift model and caregiver authentication) is activated. Task 0003 is explicitly blocked on real facility input from this task.
 
 ---
 

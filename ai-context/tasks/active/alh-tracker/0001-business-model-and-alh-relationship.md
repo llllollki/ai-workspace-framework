@@ -1,7 +1,7 @@
 # Task 0001 — Business Model and ALH Relationship
 
 **Project:** alh-tracker
-**Status:** backlog
+**Status:** active
 **Created:** 2026-05-05
 **Owner role:** Product / Program Lead
 **Reviewers:** Business Development / Partner Success Lead
@@ -49,6 +49,18 @@ Specifically:
 - ALH facility partners currently pay $299–$999/month for listing packages. alh-tracker pricing should be complementary in positioning and not feel like a second monthly bill for a product that should help operators.
 - The data boundary (resident care data must not flow to the ALH placement side) is already a decided product constraint documented in `overview.md`. This task resolves only the commercial model.
 - Small RCFE operators (6–20 residents) typically generate modest revenue per resident per day. A $300/month software bill may require justification; $99–$199/month may feel more accessible.
+
+---
+
+## Planning Notes
+
+**Activated 2026-05-05.** Strategic direction provided at task activation:
+
+- **Strategic posture:** alh-tracker is positioned primarily as a stickiness and relationship-depth tool for AssistedLivingHelp facility partners, not a standalone SaaS-first business. Pricing and positioning decisions should reflect this ordering.
+- **ALH partner pricing direction:** Bundled or heavily discounted during early rollout. Should not feel like a second independent bill alongside ALH listing fees. Exact structure (free tier, percentage discount, fixed bundle) is what this task must determine.
+- **Non-ALH pricing direction:** Flat monthly rate per facility. Working range: $99–$199/month. Per-resident pricing is explicitly deferred — adds complexity at onboarding and harder to justify for sole-operator homes with variable census.
+- **BD timing:** alh-tracker may be introduced in ALH facility BD conversations now as a "coming soon / design partner invitation" signal only. Not a finished-product promise. This framing should generate design partner candidates (feeding task 0002), not a launch pipeline.
+- **What this task must finalize:** Exact price points, ALH partner discount or bundle structure, BD introduction timing recommendation, and the formal commercial boundary document.
 
 ---
 
