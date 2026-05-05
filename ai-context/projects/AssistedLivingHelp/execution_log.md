@@ -12,6 +12,9 @@ For durable decisions, use `decisions\`.
 ## 2026-05-04
 
 - Created AssistedLivingHelp task set in `ai-context\tasks\`: one active planning task for Phase 1 market boundaries and eleven backlog tasks covering facility curation, intake fields, consent language, communications, out-of-market handling, lead update API, facility search QA, partner pipeline, staff follow-up queue, privacy flow, and a second frontend framework trial.
+- Completed Phase 1 market boundary planning pass (task 0002): boundary table, overlap rules, and out-of-market handling documented; ZIP validation and compliance review recorded as open items in `ai_memory.md`.
+- Applied compliance wording fixes (task 0002): prefixed "Near" to hospital-anchor renders in three pages; changed menifee-global summary from "referring partners" to "facility partners"; updated task 0002 outcome and `ai_memory.md` with compliance review results.
+- Closed task 0002: moved to `tasks\done\AssistedLivingHelp\`; committed app copy fixes to AssistedLivingHelp and framework docs to ai-workspace-framework.
 
 ## 2026-05-03
 
