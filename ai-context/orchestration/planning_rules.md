@@ -40,6 +40,11 @@ This file defines how agents should decompose tasks into subtasks before beginni
 Each task document should contain:
 
 ```
+Status:
+Created:
+Owner role:
+Reviewers:
+
 ## Goal
 ## Acceptance Criteria
 ## Plan

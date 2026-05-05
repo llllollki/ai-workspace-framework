@@ -9,6 +9,10 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-04
+
+- Created AssistedLivingHelp task set in `ai-context\tasks\`: one active planning task for Phase 1 market boundaries and eleven backlog tasks covering facility curation, intake fields, consent language, communications, out-of-market handling, lead update API, facility search QA, partner pipeline, staff follow-up queue, privacy flow, and a second frontend framework trial.
+
 ## 2026-05-03
 
 - Removed stale open question from `ai_memory.md`: "what should the initial listing fee and premium add-on pricing be?" — answered by `business_development.md` pricing tiers. Added resolved note to Current Working Context section.
