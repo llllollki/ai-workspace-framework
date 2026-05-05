@@ -17,7 +17,8 @@ This file defines what context to load and when.
 
 ## Related Files
 
-- `projects\AssistedLivingHelp\` — project context files
+- `projects\AssistedLivingHelp\` — AssistedLivingHelp project context files
+- `projects\alh-tracker\` — alh-tracker project context files
 - `global\` — shared standards
 
 ---
@@ -27,11 +28,11 @@ This file defines what context to load and when.
 For any task on `<project>`:
 
 1. `ai-context\README.md` — framework orientation
-2. `ai-context\projects\AssistedLivingHelp\overview.md` — project purpose, positioning, compliance constraints
+2. `ai-context\projects\<project>\overview.md` — project purpose, positioning, compliance constraints
 
-Load additional files based on task type (see table below).
+Load additional files based on task type (see project-specific tables below).
 
-## Task-Type Context Table
+## Task-Type Context Table — AssistedLivingHelp
 
 | Task type | Load additionally |
 |---|---|
@@ -42,6 +43,18 @@ Load additional files based on task type (see table below).
 | BD / partner work | `projects\AssistedLivingHelp\business_development.md` |
 | Active task | `tasks\active\AssistedLivingHelp\<task-file>.md` |
 | Working context / open questions | `projects\AssistedLivingHelp\ai_memory.md` |
+
+## Task-Type Context Table — alh-tracker
+
+| Task type | Load additionally |
+|---|---|
+| UI / frontend work | `global\design_system.md`, `global\ui_components.md`, `global\coding_standards.md` |
+| API / backend work | `global\api_patterns.md`, `global\coding_standards.md` |
+| Data model work | `projects\alh-tracker\data_model.md` |
+| Feature work | `projects\alh-tracker\features.md`, `projects\alh-tracker\user_flows.md` |
+| Compliance / regulatory work | `projects\alh-tracker\compliance_notes.md` |
+| Active task | `tasks\active\alh-tracker\<task-file>.md` |
+| Working context / open questions | `projects\alh-tracker\ai_memory.md` |
 
 ## Rules
 

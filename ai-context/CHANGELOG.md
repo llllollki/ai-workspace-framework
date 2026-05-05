@@ -3,7 +3,46 @@
 This file records framework-level documentation structure changes only.
 
 It does not track application code changes, business logic changes, or project-specific content updates.
-For project-specific documentation activity, see `projects\AssistedLivingHelp\execution_log.md`.
+For project-specific documentation activity, see the relevant project's `execution_log.md`.
+
+---
+
+## v0.2 — 2026-05-05
+
+**Added alh-tracker project context.**
+
+### Created
+
+- `ai-context\projects\alh-tracker\` — new project context directory
+- `ai-context\projects\alh-tracker\overview.md` — product purpose, persona split, positioning, MVP boundary, compliance stance, and ALH relationship
+- `ai-context\projects\alh-tracker\data_model.md` — entity design reference: Facility, User, Resident, Routine, Shift, CareLogEntry, ObservedCareTask, FollowUp, AuditTrail, and family access stubs
+- `ai-context\projects\alh-tracker\features.md` — MVP scope, explicit defer list, logging UX principles, and implementation phases
+- `ai-context\projects\alh-tracker\user_flows.md` — ten primary user flows from facility setup through owner review
+- `ai-context\projects\alh-tracker\compliance_notes.md` — RCFE/Title 22 context, medication boundary language, HIPAA posture, data handling requirements
+- `ai-context\projects\alh-tracker\ai_memory.md` — open questions across business model, design partner, shift model, caregiver auth, family access, HIPAA, and Title 22
+- `ai-context\projects\alh-tracker\execution_log.md` — project documentation activity log
+- `ai-context\projects\alh-tracker\decisions\README.md` — ADR format guide for alh-tracker
+- `ai-context\tasks\active\alh-tracker\README.md`
+- `ai-context\tasks\backlog\alh-tracker\README.md` — includes Phase 0 dependency table
+- `ai-context\tasks\done\alh-tracker\README.md`
+- `ai-context\tasks\backlog\alh-tracker\0001-business-model-and-alh-relationship.md`
+- `ai-context\tasks\backlog\alh-tracker\0002-design-partner-criteria-and-outreach.md`
+- `ai-context\tasks\backlog\alh-tracker\0003-shift-model-and-caregiver-auth.md`
+- `ai-context\tasks\backlog\alh-tracker\0004-title-22-documentation-review.md`
+- `ai-context\tasks\backlog\alh-tracker\0005-mvp-data-model.md`
+- `ai-context\tasks\backlog\alh-tracker\0006-family-access-architecture.md`
+- `ai-context\tasks\backlog\alh-tracker\0007-logging-ux-principles-and-prototype.md`
+- `ai-context\tasks\backlog\alh-tracker\0008-device-and-offline-behavior.md`
+
+### Changed
+
+- `ai-context\README.md` — added alh-tracker to Start Here use-case table and Projects Index
+- `ai-context\orchestration\context_rules.md` — generalized Default Context Loading Sequence step 2 from hardcoded `AssistedLivingHelp` to `<project>` placeholder; added alh-tracker Task-Type Context Table; split AssistedLivingHelp table into named section; updated Related Files to reference both projects; updated CHANGELOG reference to use generic `execution_log.md`
+
+### Not changed
+
+- All AssistedLivingHelp project context files — unchanged
+- All application source, config, dependency, environment, deployment, data, and generated files — unchanged
 
 ---
 

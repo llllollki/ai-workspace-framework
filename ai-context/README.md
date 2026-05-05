@@ -22,6 +22,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | Starting a new task | `orchestration\planning_rules.md` |
 | Selecting a skill | `skills\skills_index.md` |
 | Understanding AssistedLivingHelp | `projects\AssistedLivingHelp\overview.md` |
+| Understanding alh-tracker | `projects\alh-tracker\overview.md` |
 | Loading context for a task | `orchestration\context_rules.md` |
 | Understanding execution behavior | `orchestration\execution_rules.md` |
 | Checking coding standards | `global\coding_standards.md` |
@@ -40,6 +41,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | Project | Path | Overview |
 |---|---|---|
 | AssistedLivingHelp | `projects\AssistedLivingHelp\` | `projects\AssistedLivingHelp\overview.md` |
+| alh-tracker | `projects\alh-tracker\` | `projects\alh-tracker\overview.md` |
 
 ## Rules for Adding to This Framework
 
