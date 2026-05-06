@@ -19,8 +19,8 @@ For durable, finalized decisions, use `decisions\` (ADR format). For retrospecti
 
 ### Design partner (Task 0002)
 
-- Who is the first design partner? Target profile: California RCFE, 6–20 residents, currently using paper binders or verbal handoffs, willing to allow shift observation and prototype testing.
-- Which outreach channel is most likely to yield a committed design partner? (ALH Phase 1 market contacts, RCFE associations, cold outreach?)
+- Who is the first design partner? Target profile defined (see task 0002 and working context below). Committed partner not yet identified — outreach not yet executed.
+- Outreach channel priority established: (1) ALH Phase 1 market contacts, (2) CDSS/CCLD Riverside County RCFE registry cold list, (3) CALCASA/local associations, (4) personal referrals. Candidate list not yet built.
 
 ### Shift model (Task 0003)
 
@@ -79,6 +79,16 @@ For durable, finalized decisions, use `decisions\` (ADR format). For retrospecti
 **Assumption (2026-05-05):** Observed care tasks are caregiver observations only — no MAR/eMAR structure — until compliance and legal review confirms a safe, appropriate path forward.
 
 **Assumption (2026-05-05):** Family access architecture stubs (ResidentContact, FamilyAccessConsent) are included in the data model design reference but are not built in MVP. Task 0006 must resolve the full architecture before Phase 2 implementation begins.
+
+**Design partner strategy (2026-05-05 — task 0002 planning complete):**
+
+- **Profile (must-have):** California RCFE, active license, 6–20 resident capacity, currently using paper/whiteboard/text/verbal handoff process, no digital shift log software, owner accessible for site visit, at least one caregiver willing to test during a real shift. Located in Temecula, Murrieta, or Menifee (SW Riverside County) — aligns with ALH Phase 1 markets.
+- **Profile (disqualifiers):** Already using PointClickCare, MatrixCare, or similar; under active CDSS license action; fewer than 4 active residents; outside California; owner unwilling to allow caregiver participation.
+- **Outreach channel priority:** (1) ALH Phase 1 facility contacts — warmest path; (2) CDSS/CCLD Riverside County RCFE registry filtered to capacity 6–20 — cold list; (3) CALCASA/local RCFE networks — lower-certainty; (4) personal referrals if Channels 1–2 stall after 4–6 weeks.
+- **Candidate list:** Not yet built. Owner must pull ALH contact list and ca_ccld_registry Riverside County RCFE data, apply filters, and build 5–10 candidate list. Target 30–50 cold contacts to yield 1 committed partner.
+- **LOI terms:** Free access during design partner phase; no pricing commitment in the LOI; founding partner rate to be communicated before design partner relationship concludes. No compliance claims. No production dependency. 30-day exit by either party.
+- **Outreach script and site visit plan:** Documented in task 0002 Sections 3 and 4. Do not deviate from the language guardrails — no launch date, no pricing, no compliance language.
+- **Validation gate for Task 0003:** Shift model and auth questions from the task 0002 validation checklist must have answers from a real facility before task 0003 is activated.
 
 **Working direction (2026-05-05 — tasks 0001, 0002, 0004 activated):**
 
