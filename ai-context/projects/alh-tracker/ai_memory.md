@@ -56,15 +56,19 @@ For durable, finalized decisions, use `decisions\` (ADR format). For retrospecti
 
 ### Title 22 documentation scope (Task 0004)
 
-- Which specific RCFE documentation requirements affect the MVP data model design and retention policy?
-- Are there content, format, or timeliness requirements for incident logging or medication observation records?
-- Does logging incidents in alh-tracker create any mandatory reporting obligations for the vendor?
+Desk research complete (2026-05-05). Pending counsel review and sign-off. Key findings:
+- § 87506 (resident records): 3-year post-service retention; includes medication records and condition documentation. Whether alh-tracker CareLogEntry records constitute § 87506 "resident records" is an open counsel question.
+- § 87211 (incident reporting): Reporting obligation rests with the licensee per regulation text. Whether the vendor has independent obligations is an open counsel question. In-product incident notices required before commercial launch.
+- § 87465 (medication management): Medication assistance records must document date, time, dosage, and response. 1-year retention for medication records. alh-tracker ObservedCareTask intentionally omits dosage/name — counsel must confirm whether these records constitute § 87465 medication records.
+- § 87411 (personnel): No explicit shift-duty record requirement; caregiver identity records required. alh-tracker User entity and AuditTrail are compatible with accountability requirements.
+- Full research and counsel brief in task 0004 Outcome, Section 6.
 
 ### Retention and deletion policy
 
-- How long are care log records retained after they are created?
-- What happens to care log records when a resident is deactivated (moved out or deceased)?
-- Must be defined before commercial launch.
+- Minimum retention not yet defined as policy. Preliminary research: § 87506 (3 years post-service), § 87465 (1 year medication records, 3 years destruction records). Counsel must confirm which categories apply to alh-tracker as a vendor.
+- Account closure behavior (what happens to records when a facility account closes) is undefined — must be resolved before commercial launch.
+- Caregiver account deactivation: User identity must be preserved in AuditTrail references; anonymization policy pending counsel guidance.
+- Must be defined before commercial launch — blocks task 0005 (data model finalization).
 
 ---
 
