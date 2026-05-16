@@ -17,9 +17,9 @@ This file defines what context to load and when.
 
 ## Related Files
 
-- `projects\AssistedLivingHelp\` — AssistedLivingHelp project context files
-- `projects\alh-tracker\` — alh-tracker project context files
-- `global\` — shared standards
+- `projects\AssistedLivingHelp\` - AssistedLivingHelp project context files
+- `projects\alh-tracker\` - alh-tracker project context files
+- `global\` - shared standards
 
 ---
 
@@ -27,12 +27,15 @@ This file defines what context to load and when.
 
 For any task on `<project>`:
 
-1. `ai-context\README.md` — framework orientation
-2. `ai-context\projects\<project>\overview.md` — project purpose, positioning, compliance constraints
+1. `ai-context\README.md` - framework orientation
+2. `ai-context\global\agent_rules.md` - global behavior rules, including automatic subagent policy
+3. `ai-context\orchestration\planning_rules.md` - task decomposition and subagent planning gate
+4. `ai-context\orchestration\execution_rules.md` - runtime behavior and subagent fallback rules
+5. `ai-context\projects\<project>\overview.md` - project purpose, positioning, compliance constraints
 
 Load additional files based on task type (see project-specific tables below).
 
-## Task-Type Context Table — AssistedLivingHelp
+## Task-Type Context Table - AssistedLivingHelp
 
 | Task type | Load additionally |
 |---|---|
@@ -44,7 +47,7 @@ Load additional files based on task type (see project-specific tables below).
 | Active task | `tasks\active\AssistedLivingHelp\<task-file>.md` |
 | Working context / open questions | `projects\AssistedLivingHelp\ai_memory.md` |
 
-## Task-Type Context Table — alh-tracker
+## Task-Type Context Table - alh-tracker
 
 | Task type | Load additionally |
 |---|---|
@@ -59,7 +62,8 @@ Load additional files based on task type (see project-specific tables below).
 ## Rules
 
 - Load only what the task requires. Do not load all project files for every task.
-- Always load `overview.md` first — it contains compliance and scope constraints.
+- Always load `global\agent_rules.md`, `planning_rules.md`, and `execution_rules.md` before implementation so the subagent gate is applied consistently.
+- Always load `overview.md` before project-specific work; it contains compliance and scope constraints.
 - Before modifying `ai_memory.md`, check for stale entries and remove resolved items.
 
 <!-- TODO: Refine context loading sequences as task patterns become clearer. -->
