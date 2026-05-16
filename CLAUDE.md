@@ -21,9 +21,10 @@ Read `ai-context\README.md` first for the full navigation map.
 ## How to Start Working on a Task
 
 1. Read `ai-context\README.md` — framework overview and directory map.
-2. Read `ai-context\orchestration\context_rules.md` — what to load and when.
-3. Read `ai-context\projects\AssistedLivingHelp\overview.md` — project purpose, positioning, and constraints.
-4. Load additional project files based on task type (see `context_rules.md`).
+2. Read `ai-context\global\agent_rules.md` - global behavior rules, including when to use subagents or parallel workers.
+3. Read `ai-context\orchestration\context_rules.md` - what to load and when.
+4. Read `ai-context\projects\AssistedLivingHelp\overview.md` — project purpose, positioning, and constraints.
+5. Load additional project files based on task type (see `context_rules.md`).
 
 ## Allowed Write Scope for Documentation and Context Tasks
 

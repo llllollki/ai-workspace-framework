@@ -23,6 +23,7 @@ c:\Projects\
 
 ## How to Route
 
+- For global behavior rules, including when Codex-style agents should use subagents or parallel workers: read `ai-context\global\agent_rules.md`
 - For task planning: read `ai-context\orchestration\planning_rules.md`
 - For skill selection: read `ai-context\skills\skills_index.md`
 - For AssistedLivingHelp context: start at `ai-context\projects\AssistedLivingHelp\overview.md`

@@ -25,6 +25,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | Understanding alh-tracker | `projects\alh-tracker\overview.md` |
 | Loading context for a task | `orchestration\context_rules.md` |
 | Understanding execution behavior | `orchestration\execution_rules.md` |
+| Understanding global agent behavior, including subagent usage | `global\agent_rules.md` |
 | Checking coding standards | `global\coding_standards.md` |
 | Checking API patterns | `global\api_patterns.md` |
 | Checking UI components | `global\ui_components.md` |

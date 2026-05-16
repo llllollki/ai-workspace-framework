@@ -7,6 +7,24 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.3 - 2026-05-16
+
+**Added global subagent guidance for Claude Code and Codex.**
+
+### Changed
+
+- `ai-context\global\agent_rules.md` - added workspace-wide rules for when to use subagents or parallel workers, when to avoid them, and how the main agent should coordinate delegated work.
+- `CLAUDE.md` - updated the Claude Code start sequence to load global agent rules before task context.
+- `AGENTS.md` - updated Codex-style routing to point at global agent rules.
+- `ai-context\README.md` - added global agent behavior to the Start Here table.
+
+### Not changed
+
+- Project-specific business context - unchanged
+- Application source, config, dependency, environment, deployment, data, and generated files - unchanged
+
+---
+
 ## v0.2 — 2026-05-05
 
 **Added alh-tracker project context.**
