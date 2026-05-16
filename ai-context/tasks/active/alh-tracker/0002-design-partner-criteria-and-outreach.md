@@ -272,10 +272,12 @@ The site visit is the single most valuable activity in Phase 0. Everything desig
 
 The LOI should be one page. Its purpose is to establish mutual expectations and build trust — not to create binding legal obligations. Plain language is preferred. If the owner asks for legal review before signing, that is reasonable and should be accommodated.
 
-**Section 1 — Purpose**
+The LOI clauses below are numbered within the document itself. These clause numbers are part of the LOI template — they are not section numbers of this task document.
+
+**Clause 1 — Purpose**
 > This letter confirms [Facility Name]'s agreement to participate as a design partner for alh-tracker, a shift log and handoff tool currently in development for small California RCFE operators. The purpose of this engagement is to gather feedback from a real operating facility to inform product design — not to deploy production software.
 
-**Section 2 — What the Facility Provides**
+**Clause 2 — What the Facility Provides**
 > [Facility Name] agrees to:
 > - Allow one or more site visits for the purpose of observing shift workflow and handoff processes
 > - Make the owner/operator available for a structured discovery conversation (approximately 45–60 minutes)
@@ -283,26 +285,26 @@ The LOI should be one page. Its purpose is to establish mutual expectations and 
 > - Provide honest feedback on product concepts, prototype flows, and design decisions
 > - Notify [Product Name] of any concerns about the engagement at any point
 
-**Section 3 — What the Facility Receives**
+**Clause 3 — What the Facility Receives**
 > In exchange, [Product/Company Name] provides:
 > - Free access to the alh-tracker prototype or early product during the design partner phase (no charges will be applied during this period)
 > - Direct input into product design decisions
 > - Preferred consideration as an early access partner when the product moves to general availability
 > - A founding partner rate to be communicated before any commercial relationship begins (not established in this letter)
 
-**Section 4 — Data Handling**
+**Clause 4 — Data Handling**
 > During site visits, no resident names, individual care records, or personally identifiable resident information will be collected or retained. Observations are limited to workflow structure and process patterns. Any data collected during prototype testing is handled with the same privacy protections planned for the production product and is not shared with any third party, including AssistedLivingHelp.
 
-**Section 5 — Compliance Boundary**
+**Clause 5 — Compliance Boundary**
 > alh-tracker is a care observation and shift log tool in development. It is not a compliance system, a medication administration record (MAR), a clinical documentation system, or an official regulatory record. Participation in the design partner phase does not satisfy any CDSS documentation, incident reporting, or medication management requirements. [Facility Name] remains responsible for all required regulatory documentation during and after this engagement.
 
-**Section 6 — No Production Dependency**
+**Clause 6 — No Production Dependency**
 > [Facility Name] will not rely on any prototype or early version of alh-tracker for required shift documentation or regulatory record-keeping during the design partner phase. The product is in development and should be treated as supplemental or experimental only.
 
-**Section 7 — Confidentiality**
+**Clause 7 — Confidentiality**
 > Both parties agree to keep the details of this engagement confidential. [Product/Company Name] will not reference [Facility Name] by name in any public communications without explicit written consent.
 
-**Section 8 — Duration and Termination**
+**Clause 8 — Duration and Termination**
 > This engagement begins on [Date] and continues until the product moves to a Phase 1 pilot or early access stage, or until either party provides 30 days written notice of withdrawal. No penalty applies to withdrawal by either party.
 
 ---
@@ -375,8 +377,79 @@ The LOI explicitly defers the founding partner rate to a future communication. I
 
 ---
 
+### 8. Candidate List Execution — Owner Checklist
+
+> **Owner action required.** The strategy and channel priority are defined in Section 2 above. This checklist converts that strategy into a step-by-step execution guide. No internet access is required to build the list — the data sources are ALH's own contact records and the public CCLD registry.
+
+#### Step 1 — Pull ALH facility contacts (warm list, do this first)
+
+1. Open the AssistedLivingHelp facility partner contact list or CRM.
+2. Filter for: RCFE license type, location in Temecula / Murrieta / Menifee / SW Riverside County.
+3. For each match, note: facility name, owner name, contact method, approximate capacity, and current ALH tier (Starter/Growth/Concierge).
+4. Exclude facilities you know are using PointClickCare, MatrixCare, or any digital care management system.
+5. Mark each as "ALH partner — warm" in your working spreadsheet.
+
+#### Step 2 — Pull the CCLD public RCFE registry (cold list)
+
+1. Go to the CDSS Community Care Licensing Division facility search: **https://www.ccld.dss.ca.gov/carefacilitysearch/**
+2. Search parameters:
+   - Facility type: **Residential Care Facility for the Elderly (RCFE)**
+   - County: **Riverside**
+   - License status: **Licensed** (active)
+3. Export or copy the results into a spreadsheet.
+4. Filter for capacity 6–20. (If the search tool does not allow capacity filtering, apply the filter in your spreadsheet after export.)
+5. Sort by city: Temecula, Murrieta, Menifee first; then other SW Riverside County cities.
+6. For each remaining facility, look up whether it appears in your ALH contact list. If yes, mark as "ALH partner — warm" and skip Step 3 for that facility.
+
+#### Step 3 — Cross-reference and rank
+
+Build a single spreadsheet with these columns:
+
+| Column | Notes |
+|---|---|
+| Facility name | From CCLD or ALH contact list |
+| City | For geography priority |
+| Capacity | Licensed capacity from CCLD; prefer 10–16 in ranking |
+| ALH relationship | Warm (existing ALH contact) or Cold (registry only) |
+| Owner contact | Phone or email if known |
+| Disqualifiers? | Note if known software user or under license action |
+| Priority rank | See ranking rules below |
+
+**Ranking rules (highest priority first):**
+1. Existing ALH partner in preferred geography (Temecula/Murrieta/Menifee)
+2. Registry-only facility in preferred geography, capacity 10–16
+3. Registry-only facility in preferred geography, capacity 6–9 or 17–20
+4. Registry-only facility in adjacent SW Riverside County city, capacity 10–16
+
+Target: identify 5–10 candidates after applying disqualifier filters. If fewer than 5 remain after filtering, expand geography to adjacent cities (Hemet, Lake Elsinore, Wildomar, Canyon Lake).
+
+#### Step 4 — Outreach sequencing
+
+1. Contact ALH warm contacts first — use the BD framing from task 0001: "We're also building a shift log and handoff tool for RCFE operators. If you're interested in being an early design partner as we develop it, we'd love to have your input."
+2. Contact registry cold list second — use the phone opener from Section 3 above.
+3. Send one contact at a time. Do not send mass outreach. Personalized messages significantly outperform templates.
+4. Wait 5 business days before following up on any outreach. Do not follow up more than once if there is no response.
+5. If Channels 1 and 2 yield no committed partner in 4–6 weeks, activate Channel 4 (personal referrals) per Section 2.
+
+#### Step 5 — Track outreach status
+
+Maintain a simple status tracker alongside your candidate spreadsheet:
+
+| Status | Meaning |
+|---|---|
+| Contacted | Message sent; awaiting response |
+| Interested | Positive response; scheduling follow-up |
+| Site visit scheduled | Date confirmed |
+| Declined | Not interested or disqualified; do not re-contact |
+| Committed | LOI signed; design partner engaged |
+
+Report progress to Product / Program Lead weekly until a committed partner is confirmed.
+
+---
+
 **Remaining to close this task:**
-- [ ] Build and send 5–10 candidate outreach list (owner execution required)
+- [ ] Build 5–10 candidate list using the execution checklist above (owner action)
+- [ ] Send initial outreach to warm ALH contacts first
 - [ ] Receive at least one positive response and schedule a site visit
 - [ ] Conduct site visit and document observations
 - [ ] Confirm at least one design partner commitment
