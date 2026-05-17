@@ -52,11 +52,21 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | Framework structure changes | `ai-context\CHANGELOG.md` |
 | Post-task retrospective patterns | `reflection.md` |
 
-## Expected First ADRs
+## ADRs Created
 
-Once the Phase 0 discovery tasks are complete, the following decisions are likely candidates for ADRs:
+| ADR | Title | Date | Status |
+|---|---|---|---|
+| 0001 | Data boundary — alh-tracker vs. AssistedLivingHelp | 2026-05-05 | Accepted |
+| 0002 | Pricing model type (flat monthly per-facility) | 2026-05-05 | Accepted |
+| 0003 | Business model and ALH partner pricing | 2026-05-09 | Accepted |
+| 0004 | Family access architecture | 2026-05-09 | Accepted |
+| 0005 | CRM and mobile distribution strategy (three-surface model) | 2026-05-16 | Accepted |
+
+## Pending Future ADRs
+
+Once the relevant Phase 0 tasks are resolved, the following decisions are likely candidates for ADRs:
 
 - Shift model (fixed windows vs. operator-configured) — from task 0003
 - Caregiver authentication model — from task 0003
-- Tech stack selection — when decided
-- Business model and ALH pricing relationship — from task 0001
+- App delivery model (PWA vs. native vs. web + redirect) — from task 0009/CRM open questions
+- Data retention and archive policy — from task 0009

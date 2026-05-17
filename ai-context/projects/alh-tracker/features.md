@@ -230,7 +230,7 @@ These are UX decisions that can be revisited after design partner feedback. Noth
 
 ## Production Security Prerequisites
 
-The following controls are not features — they are security and privacy requirements that must be in place before any real resident data is stored. The current prototype (https://alh-tracker.vercel.app) uses localStorage with no authentication and is for design validation only.
+The following controls are not features — they are security and privacy requirements that must be in place before any real resident data is stored. The production backend has migrated to Supabase (PostgreSQL + Auth + RLS) — the pre-Supabase localStorage architecture is superseded. A full production security posture assessment against this checklist is still needed before commercial launch.
 
 **Prototype status (as of 2026-05-11):** The current public prototype at https://alh-tracker.vercel.app displays a fixed "Demo only — do not enter real resident data." amber banner at the bottom of every screen (implemented in `src/components/Layout.tsx`, commit `fa8577a`). This banner must remain visible until all production security controls below are in place and verified.
 

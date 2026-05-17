@@ -6,7 +6,7 @@ Build `alh-tracker`, a California-first shift log and handoff tool for small RCF
 
 Core wedge: "Replace the paper binder. Make shift handoff fast, clear, and auditable."
 
-Product mantra: "Fast enough for caregivers. Clear enough for handoff. Trustworthy enough for owners. Safe enough for future compliance."
+Product mantra: "Fast enough for caregivers. Clear enough for handoff. Trustworthy enough for owners. Safe enough for future compliance." (positioning goal — no compliance claims without counsel review)
 
 ## Relationship to AssistedLivingHelp
 
@@ -51,7 +51,7 @@ Long form: "Replace the paper binder with simple shift logs, resident routine tr
 
 ### Later Expansion
 
-"Daily care visibility for residents, families, caregivers, and owners, with a path toward stronger RCFE documentation and MAR/eMAR-adjacent workflows."
+"Daily care visibility for residents, families, caregivers, and owners (pending Phase 2 counsel review and consent model approval), with a path toward stronger RCFE documentation and MAR/eMAR-adjacent workflows (only following a separate compliance and legal review confirming a safe and appropriate path — see `compliance_notes.md`)."
 
 Family access is planned as a separate Phase 2 mobile/tablet surface — see Product Surfaces above.
 
@@ -96,4 +96,4 @@ See `compliance_notes.md` for full detail.
 
 ## Pinned Versions
 
-_TODO: Record pinned versions once the tech stack is selected._
+Facility tracker app: React 18 + TypeScript, Vite, Tailwind CSS, Zustand, React Router v6, lucide-react, date-fns. Production backend: Supabase (PostgreSQL + Auth + Row Level Security). Pinned versions are in `C:\Projects\alh-tracker\package.json`.

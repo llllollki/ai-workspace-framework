@@ -241,6 +241,8 @@ Each phase transition requires Product / Program Lead sign-off.
 **Remaining to close this task:**
 - [ ] ALH partner pricing rate and structure finalized
 - [ ] Non-ALH price point confirmed (or $149 validated and accepted as launch price)
-- [ ] Shared onboarding/billing workflow question answered
-- [ ] Full business model ADR recorded in `decisions\` (`0003-business-model-alh-pricing.md`)
+- [x] Shared onboarding/billing workflow question answered — ADR 0003 (2026-05-09) decided no shared system at MVP; ALH partner identified by `alh_partner` boolean only. ADR 0005 (2026-05-16) establishes the internal CRM as the commercial management layer.
+- [x] Full business model ADR recorded in `decisions\` (`0003-business-model-alh-pricing.md`) — ADR 0003 accepted 2026-05-09.
 - [ ] Resolved open questions removed from `ai_memory.md`
+
+> **Blocked on external execution (2026-05-16):** Remaining open items (non-ALH price validation, ALH rate finalization) require design partner pricing probe during site visit. These cannot be resolved without a committed design partner — task 0001 is blocked pending task 0002 execution.

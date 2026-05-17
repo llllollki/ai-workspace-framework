@@ -302,7 +302,7 @@ This section is formatted for direct use in briefing compliance/privacy counsel.
 
 - This task document (full Outcome section)
 - `compliance_notes.md` (current version, post-task-0004 update)
-- The ToS draft (not yet written — needs to be produced before counsel review)
+- The ToS draft — `projects/alh-tracker/tos_draft_for_counsel.md` (created 2026-05-10; preliminary draft pending counsel review; counsel must review before any commercial use)
 - alh-tracker data model (`data_model.md`) — specifically the CareLogEntry, ObservedCareTask, AuditTrail, and Resident entities
 - The in-product disclosure text drafted in Section 5 above
 

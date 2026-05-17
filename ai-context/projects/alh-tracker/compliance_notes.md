@@ -177,7 +177,7 @@ The family portal is deferred from MVP. When it is built in Phase 2, the followi
 
 **Notification scope:** Family members may receive approved notifications for their granted resident. **TODO:** Notification categories are unresolved and must be limited to approved wellbeing/communication events only — not incidents, regulatory events, or operational alerts.
 
-**Communication model:** Family-to-facility messaging is planned to be available through approved channels. **TODO:** Message types, direction, channels, content scope, and moderation/audit requirements are unresolved. Communications must not conflict with ADR 0004's read-only constraint on care data — messaging is a separate data category from care log access.
+**Communication model:** Family-to-facility messaging is planned to be available through approved channels. **TODO:** Message types, direction, channels, content scope, and moderation/audit requirements are unresolved. Communications must not conflict with ADR 0004's read-only constraint on care data — messaging is a separate data category from care log access. **This feature must not be designed or built before counsel review of content scope, data classification, and moderation requirements is complete.**
 
 **Resident autonomy posture:**
 - A competent RCFE resident has autonomy over their personal care information. The consent model requires the operator to note whether they considered the resident's preferences before granting family access (`resident_autonomy_noted` field on FamilyAccessConsent).
@@ -227,28 +227,30 @@ See `ai_memory.md` for the working list of unresolved items. Key items requiring
 > **IMPLEMENTATION PLANNING — NOT LEGAL ADVICE — PENDING COUNSEL AND SECURITY REVIEW**
 > This section describes the current prototype security state and the controls required before any real resident data may be stored under a commercial relationship. It does not constitute a security certification, HIPAA compliance claim, or legal opinion. A qualified security reviewer and California privacy/compliance counsel must review the final implementation before commercial launch.
 
-### Current Prototype State (as of 2026-05-11)
+### Production Security State (updated 2026-05-16)
 
-The live prototype at https://alh-tracker.vercel.app is a design and validation tool only. Its current security posture has the following known limitations:
+> **NOTE: The pre-Supabase prototype state table below has been superseded.** The production deployment at https://alh-tracker.vercel.app now uses Supabase (PostgreSQL + Auth + Row Level Security) as the backend. The localStorage prototype architecture is no longer the production model. See the app `README.md` and `docs/architecture.md` for the current backend architecture. A full production security posture assessment against the 15-item must-have checklist below is needed before any real resident data is accepted under a commercial relationship. Do not use the superseded table below as the current security state.
 
-| Control | Current State | Required for Real Data |
+**Superseded pre-Supabase prototype state table (as of 2026-05-11 — historical reference only):**
+
+| Control | Former Prototype State | Required for Real Data |
 |---|---|---|
-| Authentication | None — hardcoded seed user | Required |
-| Authorization / RBAC | None — all routes open | Required |
-| Data storage | Browser localStorage (plaintext) | Must move to server-side database |
-| Backend / API | None — static SPA | Required |
-| Tenant isolation | None — single hardcoded facility | Required |
-| Encryption at rest | None (localStorage is plaintext) | Required |
-| Encryption in transit | HTTPS via Vercel (prototype only) | Required in production |
-| Audit trail persistence | localStorage — not integrity-protected | Must move to append-only database table |
-| Session timeout | None | Required |
-| MFA | None | Required for owner/admin roles |
-| Secrets management | None needed (no backend) | Required when backend is built |
-| Backup / recovery | None | Required |
-| Data export | None | Required before commercial launch |
-| Account closure / deletion | None | Required before commercial launch |
+| Authentication | None — hardcoded seed user | Required — now Supabase Auth (email/password) in production |
+| Authorization / RBAC | None — all routes open | Required — now RLS in production; server-side enforcement still needs verification |
+| Data storage | Browser localStorage (plaintext) | Required — now Supabase PostgreSQL in production |
+| Backend / API | None — static SPA | Required — now Supabase REST API in production |
+| Tenant isolation | None — single hardcoded facility | Required — enforced via RLS in production; verify by test |
+| Encryption at rest | None (localStorage is plaintext) | Required — Supabase encrypts at rest by default |
+| Encryption in transit | HTTPS via Vercel (prototype only) | Required in production — HTTPS enforced |
+| Audit trail persistence | localStorage — not integrity-protected | Must be append-only database table — current status: needs verification |
+| Session timeout | None | Required — current status: needs verification |
+| MFA | None | Required for owner/admin roles — current status: not yet implemented |
+| Secrets management | None needed (no backend) | Required — Supabase credentials in Vercel env vars |
+| Backup / recovery | None | Required — Supabase automated backups; PITR status needs verification |
+| Data export | None | Required before commercial launch — current status: not yet implemented |
+| Account closure / deletion | None | Required before commercial launch — current status: not yet implemented |
 
-**The prototype must not be used with real resident names, care data, allergy records, contact information, or HIPAA-related notes until all "Required" controls above are in place.**
+**The app must not be used with real resident names, care data, allergy records, contact information, or HIPAA-related notes until all "Required" controls above are verified operational.**
 
 ### Data Classification
 

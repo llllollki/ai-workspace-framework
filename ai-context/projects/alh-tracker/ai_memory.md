@@ -129,10 +129,13 @@ Desk research complete (2026-05-05). Pending counsel review and sign-off. Key fi
 
 ### Retention and deletion policy
 
+> **HIGH RISK — pre-commercial-launch blocker (identified 2026-05-16):** No retention policy exists at the Supabase (production database) level. This must be resolved before any real resident data enters production. See task 0009.
+
 - Minimum retention not yet defined as policy. Preliminary research: § 87506 (3 years post-service), § 87465 (1 year medication records, 3 years destruction records). Counsel must confirm which categories apply to alh-tracker as a vendor.
 - Account closure behavior (what happens to records when a facility account closes) is undefined — must be resolved before commercial launch.
 - Caregiver account deactivation: User identity must be preserved in AuditTrail references; anonymization policy pending counsel guidance.
-- Must be defined before commercial launch — blocks task 0005 (data model finalization).
+- PITR backup retention (Supabase) must be at least as long as the counsel-confirmed minimum retention period per record type — not yet verified.
+- Must be defined before commercial launch — blocks task 0005 (data model finalization). Task 0009 created to track this work.
 
 ---
 
@@ -197,7 +200,7 @@ Desk research complete (2026-05-05). Pending counsel review and sign-off. Key fi
 
 **alh-tracker MVP Phase 4 features shipped (2026-05-11):**
 
-- Five new operational features added to the live app at https://alh-tracker.vercel.app and committed to git master (`edaa187`).
+- Five new operational features added to the live app at https://alh-tracker.vercel.app and committed to git main (`edaa187`).
 - **Preferences** — per-resident record: food, activity, communication, wake/sleep times, personal care, general notes. Upsert, one record per resident.
 - **Main Contact / HIPAA Release Status** — per-resident record: contact name, relationship, phone, email, and a facility-recorded HIPAA release status field (Unknown / Not on file / On file / Expired / Not required). Operational tracking only — not legal validation of a release.
 - **Allergies & Triggers** — per-resident record: allergies (with severity), sensitivities, behavioral triggers, calming/support strategies. Displayed as a prominent warning banner on the resident profile (always visible regardless of tab) and in the Activity Log when that resident is selected. Severe allergies (text contains "severe" or "anaphylaxis") render in red; others in amber.

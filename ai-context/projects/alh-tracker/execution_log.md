@@ -9,6 +9,24 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-16 (documentation review and task queue cleanup)
+
+- Ran four-subagent documentation review: Documentation Inventory, Product/Business, Compliance/Data Boundary, and Task Queue reviewers.
+- **overview.md:** Added compliance caveats to product mantra ("positioning goal — no compliance claims without counsel review"), Later Expansion MAR/eMAR-adjacent language (separate legal review required), and "Daily care visibility" phrase (pending Phase 2 counsel review). Updated Pinned Versions section with actual selected tech stack (React 18 + TypeScript, Vite, Tailwind CSS, Zustand, React Router v6, Supabase).
+- **compliance_notes.md:** Updated "Current Prototype State" table to note it has been superseded by Supabase production backend; added current status notes per control; added hard "blocked on counsel review" requirement to family-to-facility communications TODO.
+- **features.md:** Updated stale "uses localStorage with no authentication" prototype state note to reflect Supabase migration.
+- **tasks/active/0001:** Checked off ADR 0003 (created 2026-05-09) and shared onboarding/billing decision (ADR 0003 + ADR 0005) as complete. Added "blocked on external execution (task 0002)" note for remaining items.
+- **tasks/active/0004:** Updated documents list — ToS draft reference corrected from "not yet written" to reference `tos_draft_for_counsel.md` (created 2026-05-10).
+- **tasks/backlog/README.md:** Updated Phase 0 task status table to reflect actual queue state (tasks 0001/0002/0004/0006/0008 are active; 0003/0005/0007 remain in backlog). Added new tasks 0009/0010/0011 to table.
+- **decisions/README.md:** Replaced stale "Expected First ADRs" with actual ADR table (ADRs 0001–0005, all accepted) and updated pending ADR list.
+- **ai_memory.md:** Corrected "git master" to "git main". Added HIGH RISK label and task 0009 reference to retention and deletion policy section.
+- **New task 0009:** `tasks/backlog/0009-data-retention-policy.md` — pre-commercial-launch blocker; defines retention periods, account closure procedure, Supabase PITR alignment.
+- **New task 0010:** `tasks/backlog/0010-crm-design-open-questions.md` — resolves 9 open questions from ADR 0005 before CRM design begins.
+- **New task 0011:** `tasks/backlog/0011-resident-profile-data-model-expansion.md` — defines expanded resident entity designs to unblock task 0005.
+- No app code changed. No schema changes. No deployment.
+
+---
+
 ## 2026-05-11 (session 10 — UI redesign for caregiver clarity)
 
 - Redesigned 6 of 7 app pages for caregiver clarity. Guiding principles: urgent-first, one purpose per page, primary action obvious, reduce competing cards, caregiver language.
