@@ -9,6 +9,37 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-17 (task 0010 — Internal CRM MVP — smoke test verification)
+
+- Ran smoke test on dev server (`npm run dev`): all required routes returned 200 OK — `/crm`, `/crm/facilities`, `/crm/facilities/crm-fac-001`, `/`, `/family`.
+- Code review confirmed: CRM pages render without blank screens; search/filter (CrmFacilities) functional; add note, add follow-up, mark follow-up done, add communication log entry (CrmFacilityDetail) all functional; no resident care types imported in any CRM file.
+- Checked off smoke test item in task 0010 acceptance criteria. Moved `tasks/active/alh-tracker/0010-internal-crm-mvp.md` to `tasks/done/alh-tracker/0010-internal-crm-mvp.md` in both mirrors.
+- Data boundary confirmed: `src/types/crm.ts`, `src/data/crm-seed.ts`, `src/components/CrmLayout.tsx`, and all `src/pages/crm/*.tsx` files import no resident care types from `src/types/index.ts`. CRM uses fake/demo data only.
+- No Supabase schema changes. No deployment changes. Build passed clean (`tsc && vite build`).
+- Mirror drift fixed: added this execution_log entry to ai-workspace-framework (the 2026-05-17 task 0010 implementation entry was missing from this mirror).
+
+---
+
+## 2026-05-17 (task 0010 — Internal CRM MVP — implementation)
+
+- Built first usable internal CRM surface as a separate route tree (`/crm`) in the existing React/Vite app.
+- Architecture decision: CRM implemented in this repo as a separate surface, matching the family portal pattern (`/family`), consistent with ADR 0005. No conflict with docs.
+- **New files:**
+  - `src/types/crm.ts` — CRM-specific TypeScript types (CrmFacility, CrmOnboardingStage, CrmSubscriptionStatus, CrmCommunicationEntry, CrmNote, CrmFollowUp, etc.). Explicitly separate from resident/care types.
+  - `src/data/crm-seed.ts` — 7 demo/fake facilities with communications, notes, and follow-ups. No real data.
+  - `src/components/CrmLayout.tsx` — dark-slate desktop sidebar layout, separate from facility tracker Layout; internal-only warning banner on every screen; TODO auth badge.
+  - `src/pages/crm/CrmDashboard.tsx` — pipeline summary counts, onboarding counts, open follow-up list, priority notes, facilities table.
+  - `src/pages/crm/CrmFacilities.tsx` — facilities list with search and subscription status filter.
+  - `src/pages/crm/CrmFacilityDetail.tsx` — facility profile, owner contact, onboarding checklist, follow-up management (add/mark done), support notes (add/edit), communication log (add entry). All local state / demo only.
+- **Modified files:**
+  - `src/App.tsx` — added `/crm`, `/crm/facilities`, `/crm/facilities/:id` routes under CrmLayout. CRM auth is TODO per ADR 0005; route is unguarded in demo prototype mode.
+- CRM data boundary enforced: CRM files import no resident care types (CareLogEntry, Resident, WellnessObservation, FollowUp) from `src/types/index.ts`.
+- No Supabase schema changes. No real payment processing. No resident care data in CRM views.
+- Build passed clean (`tsc && vite build`).
+- Task doc created: `tasks/active/alh-tracker/0010-internal-crm-mvp.md`.
+
+---
+
 ## 2026-05-16 (documentation review and task queue cleanup)
 
 - Ran four-subagent documentation review: Documentation Inventory, Product/Business, Compliance/Data Boundary, and Task Queue reviewers.
