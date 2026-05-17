@@ -9,6 +9,123 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-11 (session 10 — UI redesign for caregiver clarity)
+
+- Redesigned 6 of 7 app pages for caregiver clarity. Guiding principles: urgent-first, one purpose per page, primary action obvious, reduce competing cards, caregiver language.
+- **Dashboard.tsx** — full rewrite. Removed 5 separate alert cards. Replaced with one unified "Needs attention today" section listing all alert types (missed transport, not returned, room not made up, high follow-ups, wellness concerns, normal follow-ups, upcoming transport) in a single prioritized list with colored dots. Green "All looking good" card when nothing needs attention. Secondary stats row (4 cols) and simplified Quick Access (5 rows, no descriptions).
+- **Residents.tsx** — added per-resident alert badges (severe allergy, allergy on file, open follow-ups count, room not made up, transport attention) computed per card in the map callback from store slices.
+- **ActivityLog.tsx** — renamed form title to "Log a care observation"; added numbered step labels (1. Who? / 2. What type? / 3. How did it go? / 4. Note) to the 4-step form flow.
+- **WellnessObservations.tsx** — renamed form title to "Record a wellness observation"; added numbered step labels (1. Who? / 2. What area? / 3. How are they doing? / 4. Note) to the form flow.
+- **FollowUps.tsx** — removed priority filter row (all/high/normal/low buttons removed; `priorityFilter` state retained at 'all' but no UI to change it). Resolved items rendered at `opacity-55` to visually quiet them.
+- **HandoffSummary.tsx** — replaced dark brand-colored stats header with clean 3-col white stats grid (entries today, exceptions, open follow-ups) with red highlight when nonzero. Added conditional "Shift alerts" amber callout block for missed pickups/not returned/incomplete rooms. Replaced verbose amber disclaimer with quieter border-only box. Added per-resident room check and transport sections (already present from Phase 4).
+- ResidentDetail.tsx not changed — structure already aligned with redesign goals.
+- Build passed clean (`tsc && vite build`). Committed as `221fe19` ("Simplify app UI for caregiver clarity"). Deployed to Vercel production: https://alh-tracker.vercel.app.
+- Updated `features.md`, `ai_memory.md`, `execution_log.md` (this entry).
+
+---
+
+## 2026-05-11 (session 9 — Phase A demo-only banner)
+
+- Added fixed amber "Demo only" warning banner to `src/components/Layout.tsx`: displays at the bottom of every screen on all device sizes. Text: "Demo only — do not enter real resident data." Amber background (`bg-amber-50`), amber border, amber icon (`AlertTriangle`), amber text. `z-20` fixed positioning — does not conflict with sidebar (no z-index) or mobile drawer (z-40).
+- Added `pb-10` to main content wrapper to prevent page content from being hidden behind the banner.
+- Build passed clean. Committed as `fa8577a` ("Add demo-only warning banner"). Deployed to Vercel production: https://alh-tracker.vercel.app.
+- Updated `features.md` (prototype status note with commit hash), `ai_memory.md` (Phase A session 9 entry), `execution_log.md` (this entry).
+
+---
+
+## 2026-05-11 (session 8 — security and privacy architecture plan)
+
+- Produced security and privacy implementation plan for alh-tracker based on review of all 7 project context files plus current app source (store, types, seed, App.tsx, package.json).
+- Confirmed current prototype security state: no authentication, no authorization, all data in browser localStorage (plaintext), no backend, hardcoded seed user. Seed data for 8 named residents persists in any browser that visits alh-tracker.vercel.app. Prototype is demo-only.
+- Updated `compliance_notes.md`: added "Security and Privacy Implementation Posture" section covering current prototype state table, data classification by sensitivity, required security architecture (authentication, RBAC, tenant isolation, AuditTrail, session/device security, password/MFA policy, user deactivation), data protection requirements (encryption, localStorage risk and replacement plan, secrets management, backups, export controls, deletion/retention), HIPAA-adjacent risk assessment, 15-item must-have checklist, and 7 open security/privacy counsel questions.
+- Updated `data_model.md`: added security notes block in preamble (tenant isolation requirement, sensitive data categories, encryption, AuditTrail integrity, localStorage prototype-only note); extended AuditTrail entity note with database-level write-once constraint requirement and identity preservation requirement.
+- Updated `features.md`: added "Production Security Prerequisites" section (15-item checklist of controls required before real data, with reference to compliance_notes.md for full detail).
+- Updated `tos_draft_for_counsel.md`: added Section 10 (Security Controls, Access, and Data Handling Standards) with 7 PENDING COUNSEL questions (Q-S1 through Q-S6) covering HIPAA Security Rule safeguards, California law security obligations, SOC 2 certification, breach notification timeline, caregiver identity retention, and audit log compliance claim risk; updated open issues table with Section 10 rows.
+- Updated `ai_memory.md`: added dated security planning entry summarizing key findings, must-have controls, and open questions.
+- No app code changed. No deployment.
+
+---
+
+## 2026-05-11 (session 7 — data model doc cleanup)
+
+- Fixed duplicate `ResidentContact` definition in `projects/alh-tracker/data_model.md`. The file contained two definitions: the implemented operational entity added in Phase 4 (Entities section) and the original family-access stub (Family Access Stub section). Removed the stub definition. Updated the Family Access Stub preamble to reference the canonical ResidentContact in the Entities section and clarify that: having a ResidentContact record does not authorize family portal access; `hipaa_release_status` is operational tracking only and not legal validation or portal consent; `FamilyAccessConsent.contact_id` will reference the canonical entity when built. Updated `FamilyAccessConsent` to note it is not yet implemented and is blocked on counsel review (task 0006). One `ResidentContact` definition now exists in the file.
+
+---
+
+## 2026-05-11 (session 7 — Phase 4 app build)
+
+- Added 5 new operational features to the live alh-tracker MVP: Preferences, Main Contact / HIPAA Release Status, Allergies & Triggers, Room Made Up / Sheets checklist, and Transport Pickup for Appointment.
+- Modified `src/types/index.ts`: added `HipaaReleaseStatus`, `PickupStatus`, `ReturnStatus` type literals; added `ResidentPreferences`, `ResidentContact`, `AllergiesTriggers`, `RoomChecklist`, `AppointmentTransport` interfaces; added label constant records for all three new enums.
+- Modified `src/data/seed.ts`: added `tomorrow()` helper; added `SEED_PREFERENCES`, `SEED_CONTACTS`, `SEED_ALLERGIES`, `SEED_ROOM_CHECKLISTS`, `SEED_APPOINTMENT_TRANSPORTS` seed exports for all 8 residents.
+- Rewrote `src/store/useStore.ts`: added 5 new state collections and 6 new store actions (`upsertPreferences`, `upsertContact`, `upsertAllergies`, `upsertRoomChecklist`, `addAppointmentTransport`, `updateAppointmentTransport`).
+- Rewrote `src/pages/ResidentDetail.tsx`: added Profile tab (4th tab) with inline-editable sections for Allergies & Triggers, Room Check Today, Transport & Appointments, Main Contact & HIPAA, Preferences. Added allergy warning banner below the resident header card, visible on all tabs.
+- Modified `src/pages/ActivityLog.tsx`: added allergy warning banner when a resident with documented allergies is selected.
+- Modified `src/pages/Dashboard.tsx`: added operational alerts section above the follow-ups/concerns grid — shows incomplete rooms and missed/upcoming/not-returned transport appointments.
+- Modified `src/pages/HandoffSummary.tsx`: added room check and transport status sections to each per-resident card in the handoff.
+- Build passed clean (`tsc && vite build` — no errors). Committed as `edaa187` ("Add resident profile operations fields"). Deployed to Vercel production: https://alh-tracker.vercel.app.
+- Updated `features.md`, `data_model.md`, `user_flows.md`, `ai_memory.md`, `execution_log.md`.
+
+---
+
+## 2026-05-11 (session 6)
+
+- Fixed two broken relative links in `projects/alh-tracker/next_7_days_owner_checklist.md`: Item 3 (counsel packet link) and Item 6 (Task 0008 link) both used `../../ai-workspace-framework/...` — corrected to `../../../ai-workspace-framework/...` to resolve from the file's directory to `C:\Projects\ai-workspace-framework\`.
+- Updated `projects/alh-tracker/phase_0_owner_action_packet.md` Action 5: added explicit reference to the AI-Assisted Technical Review Note in Task 0008 (added Session 4, 2026-05-10); clarified that AI review does not satisfy acceptance criterion 6. Updated "Document last updated" to reflect Session 4/5 actual update date (2026-05-10).
+- Updated `projects/alh-tracker/ai_memory.md` with session 6 maintenance note.
+
+---
+
+## 2026-05-10 (session 5)
+
+- Verified Session 4 cross-references. Found one gap: `design_partner_tracker.md` not referenced in `phase_0_owner_action_packet.md`. Fixed in three places: Action 1 checklist, Section 3A Step 3, and Section 3B outreach tracker paragraph.
+- Added counsel email cover note to `tasks/active/alh-tracker/0004-counsel-handoff-packet.md`: covers the routing ask, lists five documents to attach, articulates Priority 1 Q1–Q4 ask and Phase 2 Q5–Q10 ask. Labeled preliminary / not legal advice throughout. No content changed in other sections.
+- Created `projects/alh-tracker/next_7_days_owner_checklist.md`: six operational items (warm list, CCLD verification, counsel routing, first outreach, $49/month rate confirmation, TA review scheduling). Each item has exact time estimate, source file reference, and completion signal. No strategic content.
+- Updated `projects/alh-tracker/ai_memory.md` with Session 5 verification findings and additions.
+
+---
+
+## 2026-05-10 (session 4)
+
+- Conducted Phase 0 state assessment: confirmed complete items (4 ADRs, task 0002 planning, task 0004 desk research, task 0008 spec), active tasks (0001/0002/0004/0006/0008), and hard-blocked tasks (0003/0005/0007). No task statuses changed — no acceptance criteria were newly satisfied this session.
+- Created `projects/alh-tracker/design_partner_tracker.md`: candidate list pre-seeded from third-party directory data (seniorguidance.org for Temecula and Menifee; aplaceformom.com for Murrieta). 36+ candidate rows across Temecula (14), Murrieta (17), Menifee (8), and adjacent geography (Wildomar). Includes scoring guide, CCLD verification instructions, outreach status key, and a Section A placeholder for owner-supplied ALH warm contacts. Key finding: area is dominated by 6-bed homes; no 10–16 capacity facilities identified in public data. All rows require CCLD verification before outreach.
+- Created `projects/alh-tracker/tos_draft_for_counsel.md`: preliminary draft ToS / data handling addendum for counsel review. Nine sections covering vendor role, record ownership, retention (with counsel-answer placeholders), account closure and record disposition, export/return/deletion rights, HIPAA BAA posture (explicitly unresolved), no compliance certification, data security / breach notification, and amendment process. Open issues table maps each unresolved provision to the specific counsel question. Labeled clearly as draft only — not legal advice.
+- Updated `tasks/active/alh-tracker/0004-counsel-handoff-packet.md`: updated supporting documents table row for ToS draft to reference the new file.
+- Updated `projects/alh-tracker/phase_0_owner_action_packet.md`: marked ToS draft checklist item as complete; referenced `tos_draft_for_counsel.md`.
+- Updated `tasks/active/alh-tracker/0008-device-and-offline-behavior.md`: added AI-Assisted Technical Review Note section. Reviewed IndexedDB queue, offline banner, reconnect sync, conflict flagging, no Background Sync dependency, and minimum browser targets. All confirmed technically coherent. Added 4 implementation notes (service worker registration, IndexedDB schema versioning, stale-while-revalidate cache behavior, 200-entry queue capacity). No blocking issues. Human TA still required to satisfy acceptance criterion 6.
+- Updated `projects/alh-tracker/ai_memory.md`: added task 0008 TA review note, design partner tracker creation, and ToS draft creation.
+
+---
+
+## 2026-05-09 (session 3)
+
+- Created `projects/alh-tracker/phase_0_owner_action_packet.md`: owner-facing Phase 0 action guide consolidating status snapshot (complete/active/blocked/do-not-start), 5-item owner action checklist ordered by leverage, design partner execution worksheet (candidate scoring table, outreach tracker, site visit questions organized by what they unblock: tasks 0003/0001/0006/0008), combined counsel routing checklist (task 0004 Priority 1 questions + task 0006 family access questions Q5–Q10), 4-ADR decision log summary, and explicit do-not-start gate list.
+
+---
+
+## 2026-05-09 (session 2)
+
+- Fixed task 0002 formatting (`tasks/active/alh-tracker/0002-design-partner-criteria-and-outreach.md`): renamed LOI internal clause headers from "Section N" to "Clause N" to eliminate naming collision with the outer document's Section 8 (Candidate List); removed duplicate `---` separator; renamed Section 8 heading for clarity.
+- Activated task 0006: created `tasks/active/alh-tracker/0006-family-access-architecture.md` with full architectural specification (family-resident association model, dual-authorization consent model, read-only/summary-default access scope, same-database row-level authorization, resident autonomy posture, 7-item open-questions register for counsel). Deleted `tasks/backlog/alh-tracker/0006-family-access-architecture.md`.
+- Created `decisions/0004-family-access-architecture.md` (ADR, accepted): locks family access as read-only, summary-default, category-scoped, dual-acknowledgment, same-database, family contacts not User records, all access audited.
+- Updated `data_model.md` family access stubs: ResidentContact — removed `is_authorized_viewer` (authorization is in FamilyAccessConsent), added `contact_type` enum and `is_active`; FamilyAccessConsent — renamed `scope` to `category_scope`, added `access_level` enum (summary/full_notes), added `resident_autonomy_noted` boolean nullable, added `resident_autonomy_notes` text, added `granted_by` role constraint note.
+- Updated `compliance_notes.md`: added "Family Access and Consent Posture" section (clearly labeled preliminary / not legal advice / pending counsel review) covering what family access is and is not, resident autonomy posture, and 6 open counsel questions for Phase 2.
+- Updated `ai_memory.md`: resolved family access open questions with architectural decisions from ADR 0004; replaced stale assumption entry; noted remaining Phase 2 blocks (counsel review, design partner validation, disclosure language).
+
+---
+
+## 2026-05-09 (session 1)
+
+- Created `decisions/0003-business-model-alh-pricing.md` (ADR, accepted): locks ALH partner pricing as free during design partner + Phase 1 pilot, then $49/month add-on at commercial transition; documents no-shared-onboarding/billing policy at MVP; retains non-ALH price as working assumption ($149/month recommended, not validated).
+- Updated task 0001 (`tasks/active/alh-tracker/0001-business-model-and-alh-relationship.md`): marked ALH partner policy, shared onboarding/billing recommendation, and full ADR checklist items as complete; narrowed remaining-to-close list to non-ALH validation and support model.
+- Updated task 0002 (`tasks/active/alh-tracker/0002-design-partner-criteria-and-outreach.md`): added Section 8 — owner-execution candidate list checklist with CCLD search instructions, spreadsheet structure, ranking rules, and outreach sequencing (no internet access; public registry method only).
+- Created `tasks/active/alh-tracker/0004-counsel-handoff-packet.md`: standalone 2-page counsel brief packaging all 9 priority questions from task 0004 Section 6, product description, what-it-is-not, and supporting document list. Clearly labeled as preliminary research / not legal advice.
+- Updated task 0004 (`tasks/active/alh-tracker/0004-title-22-documentation-review.md`): marked counsel packet prepared; updated remaining-to-close to reference the packet file.
+- Activated task 0008: created `tasks/active/alh-tracker/0008-device-and-offline-behavior.md` with full offline behavior spec (device tier matrix, offline detection, IndexedDB queue, pre-cached data, sync strategy, conflict resolution — flag for review, no auto-merge/discard, no Background Sync API dependency, minimum browser/OS requirements). Deleted `tasks/backlog/alh-tracker/0008-device-and-offline-behavior.md`.
+- Updated `features.md`: added Offline Behavior Specification section (inline summary of task 0008 spec) to device support section.
+- Updated `ai_memory.md`: resolved business model open questions (ADRs 0001-0003 all accepted); added task 0008 activation status; narrowed remaining open items to non-ALH price validation and Technical Architect confirmation of offline spec.
+
+---
+
 ## 2026-05-05
 
 - Created initial alh-tracker AI context framework scaffold: `overview.md`, `data_model.md`, `features.md`, `user_flows.md`, `compliance_notes.md`, `ai_memory.md`, `execution_log.md`, `decisions\README.md`.

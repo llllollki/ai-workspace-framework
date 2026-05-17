@@ -35,11 +35,11 @@ Specifically:
 - [x] Review AssistedLivingHelp BD pricing tiers (`business_development.md`): Starter $299–$499, Growth $699–$999, Concierge $500–$1,500
 - [x] Assess typical willingness-to-pay for small RCFE operators (6–20 residents); context: these are often sole-operator homes with thin margins
 - [x] Define alh-tracker standalone pricing range and model
-- [x] Define ALH partner discount or bundle policy — $49/month add-on at commercial transition; free during design partner and Phase 1 pilot; recorded in ADR 0003
+- [ ] Define ALH partner discount or bundle policy — direction set (bundled or heavily discounted); exact rate and structure not yet finalized
 - [x] Define the commercial and data boundary between products (commercial relationship shared; resident care data not)
 - [x] Write a brief recommendation document
-- [x] Record durable decisions as ADRs in `decisions\` — ADR 0001 (data boundary), ADR 0002 (pricing model type), ADR 0003 (ALH partner pricing and shared onboarding)
-- [x] Update `ai_memory.md`: business model open questions resolved (2026-05-09)
+- [ ] Record durable decisions as ADRs in `decisions\` — 2 partial ADRs created (data boundary, pricing model type); full pricing ADR pending rate finalization
+- [ ] Update `ai_memory.md`: remove resolved open questions — pending task closure
 
 ---
 
@@ -239,6 +239,8 @@ Each phase transition requires Product / Program Lead sign-off.
 ---
 
 **Remaining to close this task:**
-- [ ] Non-ALH price point confirmed ($149/month is the working recommendation; requires design partner pricing sensitivity probe and early pilot validation — see task 0002 validation checklist)
-- [ ] Support model at $99–$149/month defined before Phase 3 commercial launch
-- [ ] What founding partner rate do ALH Phase 1 pilot participants lock in? (ADR 0003 recommends $49/month; owner must confirm before first pilot conversation)
+- [ ] ALH partner pricing rate and structure finalized
+- [ ] Non-ALH price point confirmed (or $149 validated and accepted as launch price)
+- [ ] Shared onboarding/billing workflow question answered
+- [ ] Full business model ADR recorded in `decisions\` (`0003-business-model-alh-pricing.md`)
+- [ ] Resolved open questions removed from `ai_memory.md`

@@ -38,8 +38,7 @@ This task should be completed before task 0005 (MVP data model finalization) is 
 - [x] Identify UI and marketing language to avoid (see initial list in `compliance_notes.md`, expanded in Section 5 below)
 - [x] Identify data model constraints: fields that must exist, retention periods to plan for, soft-delete requirements
 - [x] Preliminary answer on incident reporting obligation for the product vendor (see Section 5; counsel confirmation required)
-- [x] Prepare counsel handoff packet — `0004-counsel-handoff-packet.md` created 2026-05-09; ready to route
-- [ ] Route counsel handoff packet and supporting documents to Compliance / Privacy Counsel for review and sign-off
+- [ ] Route findings to Compliance / Privacy Counsel for review and sign-off
 - [ ] Update `compliance_notes.md` with confirmed, counsel-reviewed findings
 - [ ] Update `ai_memory.md`: remove resolved open questions
 
@@ -336,7 +335,7 @@ This section is formatted for direct use in briefing compliance/privacy counsel.
 ---
 
 **Remaining to close this task:**
-- [ ] Route `0004-counsel-handoff-packet.md` plus supporting documents (compliance_notes.md, data_model.md, task 0004 Outcome) to Compliance / Privacy Counsel
+- [ ] Route Section 6 (counsel packet + supporting documents) to Compliance / Privacy Counsel
 - [ ] Receive counsel answers to Priority 1 and Priority 2 questions
 - [ ] Update `compliance_notes.md` with counsel-confirmed findings (remove preliminary labels where confirmed)
 - [ ] Confirm or revise vendor incident reporting obligation answer based on counsel response
