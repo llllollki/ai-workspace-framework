@@ -147,24 +147,24 @@ The vendor's obligations with respect to these retention periods have not been c
 
 ---
 
-## Section 10 — Security Controls, Access, and Data Handling Standards
+## Section 9 — Security Controls, Access, and Data Handling Standards
 
 > **PLACEHOLDER — FOR COUNSEL REVIEW**
 > This section identifies security and privacy controls the vendor intends to implement before commercial launch. It does not represent current capabilities of the prototype. Each subsection contains open questions for counsel. Do not treat any statement below as a security certification or compliance claim.
 
-**10.1 Authentication and access control.** [Company Name] will require authenticated, named user accounts for all access to resident care data. Authentication will use secure credential handling (no plaintext passwords). Role-based access control will be enforced server-side; each user's access will be limited to the data of the specific facility for which they are authorized.
+**9.1 Authentication and access control.** [Company Name] will require authenticated, named user accounts for all access to resident care data. Authentication will use secure credential handling (no plaintext passwords). Role-based access control will be enforced server-side; each user's access will be limited to the data of the specific facility for which they are authorized.
 
-**10.2 Audit logging.** [Company Name] will maintain an append-only audit log of all create and edit operations on resident care records. The audit log will be stored in a database with write-once constraints. Audit log records will not be deleted before the expiration of the applicable record retention period.
+**9.2 Audit logging.** [Company Name] will maintain an append-only audit log of all create and edit operations on resident care records. The audit log will be stored in a database with write-once constraints. Audit log records will not be deleted before the expiration of the applicable record retention period.
 
-**10.3 Encryption.** Resident care data will be encrypted in transit (HTTPS/TLS 1.2+) and at rest (database-level encryption). Encryption in transit is enforced for all production traffic.
+**9.3 Encryption.** Resident care data will be encrypted in transit (HTTPS/TLS 1.2+) and at rest (database-level encryption). Encryption in transit is enforced for all production traffic.
 
-**10.4 Backups.** [Company Name] will maintain automated backups of the production database with point-in-time recovery capability. Backup retention will be at least as long as the counsel-confirmed minimum retention period for the relevant record categories.
+**9.4 Backups.** [Company Name] will maintain automated backups of the production database with point-in-time recovery capability. Backup retention will be at least as long as the counsel-confirmed minimum retention period for the relevant record categories.
 
-**10.5 Data export.** The Customer may export all resident care data from the product at any time during active service. Export is available to facility owner and admin roles only. Export events are logged in the audit trail. Export format: CSV or equivalent machine-readable format.
+**9.5 Data export.** The Customer may export all resident care data from the product at any time during active service. Export is available to facility owner and admin roles only. Export events are logged in the audit trail. Export format: CSV or equivalent machine-readable format.
 
-**10.6 User deactivation.** When a Customer deactivates a user account (e.g., a caregiver leaves employment), [Company Name] will immediately revoke all active sessions for that account. The user's identity record will be preserved in the audit trail for the duration of the applicable retention period.
+**9.6 User deactivation.** When a Customer deactivates a user account (e.g., a caregiver leaves employment), [Company Name] will immediately revoke all active sessions for that account. The user's identity record will be preserved in the audit trail for the duration of the applicable retention period.
 
-**10.7 Breach notification timeline.** [Company Name] will notify the Customer within 72 hours of confirming a data breach affecting resident care data. [PENDING COUNSEL — see Section 8.2 and open question below regarding California breach notification requirements.]
+**9.7 Breach notification timeline.** [Company Name] will notify the Customer within 72 hours of confirming a data breach affecting resident care data. [PENDING COUNSEL — see Section 8.2 and open question below regarding California breach notification requirements.]
 
 > [PENDING COUNSEL — Security Controls]:
 > - **Q-S1**: What specific administrative, physical, and technical safeguards must the vendor implement before storing data for HIPAA Covered Entity RCFE operators? (HIPAA Security Rule, 45 CFR Part 164 Subpart C — relevant if BAA is required.)
@@ -172,11 +172,11 @@ The vendor's obligations with respect to these retention periods have not been c
 > - **Q-S3**: Must the vendor implement SOC 2 Type II or any other security certification before facility operators at this scale will contract? Is this a deal-blocker at the design partner stage?
 > - **Q-S4**: What is the required breach notification timeline under California law for a breach affecting resident care data? Is 72 hours sufficient, or does CCPA/CPPA require a shorter window?
 > - **Q-S5**: When a caregiver account is deactivated, must the identity record be preserved in the audit trail indefinitely, or may it be anonymized after the counsel-confirmed retention period expires?
-> - **Q-S6**: Does the vendor's obligation to maintain an append-only audit log (Section 10.2) constitute a representation that the audit log satisfies any specific California Title 22 record-keeping requirement? (It must not — see Section 7.)
+> - **Q-S6**: Does the vendor's obligation to maintain an append-only audit log (Section 9.2) constitute a representation that the audit log satisfies any specific California Title 22 record-keeping requirement? (It must not — see Section 7.)
 
 ---
 
-## Section 9 — Changes to This Addendum
+## Section 10 — Changes to This Addendum
 
 [Company Name] may update this Data Handling Addendum with reasonable notice to Customers. Material changes affecting data retention, ownership, export rights, or HIPAA posture will be communicated to Customers at least [30 days — confirm with counsel] before taking effect. Continued use of the service after that period constitutes acceptance of the updated terms.
 
@@ -194,11 +194,11 @@ The vendor's obligations with respect to these retention periods have not been c
 | 5.2 | Can the Customer request deletion before the statutory retention period expires? | Q1, Q4 |
 | 6.1–6.4 | Is a HIPAA BAA required? Does storing medication-adjacent observations without dosage trigger BAA requirement? | Q2(c), Q7 |
 | 8.2 | What breach notification timeline is required under California law? | Q7 / Q-S4 |
-| 10.1 | Does role-based access control satisfy any specific HIPAA Security Rule technical safeguard? | Q-S1 |
-| 10.2 | Does the append-only audit log constitute a representation of regulatory compliance? Must it not. | Q-S6 |
-| 10.3–10.4 | Do HIPAA Security Rule or California law impose specific encryption or backup standards? | Q-S1, Q-S2 |
-| 10.6 | Must caregiver identity be preserved in audit trail after deactivation, or may it be anonymized? | Q-S5 |
-| 10 (general) | Is SOC 2 Type II or other certification required or expected by RCFE operators at this scale? | Q-S3 |
+| 9.1 | Does role-based access control satisfy any specific HIPAA Security Rule technical safeguard? | Q-S1 |
+| 9.2 | Does the append-only audit log constitute a representation of regulatory compliance? Must it not. | Q-S6 |
+| 9.3–9.4 | Do HIPAA Security Rule or California law impose specific encryption or backup standards? | Q-S1, Q-S2 |
+| 9.6 | Must caregiver identity be preserved in audit trail after deactivation, or may it be anonymized? | Q-S5 |
+| 9 (general) | Is SOC 2 Type II or other certification required or expected by RCFE operators at this scale? | Q-S3 |
 
 ---
 
