@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-05-17
 Owner role: Claude Code (implementation agent)
 Reviewers: Noel Castillo
@@ -56,4 +56,23 @@ Extend the internal CRM MVP so ALH Tracker business/admin staff can manage facil
 
 ## Outcome
 
-_To be filled in after task completion._
+Completed 2026-05-17.
+
+**Implementation:**
+- `src/store/useCrmStore.ts` — new Zustand session store for CRM (no persistence). Holds facilities, communications, notes, followUps. All pages read from and write to this store.
+- `src/pages/crm/FacilityFormModal.tsx` — shared create/edit form modal with all required CRM fields and validation.
+- `src/types/crm.ts` — added `archived` and `archivedAt` to `CrmFacility`.
+- `CrmFacilities.tsx` — store-connected, "Add facility" button, allowable resident count column, archived toggle.
+- `CrmFacilityDetail.tsx` — store-connected, edit modal, archive confirmation, archived-state banner, notes/followUps/comms preserved via store.
+- `CrmDashboard.tsx` — store-connected, all counts exclude archived facilities.
+
+**Build:** Passed clean (`tsc && vite build`, 0 errors).
+
+**Data boundary:** Confirmed. No resident care types imported into any CRM file.
+
+**No Supabase schema changes.** Session-only demo state.
+
+**App repo commit:** `1709a8d` (`main → main` pushed to origin).
+**Context repo commit:** `79beb13` (`main → main` pushed to origin).
+
+**Vercel:** Vercel should auto-deploy from the pushed app commit (`1709a8d`) if the Vercel project is connected to the `main` branch.
