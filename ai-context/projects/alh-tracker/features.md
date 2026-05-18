@@ -258,24 +258,78 @@ See `compliance_notes.md` — Security and Privacy Implementation Posture sectio
 
 ---
 
-## Internal CRM (Separate Product Surface — Stub)
+## Internal CRM (Separate Product Surface)
 
 The internal CRM is a desktop-only tool for ALH Tracker business/admin staff. It is a separate product surface from the facility tracker app and the family member app. CRM users are ALH Tracker staff — not facility owners, caregivers, or family members. The CRM does not expose resident wellness/care logs. See ADR 0005 for the architectural decision.
 
-The CRM supports the following capabilities at a conceptual level. Implementation details, entity schemas, and CRM-specific roles are TODO pending CRM design.
+The CRM MVP is implemented as a separate route tree (`/crm`) within the existing React/Vite app (consistent with the `/family` prototype pattern and ADR 0005). All CRM data is session-only demo state; no Supabase schema changes have been made for CRM. CRM types live in `src/types/crm.ts` (separate from `src/types/index.ts` — no resident care types imported into CRM files).
 
-### CRM Capability Areas
+### CRM Capability Areas — Implemented (Task 0010 + Task 0011)
 
-**Facility owner/customer management**
-- Add, update, and deactivate facility owner/customer profiles
-- Store owner contact information (name, email, phone, preferred contact method)
-- TODO: define customer record lifecycle (active, suspended, churned)
+**Facility customer management — CRM Dashboard (`/crm`)**
+- Pipeline summary counts by subscription status (active, trial, pending, paused, canceled) — excludes archived facilities
+- Onboarding status counts (prospect, in progress, fully active) — excludes archived facilities
+- Open follow-ups list (overdue highlighted) — filtered to active facilities only
+- High-priority notes list — filtered to active facilities only
+- All-facilities table with link to detail
+
+**Facility list (`/crm/facilities`)**
+- Facilities list with search (name, city, owner) and subscription status filter
+- Add facility — opens create form modal with all required CRM fields
+- Allowable resident count displayed per facility (labeled as CRM config field, not a live care-ops count)
+- Archive toggle — shows archived facilities separately; archived facilities are not included in active list or dashboard counts
+
+**Facility create (`/crm/facilities` → Add facility)**
+- Form fields: facility name, city, state, RCFE/license placeholder, allowable resident count (required positive integer), owner name, owner email, owner phone, preferred contact, relationship source, subscription status (placeholder), onboarding stage, ALH partner flag, internal priority
+- Required field validation; allowable resident count validated as a positive whole number
+- Demo-safe placeholder language throughout; no real payment processing
+
+**Facility update (`/crm/facilities/:id` → Edit facility)**
+- Edit facility button opens the same form modal pre-populated with current values
+- All facility profile fields are editable
+- Allowable resident count validated as a positive integer on save
+- Notes, follow-ups, and communication log entries are preserved during edit
+
+**Archive facility (`/crm/facilities/:id` → Archive)**
+- Confirmation dialog before archiving with explicit notice that CRM archiving does not affect resident care records
+- Archived facilities: removed from active pipeline counts; shown only via "Show archived" toggle in facilities list; detail page shows archived banner; edit/archive actions disabled on archived records
+- Archive is a soft operation (flag only); records and notes/follow-ups/communications are preserved
+
+**Allowable resident count management**
+- Editable via the facility edit form on any active facility
+- Validated as a positive whole number
+- Displayed with clear label: "CRM config · not a live care-ops count" to distinguish it from resident care data
+- TODO (ADR 0005): this field may eventually split into three separate tracked fields — (a) licensed facility capacity (CDSS-issued), (b) subscription-tier resident limit (commercial), (c) active resident count (operational). Current implementation uses a single integer placeholder.
+
+**Facility detail (`/crm/facilities/:id`)**
+- Facility profile (name, city, state, license placeholder, allowable resident count, relationship source, subscription dates)
+- Owner/operator contact (name, email, phone, preferred contact)
+- Onboarding checklist (read-only display; editing via TODO)
+- Follow-up management (add, mark done, overdue/today highlighting)
+- Support/admin notes (add, edit, priority flag)
+- Communication log (add entry by type: call, email, meeting, internal, support)
+
+### CRM Capability Areas — Conceptual / TODO
 
 **Facility records**
-- Manage facility records linked to customer accounts
-- Store facility name, address, license number, and operational status
-- Configure allowable resident count per facility
-- TODO: "Allowable resident count" distinction — licensed capacity (set by CDSS), subscription-tier resident limit (commercial), and active resident count (operational) may be three separate tracked fields. This distinction is unresolved.
+- TODO: define customer record lifecycle (active, suspended, churned) beyond the current archive pattern
+
+**Onboarding tracking**
+- TODO: onboarding status states and step ownership (staff vs. facility owner self-serve vs. hybrid) are unresolved
+- TODO: onboarding checklist items not yet editable through the CRM UI
+
+**Subscription and payment status**
+- TODO: payment provider identity and which fields are stored locally vs. held by the provider are unresolved
+- Subscription start/renewal/trial dates are stored but not yet editable through the CRM UI
+
+**Communications log**
+- "Communications log" definition (email threads, call logs, in-app messages) is partially resolved — current implementation supports: call, email, meeting, internal note, support entry types
+
+**Support/admin notes**
+- Internal notes by ALH Tracker staff — implemented. Must not contain resident-identifiable health data.
+
+**TODO — CRM roles:** What roles exist within the CRM (sales, onboarding, support, billing, admin) is unresolved.
+**TODO — CRM authentication:** CRM user auth model is pending CRM design (per ADR 0005). Route is currently unguarded in demo prototype mode.
 
 **Onboarding tracking**
 - Record onboarding status after facility owner signs the ALH Tracker agreement

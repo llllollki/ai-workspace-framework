@@ -465,22 +465,56 @@ An explicit operator-granted access record allowing a specific family contact to
 
 ---
 
-## CRM Entity Model (Stub — Separate Product Surface)
+## CRM Entity Model (Separate Product Surface)
 
-The internal CRM is a separate product surface from the facility tracker app. It has its own entity model, which is NOT defined in this document. The entities below are named stubs only — no fields, relationships, keys, or data types are defined here. All CRM schema decisions are TODO pending CRM design.
+The internal CRM is a separate product surface from the facility tracker app. CRM entities are defined in `src/types/crm.ts` and are completely separate from the tracker app data model. CRM types must never import from `src/types/index.ts` (resident care types).
 
-**Hard constraint:** CRM entities must not be added to the tracker app's database schema without explicit architecture review. CRM users must have no read access to tracker app care data tables (CareLogEntry, WellnessObservation, ObservedCareTask, FollowUp, etc.). See ADR 0005.
+**Hard constraint:** CRM entities must not be added to the tracker app's Supabase database schema without explicit architecture review. CRM users must have no read access to tracker app care data tables (CareLogEntry, WellnessObservation, ObservedCareTask, FollowUp, etc.). See ADR 0005.
 
-**TODO — CRM entity model:** Entity names listed for orientation only. Schemas are undefined.
+**Current implementation (task 0010 + task 0011):** All CRM data is session-only local state in a Zustand store (`src/store/useCrmStore.ts`) initialized from demo seed data. No Supabase schema changes have been made for CRM. A separate persistence task would be required before CRM data is stored in a database.
 
-| CRM Entity | Purpose |
+### CrmFacility
+
+The primary CRM entity. Commercial facility customer record — not the same as the tracker app `Facility` entity.
+
+| Field | Notes |
 |---|---|
-| `CRMCustomer` | Commercial customer record for a facility; links to tracker app Facility via opaque reference. Relationship between CRMCustomer and the tracker Facility entity is a design question — TODO. |
-| `CRMContact` | Facility owner or primary business contact for the customer account. Not to be confused with `ResidentContact` (which is a care-operations entity for a resident's family/emergency contact). |
-| `OnboardingRecord` | Tracks onboarding milestones (agreement signed, instructions sent, first login, etc.). Onboarding status states and step ownership are unresolved. |
-| `SubscriptionRecord` | Subscription tier, status, dates, and payment provider reference (opaque ID only — no card or bank details). Payment provider and local data fields are TODO. |
-| `AdminNote` | Internal notes by ALH Tracker staff about a customer account. CRM-scoped only; never visible to facility users. Must not contain resident-identifiable health data. |
-| `CommunicationLog` | Records of communications between ALH Tracker staff and facility owners. Definition of log structure (call, email, in-app, etc.) is unresolved. |
+| `id` | CRM-generated ID (session UUID) |
+| `facilityName` | Facility name |
+| `city` | City |
+| `state` | State (CA for MVP) |
+| `rcfeLicensePlaceholder` | RCFE/license number placeholder — demo only, not validated |
+| `allowedResidentCount` | CRM-managed integer. See **Allowable resident count** note below. |
+| `onboardingStage` | See CrmOnboardingStage enum |
+| `subscriptionStatus` | See CrmSubscriptionStatus enum (placeholder — no real billing) |
+| `relationshipSource` | How this facility came into the CRM pipeline |
+| `alhPartner` | Boolean — ALH facility partner |
+| `ownerContact` | Embedded `CrmOwnerContact` (name, email, phone, preferredContact) |
+| `subscriptionStartDate` | Placeholder date string or null |
+| `subscriptionRenewalDate` | Placeholder date string or null |
+| `trialEndDate` | Trial end date string or null |
+| `nextFollowUpDate` | Next scheduled follow-up date or null |
+| `internalPriority` | `normal` / `high` / `low` — internal ALH Tracker staff flag |
+| `createdAt` | Timestamp |
+| `updatedAt` | Timestamp |
+| `onboardingChecklist` | Embedded `CrmOnboardingChecklist` (7 boolean fields) |
+| `archived` | Boolean — soft delete; archived facilities excluded from pipeline counts |
+| `archivedAt` | Timestamp or null — set when archived |
+
+**Allowable resident count distinction (ADR 0005 open question):** The `allowedResidentCount` field is a single integer placeholder. It may represent: (a) licensed facility capacity (CDSS-issued), (b) subscription-tier resident limit (commercial), or (c) active resident count (operational). These may eventually become three separate tracked fields. The current implementation uses one integer and labels it clearly in the UI as "CRM config · not a live care-ops count" to prevent confusion with actual resident records in the tracker app.
+
+### Supporting CRM Entities
+
+| CRM Entity | `src/types/crm.ts` Interface | Notes |
+|---|---|---|
+| Communications log | `CrmCommunicationEntry` | Call, email, meeting, internal, or support entries per facility. Not to be confused with facility tracker app communications. |
+| Support/admin notes | `CrmNote` | Internal notes by ALH Tracker staff. CRM-scoped only. Must not contain resident-identifiable health data. |
+| Follow-ups | `CrmFollowUp` | CRM follow-up items (open/done/snoozed) per facility. Distinct from tracker app `FollowUp` (care-operations). |
+| Onboarding checklist | `CrmOnboardingChecklist` | Embedded in `CrmFacility`. 7 boolean milestones. |
+
+**TODO — Subscription persistence:** Subscription start/renewal/trial dates are stored on `CrmFacility` but are not editable through the CRM UI. A subscription management task would be needed to make these editable.
+
+**TODO — CRM database schema:** When CRM persistence is implemented, the entity model above should inform the schema. The schema must be in a separate database or schema namespace from the tracker app to enforce the data boundary (ADR 0005). CRM users must not be granted any access to tracker app tables.
 
 ---
 

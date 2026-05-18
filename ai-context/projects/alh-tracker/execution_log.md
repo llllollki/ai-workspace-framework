@@ -9,6 +9,16 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-17 (task 0011 — CRM facility management)
+
+- Implemented CRM facility create, edit, archive, and allowable resident count management.
+- **New files:** `src/store/useCrmStore.ts` (Zustand session store for CRM: facilities, communications, notes, followUps — initialized from seed, not persisted); `src/pages/crm/FacilityFormModal.tsx` (shared modal for create and edit with full CRM field set and positive-integer validation for allowedResidentCount).
+- **Modified files:** `src/types/crm.ts` (added `archived`, `archivedAt` to `CrmFacility`); `src/pages/crm/CrmFacilities.tsx` (connected to store, added "Add facility" button, allowable resident count column, archived toggle, post-create navigation); `src/pages/crm/CrmFacilityDetail.tsx` (connected to store, added edit modal, archive confirmation dialog, archived-state banner, all actions routed through store); `src/pages/crm/CrmDashboard.tsx` (connected to store, all counts filter archived facilities).
+- Data boundary confirmed: no resident care types imported in CRM files. No Supabase schema/migration changes.
+- Build passed clean (`tsc && vite build`). Task doc created in both mirrors: `tasks/active/alh-tracker/0011-crm-facility-management.md`.
+- Updated `features.md` (Internal CRM section expanded from stub to implemented spec), `data_model.md` (CRM entity model section updated with actual field definitions), `ai_memory.md` (allowable resident count open question partially resolved), `README.md` (internal CRM section added).
+- Subagents: not used for implementation (store → pages is a sequential dependency chain). Documentation mirror writes were parallelized within the main agent.
+
 ## 2026-05-17 (task 0010 — Internal CRM MVP — smoke test verification)
 
 - Ran smoke test on dev server (`npm run dev`): all required routes returned 200 OK — `/crm`, `/crm/facilities`, `/crm/facilities/crm-fac-001`, `/`, `/family`.
