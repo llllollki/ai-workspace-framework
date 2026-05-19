@@ -1,7 +1,7 @@
 # 0006 — CRM Owner Provisioning and Family Account Approval
 
 **Date:** 2026-05-18
-**Status:** proposed
+**Status:** accepted
 **Supersedes:** The pending TODO in ADR 0005 Section 4 (provisioning handshake implementation details)
 **Superseded by:** n/a
 
@@ -19,7 +19,6 @@ Two new flows are now defined at a conceptual architectural level:
 
 This ADR records the durable architectural decisions being made for both flows. Implementation details (token storage mechanism, specific API calls, exact database fields) remain deferred and are marked as TODOs.
 
-**Status is proposed:** This ADR requires human review and acceptance before it is treated as an accepted decision. Downstream implementation must not begin until this ADR is accepted.
 
 ---
 

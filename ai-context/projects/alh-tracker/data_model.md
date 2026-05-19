@@ -502,11 +502,18 @@ The family member's account in the Family Member App. An identity record only �
 | address | Required — TODO: whether required for all accounts or only for identity/relationship context is unresolved |
 | account_status | `pending` (account created; no active FamilyAccessConsent yet) / `active` (has at least one active grant) |
 | preferred_notification_method | TODO: notification model is unresolved |
+| occupation | Optional — TODO: whether needed at all or only for identity context is unresolved (per ADR 0006 Section 6). Must not be labeled to imply legal authority. |
+| facility_association | Optional (if known at signup) — TODO: how a family member identifies the correct facility at self-signup (invitation code, facility search, or invitation-only model) is unresolved |
+| emergency_contact_role | Optional (if applicable) — must not be labeled to imply legal authority, POA status, or clinical authority (per ADR 0006 Section 6 labeling guardrail) |
+| privacy_release_status | Optional (if known or facility-confirmed) — operational tracking field only; not legal validation; must not imply HIPAA validation or consent verification (per ADR 0006 Section 6 labeling guardrail) |
+| resident_access_request | TODO: only applicable if request-based access is allowed (per ADR 0006 Section 5). Not collected if family members cannot submit access requests independently. |
 | created_at | Timestamp |
 
 **TODO:** FamilyUser authentication model (separate Supabase Auth project/tenant, separate auth table, or other mechanism) is unresolved.
 
 **TODO:** Whether FamilyUsers must be invited by owner/admin before they can create an account, or may self-register independently, is unresolved (ADR 0006).
+
+**TODO:** Optional fields above (occupation, facility_association, emergency_contact_role, privacy_release_status, resident_access_request) are documented in ADR 0006 Section 6 as collection candidates — whether each is implemented and under what conditions is pending Phase 2 design review.
 
 ### FamilyAccessConsent (stub)
 

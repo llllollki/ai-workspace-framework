@@ -9,6 +9,14 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-18 (ADR 0006 accepted — CRM owner provisioning and family account approval)
+
+- ADR 0006 status updated from `proposed` to `accepted` in both mirrors. Removed `(proposed)` qualifiers from ADR 0006 references in `compliance_notes.md` in both mirrors. Created task doc `0013-accept-adr-0006.md` and moved to done.
+
+## 2026-05-18 (ADR 0006 review — CRM owner provisioning and family account approval)
+
+- Architecture review of ADR 0006 (proposed). Recommendation: Accept with minor edits. No conflicts found with ADR 0004 or ADR 0005. One documentation gap fixed: added five missing optional FamilyUser fields from ADR 0006 Section 6 (occupation, facility_association, emergency_contact_role, privacy_release_status, resident_access_request) as TODO entries in `data_model.md` FamilyUser entity table — mirrored to ai-workspace-framework. ADR 0006 status remains `proposed` pending explicit user acceptance.
+
 ## 2026-05-18 (task 0012 — CRM owner provisioning and family account flow)
 
 - Documentation-only task. Created ADR 0006 (CRM owner provisioning and family account approval — status: proposed, requires human review before accepted) in both mirrors. Updated ADR 0005 Section 4 (resolved the CRM-to-tracker provisioning handshake TODO with a 7-step conceptual flow). Updated `decisions/README.md` (added ADR 0006 row; clarified app delivery model ADR remains pending).
