@@ -63,6 +63,7 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | 0005 | CRM and mobile distribution strategy (three-surface model) | 2026-05-16 | Accepted |
 | 0006 | CRM owner provisioning and family account approval | 2026-05-18 | Accepted |
 | 0007 | CRM owner provisioning token mechanism | 2026-05-18 | Accepted |
+| 0008 | CRM-to-tracker provisioning API authentication | 2026-05-19 | Proposed |
 
 ## Pending Future ADRs
 

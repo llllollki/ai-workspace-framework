@@ -306,7 +306,7 @@ This ADR does not define or change:
 
 ## Open Implementation TODOs
 
-- **TODO — CRM-to-tracker provisioning API authentication:** The provisioning API endpoint must authenticate the CRM's request. Options: rotating API key (simplest; requires key management), short-lived service JWT (more secure; requires a token exchange service). Must be decided and implemented before the provisioning API is built.
+- **RESOLVED — CRM-to-tracker provisioning API authentication (ADR 0008, 2026-05-19):** ADR 0008 selects a rotating static API key for MVP, stored server-side only (Vercel env vars for CRM; SHA-256 hash in tracker secrets). Zero-downtime rotation via versioned key slots. Phase 2 hardening path: short-lived HMAC-signed JWT. See ADR 0008 for full secret storage, rotation, request contract, idempotency, replay prevention, and audit requirements.
 - **TODO — Transactional email service:** Select and configure the email delivery service for activation emails (Resend, SendGrid, Postmark, or Supabase transactional emails). Must include SPF, DKIM, and DMARC configuration for the sender domain before the activation email can be sent.
 - **TODO — Facility record creation at provisioning:** When the CRM provisions the owner's account, does the tracker `Facility` record already exist (created by a separate internal process), or is it created as part of the provisioning API call? If created at provisioning time, what is the minimum required facility data? This sequencing dependency must be resolved before the provisioning API is built.
 - **TODO — `User.created_by` for CRM-provisioned accounts:** The `created_by` field on `User` references a tracker `User` ID, but CRM staff are not tracker users. Define the sentinel or structural behavior.

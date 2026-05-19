@@ -9,6 +9,18 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0017 — ADR 0008: CRM-to-tracker provisioning API authentication)
+
+- Architecture/design documentation task. Created ADR 0008 (CRM-to-tracker provisioning API authentication — status: proposed) resolving the authentication blocker deferred in ADR 0007.
+- Decision: rotating static API key (MVP). CRM stores raw key server-side in Vercel env vars (`CRM_TRACKER_PROVISIONING_KEY`); tracker stores only SHA-256 hash(es) of valid keys. Zero-downtime rotation via versioned key slots (V1/V2). Phase 2 hardening: HMAC-signed short-lived service JWT. ADR 0007 service-role key (Option A) remains rejected.
+- ADR 0008 documents: 5 options evaluated (static API key, HMAC JWT, asymmetric JWT, OAuth2 client credentials, mTLS); full authentication flow for MVP and Phase 2; secret storage and rotation procedure; least-privilege scope table; request contract (5 required headers + body schema); response contract (opaque `provisioning_reference` + `status` only); idempotency keyed on `X-Idempotency-Key` (24h TTL); two-layer replay prevention (timestamp window ±5 min + idempotency key deduplication); audit/logging requirements (key version logged, raw key never logged); 7 open implementation TODOs.
+- Updated `decisions/README.md`: added ADR 0008 row.
+- Updated `decisions/0007-crm-owner-provisioning-token-mechanism.md`: resolved CRM-to-tracker API auth TODO with ADR 0008 reference.
+- Updated `ai_memory.md`: resolved CRM-to-tracker API authentication open question (both the standalone bullet and the CRM provisioning mechanism entry).
+- Updated `data_model.md`: added ADR 0008 reference note to User entity provisioning mechanism paragraph.
+- Updated `compliance_notes.md`: added CRM-to-tracker provisioning API authentication row to Data Handling Posture table.
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed. No Supabase schema changes.
+
 ## 2026-05-18 (task 0016 — accept ADR 0007)
 
 - ADR 0007 (CRM owner provisioning token mechanism) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md` updated in both mirrors. Task doc `0016-accept-adr-0007.md` created and placed in done. No application code changed.
