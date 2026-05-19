@@ -64,7 +64,7 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | 0006 | CRM owner provisioning and family account approval | 2026-05-18 | Accepted |
 | 0007 | CRM owner provisioning token mechanism | 2026-05-18 | Accepted |
 | 0008 | CRM-to-tracker provisioning API authentication | 2026-05-19 | Accepted |
-| 0009 | Tracker Facility record creation during CRM provisioning | 2026-05-19 | Proposed |
+| 0009 | Tracker Facility record creation during CRM provisioning | 2026-05-19 | Accepted |
 
 ## Pending Future ADRs
 

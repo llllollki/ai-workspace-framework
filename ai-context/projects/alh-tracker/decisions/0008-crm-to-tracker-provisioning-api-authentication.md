@@ -338,7 +338,7 @@ actions on the tracker:
 
 | Action | Allowed |
 |---|---|
-| Trigger owner account provisioning (create ProvisioningToken + User in `invited` state) | Yes |
+| Trigger owner account provisioning (create Facility in `pending_setup` state + ProvisioningToken + User in `invited` state — per ADR 0009) | Yes |
 | Trigger token resend (expire existing token, generate new one) | Yes |
 | Trigger invitation revocation (expire token, set User to `disabled`) | Yes |
 | Read any tracker entity | No |

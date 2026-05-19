@@ -1,7 +1,7 @@
 # 0009 — Tracker Facility Record Creation During CRM Provisioning
 
 **Date:** 2026-05-19
-**Status:** proposed
+**Status:** accepted
 **Supersedes:** The "TODO — Facility record creation at provisioning" in ADR 0007 Section
 — Open Implementation TODOs, and the facility association dependency note in ADR 0008
 Section — Request Contract.
@@ -488,3 +488,17 @@ This ADR does not define or change:
   created outside the CRM flow (self-signup, admin action, seed data) should default to
   `active` unless there is a reason to put them in `pending_setup`. This must be defined
   in the schema migration default.
+- **TODO — Retry payload conflict behavior:** Idempotency Scenario 2 (same
+  `X-CRM-Facility-Id`, new `X-Idempotency-Key`) specifies that the endpoint reuses the
+  existing Facility when found in `pending_setup` state. It does not specify what happens
+  if the retry body includes conflicting field values (e.g., different `facility_name` or
+  `facility_city`). Should the endpoint silently ignore the conflicting fields, log and
+  alert, or return a 409 conflict? This behavior must be specified before the provisioning
+  endpoint is implemented.
+- **TODO — Re-provision when invited User is disabled:** Idempotency Scenario 2 covers
+  the case where the Facility is in `pending_setup` and has an active ProvisioningToken
+  for the same email. It does not cover the case where the Facility is in `pending_setup`
+  but the associated User is in `disabled` state (i.e., the CRM revoked the invitation,
+  then attempts to re-provision the same facility). Whether re-provisioning a
+  previously-revoked facility is permitted, and what the endpoint returns if it is, must
+  be specified before the provisioning endpoint is implemented.

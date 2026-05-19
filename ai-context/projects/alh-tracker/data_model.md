@@ -36,11 +36,11 @@ The RCFE or small care home using alh-tracker.
 | capacity | Licensed capacity (CDSS-issued). This is a care-operations field. It is distinct from the CRM-managed "subscription resident limit" (the commercial subscriber limit configured by ALH Tracker staff) and the operational "active resident count" (count of currently active Resident records). All three may differ. The subscription resident limit lives in the CRM entity model, not in this table. NULL at provisioning time — entered by owner during post-activation facility setup. |
 | alh_partner | Boolean — whether this facility is an AssistedLivingHelp facility partner |
 | alh_partner_tier | Optional — reflects ALH listing tier (Starter, Growth, Concierge) or null |
-| provisioning_status | See FacilityProvisioningStatus enum below — tracks the facility's lifecycle from CRM provisioning through owner activation. (ADR 0009 — proposed) |
-| crm_facility_reference | Optional TEXT — opaque CRM facility identifier (`X-CRM-Facility-Id`) stored for correlation and idempotency. UNIQUE constraint. NULL for facilities created outside the CRM provisioning flow. Never returned to CRM as the tracker `Facility.id`. (ADR 0009 — proposed) |
+| provisioning_status | See FacilityProvisioningStatus enum below — tracks the facility's lifecycle from CRM provisioning through owner activation. (ADR 0009) |
+| crm_facility_reference | Optional TEXT — opaque CRM facility identifier (`X-CRM-Facility-Id`) stored for correlation and idempotency. UNIQUE constraint. NULL for facilities created outside the CRM provisioning flow. Never returned to CRM as the tracker `Facility.id`. (ADR 0009) |
 | created_at | Timestamp |
 
-#### FacilityProvisioningStatus Enum (proposed — ADR 0009)
+#### FacilityProvisioningStatus Enum (ADR 0009)
 
 Tracks the Facility's operational state through the CRM provisioning lifecycle.
 
@@ -51,7 +51,7 @@ Tracks the Facility's operational state through the CRM provisioning lifecycle.
 | `suspended` | Commercial suspension (billing lapse, admin action). Historical records retained per retention policy. Set by internal admin/billing action — not by the provisioning endpoint. |
 | `closed` | Account permanently closed. Terminal state. |
 
-**Resident count concepts (ADR 0009 — proposed):**
+**Resident count concepts (ADR 0009):**
 
 Four distinct resident count concepts exist and must not be conflated:
 

@@ -9,6 +9,18 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0022 — accept ADR 0009)
+
+- ADR 0009 (tracker Facility record creation during CRM provisioning) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md`, `data_model.md`, `features.md`, `user_flows.md`, and `ai_memory.md` proposed references updated in both mirrors. Task doc `0022-accept-adr-0009.md` created in done. No application code changed.
+
+## 2026-05-19 (task 0021 — ADR 0009 architecture review)
+
+- Architecture review of ADR 0009 (tracker Facility record creation during CRM provisioning — status: proposed). Recommendation: **Accept with minor edits** (edits applied in this task).
+- No conflicts with ADR 0005/0006/0007/0008 or compliance_notes.md found. All seven review focus areas passed. Documentation consistency confirmed across all 10 updated files.
+- Two behavioral edge cases were undocumented — added as TODOs in ADR 0009 Open Implementation TODOs: (1) retry payload conflict behavior (same `X-CRM-Facility-Id`, different `facility_name`) must be specified before implementation; (2) re-provision when `User.account_status = disabled` (revoked invitation) must be specified before implementation.
+- ADR 0008 Authorization Scope table row 1 updated: description now includes Facility creation per ADR 0009.
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed. ADR 0009 status remains `proposed` pending explicit user acceptance.
+
 ## 2026-05-19 (task 0020 — ADR 0009: tracker Facility creation during CRM provisioning)
 
 - Architecture/design documentation task. Created ADR 0009 (tracker Facility record creation during CRM provisioning — status: proposed) resolving the facility creation timing blocker deferred in ADR 0007 Step 3a and ADR 0008 request contract.
