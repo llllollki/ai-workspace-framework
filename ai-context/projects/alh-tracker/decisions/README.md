@@ -61,7 +61,8 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | 0003 | Business model and ALH partner pricing | 2026-05-09 | Accepted |
 | 0004 | Family access architecture | 2026-05-09 | Accepted |
 | 0005 | CRM and mobile distribution strategy (three-surface model) | 2026-05-16 | Accepted |
-| 0006 | CRM owner provisioning and family account approval | 2026-05-18 | Proposed |
+| 0006 | CRM owner provisioning and family account approval | 2026-05-18 | Accepted |
+| 0007 | CRM owner provisioning token mechanism | 2026-05-18 | Proposed |
 
 ## Pending Future ADRs
 

@@ -9,6 +9,16 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-18 (task 0014 — CRM owner provisioning token mechanism, ADR 0007)
+
+- Architecture/design documentation task. Created ADR 0007 (CRM owner provisioning token mechanism — status: proposed) selecting Option B (custom `provisioning_tokens` table) over Supabase Auth invite API. Rationale: Supabase invite API requires CRM to hold tracker service-role key, violating ADR 0005 CRM/tracker boundary; custom table gives full lifecycle auditability and defers Supabase Auth user creation to activation time.
+- ADR 0007 specifies: 32-byte hex opaque token, SHA-256 hashed storage, 72h expiry, one-time use, constant-time lookup, four-phase sequence (provision → activate → resend → revoke), `ProvisioningEvent` append-only audit table, CRM provisioning fields (`provisioning_reference`, `provisioning_status`), deep-link routing behavior, full token security model, and 10 open implementation TODOs.
+- Updated `decisions/README.md`: added ADR 0007 row; corrected ADR 0006 status from Proposed to Accepted.
+- Updated `data_model.md`: promoted `ProvisioningToken` from "TODO — Conceptual" to fully specified (ADR 0007); updated account_status TODO to note mechanism resolved; added `ProvisioningEvent` new entity (append-only audit); added CRM provisioning fields note to CRM entity model section.
+- Updated `ai_memory.md`: narrowed CRM provisioning mechanism open question (resolved to ADR 0007 Option B); retained iOS/Android deep-link TODO; added CRM-to-tracker API authentication as new open question.
+- Updated `user_flows.md`: updated Flow 0 step 4 TODO to reference ADR 0007 mechanism decision.
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No app code changed. No Supabase schema changes. No deployment.
+
 ## 2026-05-18 (ADR 0006 accepted — CRM owner provisioning and family account approval)
 
 - ADR 0006 status updated from `proposed` to `accepted` in both mirrors. Removed `(proposed)` qualifiers from ADR 0006 references in `compliance_notes.md` in both mirrors. Created task doc `0013-accept-adr-0006.md` and moved to done.
@@ -43,9 +53,8 @@ For durable decisions, use `decisions\`.
 - Ran smoke test on dev server (`npm run dev`): all required routes returned 200 OK — `/crm`, `/crm/facilities`, `/crm/facilities/crm-fac-001`, `/`, `/family`.
 - Code review confirmed: CRM pages render without blank screens; search/filter (CrmFacilities) functional; add note, add follow-up, mark follow-up done, add communication log entry (CrmFacilityDetail) all functional; no resident care types imported in any CRM file.
 - Checked off smoke test item in task 0010 acceptance criteria. Moved `tasks/active/alh-tracker/0010-internal-crm-mvp.md` to `tasks/done/alh-tracker/0010-internal-crm-mvp.md` in both mirrors.
-- Data boundary confirmed: `src/types/crm.ts`, `src/data/crm-seed.ts`, `src/components/CrmLayout.tsx`, and all `src/pages/crm/*.tsx` files import no resident care types from `src/types/index.ts`. CRM uses fake/demo data only.
+- Data boundary confirmed: CRM files import no resident care types. CRM uses fake/demo data only.
 - No Supabase schema changes. No deployment changes. Build passed clean (`tsc && vite build`).
-- Mirror drift fixed: added this execution_log entry to ai-workspace-framework (the 2026-05-17 task 0010 implementation entry was missing from this mirror).
 
 ---
 
@@ -65,7 +74,7 @@ For durable decisions, use `decisions\`.
 - CRM data boundary enforced: CRM files import no resident care types (CareLogEntry, Resident, WellnessObservation, FollowUp) from `src/types/index.ts`.
 - No Supabase schema changes. No real payment processing. No resident care data in CRM views.
 - Build passed clean (`tsc && vite build`).
-- Task doc created: `tasks/active/alh-tracker/0010-internal-crm-mvp.md`.
+- Task doc created: `tasks/active/alh-tracker/0010-internal-crm-mvp.md` (mirrored to ai-workspace-framework).
 
 ---
 

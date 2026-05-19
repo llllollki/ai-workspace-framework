@@ -78,33 +78,59 @@ Tracks the activation lifecycle for owner accounts provisioned via CRM.
 | `active` | Owner completed activation; account is fully active |
 | `disabled` | Account disabled (account closure or ALH Tracker staff action) |
 
-**TODO:** Whether `account_status` belongs on the `User` table or is tracked via Supabase Auth's email confirmation state depends on the provisioning mechanism chosen (Supabase Auth invite API vs. custom provisioning_tokens table vs. manual admin step). See ADR 0006 and `ai_memory.md`.
+**Provisioning mechanism (ADR 0007 — proposed):** The custom `provisioning_tokens` table approach (Option B) has been selected as the provisioning mechanism. `account_status` is tracked in the tracker `User` table, not via Supabase Auth's email confirmation state. The Supabase Auth user (`auth.users` entry) is created at activation time only — not at provisioning time. See ADR 0007.
 
 **TODO:** Whether this lifecycle applies to all User records or only to owner accounts provisioned via CRM is unresolved. Caregiver and admin accounts created directly within the app may bypass this lifecycle and be created as immediately active.
 
 ---
 
-### ProvisioningToken (TODO — Conceptual, Not Yet Implemented)
+### ProvisioningToken (specified — pending implementation; ADR 0007)
 
-An activation token embedded in the deep link email sent to the facility owner after CRM provisioning. This entity is one possible implementation model — the actual storage mechanism depends on the provisioning approach chosen (see ADR 0006 and `ai_memory.md`).
+An activation token stored as part of the tracker-side provisioning flow. The custom `provisioning_tokens` table approach (Option B) was selected in ADR 0007 over the Supabase Auth invite API. The Supabase Auth user is not created at provisioning time — it is deferred to activation.
 
-**Token security requirements (per ADR 0006):**
-- Opaque: randomly generated; no embedded data
-- Expiring: a defined TTL after which the token is invalid
-- One-time-use: consumed on first successful activation; cannot be reused
-- The URL must not contain facility IDs, resident IDs, care data, family IDs, or any identifiable information
+**Token security requirements (ADR 0006 + ADR 0007):**
+- Opaque: 32 cryptographically random bytes encoded as lowercase hex (64 chars). Never base64url.
+- Expiring: 72 hours from creation (`expires_at = created_at + 72h`). Can be set to `NOW()` for immediate invalidation (resend or revocation).
+- One-time-use: `used_at` set atomically at successful activation; lookup always includes `AND used_at IS NULL`.
+- Hashed storage: SHA-256 hash of the raw token stored in `token_hash`. The raw token is never stored server-side.
+- URL: `https://[tracker-domain]/activate?t=[raw_token]`. No facility IDs, user IDs, resident IDs, or identifiable data in URL.
+- Lookup: constant-time comparison to prevent timing attacks.
 
-| Field | Notes |
-|---|---|
-| id | Primary key |
-| user_id | Foreign key → User (the invited owner account) |
-| facility_id | Foreign key → Facility (the associated facility) |
-| token_hash | Cryptographic hash of the token — the raw token is never stored |
-| expires_at | Timestamp — token is invalid after this time |
-| used_at | Timestamp — set when the owner completes activation (null until used) |
-| created_at | Timestamp |
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID | Primary key |
+| user_id | UUID FK | → User (the invited owner account) |
+| facility_id | UUID FK | → Facility |
+| token_hash | TEXT | SHA-256 hex digest of the raw token. Raw token never stored. |
+| expires_at | TIMESTAMPTZ | Token invalid after this time. Set to NOW() + 72h at creation; set to NOW() to expire immediately (resend/revocation). |
+| used_at | TIMESTAMPTZ | NULL until activation completes. Set atomically at successful activation. |
+| created_at | TIMESTAMPTZ | Record creation time. |
 
-**TODO:** Token expiry period, resend behavior (can the owner request a new activation link?), and revocation (can CRM staff cancel an unactivated invite?) are unresolved.
+**Access control:** This table must not be accessible via client-side Supabase queries. All reads and writes must go through tracker backend server-side functions with service-role access. RLS must deny all client-originated access.
+
+**Resend behavior:** Previous active token is expired (`expires_at = NOW()`); a new token is generated. Rate limit: maximum 3 resends per 24 hours per owner account (TODO: exact implementation pending).
+
+**Revocation behavior:** CRM staff action. Active token expired (`expires_at = NOW()`); `User.account_status` set to `disabled`.
+
+---
+
+### ProvisioningEvent (new — append-only audit table; ADR 0007)
+
+Append-only record of all provisioning lifecycle events for CRM-initiated owner account provisioning. Separate from `AuditTrail` because provisioning is an account lifecycle concern, not a care-operations entity. Follows the same append-only constraint as `AuditTrail`: no UPDATE or DELETE permitted at the database level.
+
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID | Primary key |
+| event_type | ENUM | `provisioned`, `token_resent`, `token_revoked`, `token_expired_passive`, `activated`, `activation_failed` |
+| user_id | UUID FK | → User (the owner being provisioned) |
+| facility_id | UUID FK | → Facility |
+| performed_by | TEXT | CRM staff identifier (CRM-triggered events) or tracker user_id (owner activation). Opaque reference. |
+| performed_by_type | ENUM | `crm_staff` or `owner` |
+| token_id | UUID FK nullable | → ProvisioningToken.id. Null for passive events (e.g., `token_expired_passive`). |
+| metadata | JSONB nullable | Additional context (e.g., failure reason for `activation_failed`). Must not contain PHI, care data, raw tokens, or facility care identifiers. |
+| created_at | TIMESTAMPTZ | Event timestamp. Append-only — no updates or deletes permitted. |
+
+**Access control:** Same database-level enforcement as `AuditTrail`: revoke UPDATE and DELETE on this table from the application user; use a write-only role for inserts.
 
 ---
 
@@ -517,7 +543,7 @@ The family member's account in the Family Member App. An identity record only �
 
 ### FamilyAccessConsent (stub)
 
-An explicit operator-granted access record allowing a specific FamilyUser to view specific categories of resident care data. This record is the source of truth for whether a family member has active access. Not yet implemented — blocked on counsel review of the consent model (task 0006).
+An explicit operator-granted access record allowing a specific family contact to view specific categories of resident care data. This record is the source of truth for whether a family contact has active access. Not yet implemented — blocked on counsel review of the consent model (task 0006).
 
 | Field | Notes |
 |---|---|
@@ -588,6 +614,15 @@ The primary CRM entity. Commercial facility customer record — not the same as 
 **TODO — Subscription persistence:** Subscription start/renewal/trial dates are stored on `CrmFacility` but are not editable through the CRM UI. A subscription management task would be needed to make these editable.
 
 **TODO — CRM database schema:** When CRM persistence is implemented, the entity model above should inform the schema. The schema must be in a separate database or schema namespace from the tracker app to enforce the data boundary (ADR 0005). CRM users must not be granted any access to tracker app tables.
+
+**CRM provisioning fields (ADR 0007 — proposed):** The following two fields should be added to `CrmFacility` when CRM persistence is implemented. These are the only provisioning-related fields stored in the CRM.
+
+| Field | Notes |
+|---|---|
+| `provisioning_reference` | Opaque correlation ID returned by the tracker provisioning API after a successful provisioning call. Not a token, not a tracker user ID, not a care-data reference. For operational correlation only. |
+| `provisioning_status` | Enum: `not_started`, `invited`, `activation_pending`, `active`, `revoked`. Managed by CRM; updated based on tracker provisioning API responses. |
+
+**Hard constraint:** CRM must not store the activation token, token hash, tracker User ID, tracker Facility ID, resident IDs, or any resident care data in these or any other fields.
 
 ---
 

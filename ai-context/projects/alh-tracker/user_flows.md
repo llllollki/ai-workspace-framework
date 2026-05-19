@@ -19,7 +19,8 @@ This file describes the primary user flows for alh-tracker at a task level. Scre
 3. Internal staff records the subscription and payment status in the CRM.
    - TODO: Payment provider and what data is stored in CRM vs. at the provider are unresolved.
 4. Internal staff provisions a Facility Tracker App account for the facility owner (as owner/admin role). This creates a pending/invited account in the tracker app. The CRM does not read from or write directly to tracker app care data tables — provisioning is a forward write only.
-   - TODO: The exact mechanism (Supabase Auth invite API, custom provisioning token table, or tracker app admin interface) is unresolved. See ADR 0006 Section 1.
+   - **Mechanism (ADR 0007 — proposed):** Custom `provisioning_tokens` table. CRM calls the tracker provisioning API endpoint; tracker backend creates the `User` row (invited state), generates an opaque token, stores its SHA-256 hash in `ProvisioningToken`, and sends the activation email. The Supabase Auth user is created at activation time only — not at provisioning time. See ADR 0007 for full specification.
+   - TODO: CRM-to-tracker API authentication method (API key vs. service JWT) is unresolved. See ADR 0007 Open Implementation TODOs.
 5. The system sends a confirmation email to the facility owner's registered email address. The email states that an account has been created and contains an activation deep link.
    - The deep link contains an opaque, expiring, one-time-use token. It does not contain facility IDs, resident IDs, or care data.
    - TODO: Token expiry period, resend behavior, and revocation rules are unresolved.
