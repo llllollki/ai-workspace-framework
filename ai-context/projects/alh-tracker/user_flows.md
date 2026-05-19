@@ -18,9 +18,10 @@ This file describes the primary user flows for alh-tracker at a task level. Scre
    - TODO: "Allowable resident count" may mean licensed capacity, subscription-tier limit, or active resident count — or all three as separate fields. Unresolved.
 3. Internal staff records the subscription and payment status in the CRM.
    - TODO: Payment provider and what data is stored in CRM vs. at the provider are unresolved.
-4. Internal staff provisions a Facility Tracker App account for the facility owner (as owner/admin role). This creates a pending/invited account in the tracker app. The CRM does not read from or write directly to tracker app care data tables — provisioning is a forward write only.
-   - **Mechanism (ADR 0007 — proposed):** Custom `provisioning_tokens` table. CRM calls the tracker provisioning API endpoint; tracker backend creates the `User` row (invited state), generates an opaque token, stores its SHA-256 hash in `ProvisioningToken`, and sends the activation email. The Supabase Auth user is created at activation time only — not at provisioning time. See ADR 0007 for full specification.
-   - TODO: CRM-to-tracker API authentication method (API key vs. service JWT) is unresolved. See ADR 0007 Open Implementation TODOs.
+4. Internal staff provisions a Facility Tracker App account for the facility owner (as owner/admin role). This creates a pending/invited account and a pending tracker Facility record. The CRM does not read from or write directly to tracker app care data tables — provisioning is a forward write only.
+   - **Mechanism (ADR 0007 — accepted):** Custom `provisioning_tokens` table. CRM calls the tracker provisioning API endpoint; tracker backend atomically creates the tracker `Facility` row (`pending_setup` state), the `User` row (`invited` state), and a `ProvisioningToken`. Sends the activation email. Supabase Auth user is created at activation time only. See ADR 0007.
+   - **Facility creation (ADR 0009 — proposed):** The provisioning API call creates the tracker `Facility` record. CRM sends: `facility_name`, `facility_city`, `facility_state`, `license_number` (optional). The tracker Facility is keyed by `crm_facility_reference` (`X-CRM-Facility-Id` header) for idempotency. `Facility.capacity` (licensed CDSS capacity), subscription resident limit, and allocated resident count are NOT set at provisioning time — owner completes these during post-activation setup. CRM never receives tracker `Facility.id`. See ADR 0009.
+   - **Authentication (ADR 0008 — accepted):** Rotating static API key (MVP). CRM stores raw key server-side; tracker stores SHA-256 hash. See ADR 0008.
 5. The system sends a confirmation email to the facility owner's registered email address. The email states that an account has been created and contains an activation deep link.
    - The deep link contains an opaque, expiring, one-time-use token. It does not contain facility IDs, resident IDs, or care data.
    - Token expiry: 72 hours. Resend: previous token is expired immediately and a new one generated. Revocation: CRM staff action — active token expired and owner account disabled. See ADR 0007 for full token lifecycle specification.
@@ -42,7 +43,7 @@ This file describes the primary user flows for alh-tracker at a task level. Scre
 7. Owner completes account activation: creates a password and confirms their profile information (full name, phone, facility relationship/role, mailing or business address; occupation/title is optional).
    - TODO: Whether identity verification, license credential, or signed agreement reference is required before full access is granted is unresolved.
 
-8. After successful login, the tracker app presents a blank tracker profile for that facility — no residents or routines pre-loaded.
+8. After successful login, the tracker app presents a facility setup screen for that facility — the Facility record transitions from `pending_setup` to `active` on activation. No residents or routines are pre-loaded. The owner must complete facility setup (address, ZIP, licensed capacity) in the post-activation setup flow (Steps 10–13 below).
 9. The owner's tracker app account does not grant CRM access (per ADR 0005 and ADR 0006 Section 3).
 
 ### Facility setup steps (tracker app, phone or tablet — post-login)

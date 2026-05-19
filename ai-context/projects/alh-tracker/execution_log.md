@@ -9,6 +9,21 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0020 — ADR 0009: tracker Facility creation during CRM provisioning)
+
+- Architecture/design documentation task. Created ADR 0009 (tracker Facility record creation during CRM provisioning — status: proposed) resolving the facility creation timing blocker deferred in ADR 0007 Step 3a and ADR 0008 request contract.
+- Decision: The tracker provisioning API call creates the tracker `Facility` record in `pending_setup` state atomically with the `User` row and `ProvisioningToken`. Allowed CRM-to-tracker facility fields: `facility_name`, `facility_city`, `facility_state`, `license_number` (optional). `Facility.capacity`, subscription resident limit, and allocated resident count are NOT forwarded at provisioning time. Idempotency keyed on `Facility.crm_facility_reference` UNIQUE constraint (= `X-CRM-Facility-Id`). Facility transitions `pending_setup → active` on owner activation.
+- ADR 0009 documents: 3 options evaluated (pre-exist, created by provisioning call, created at activation); full facility creation/provisioning sub-sequence; allowed and excluded CRM-to-tracker fields; Facility status lifecycle (pending_setup → active → suspended → closed); idempotency and duplicate prevention; four distinct resident count concepts defined and separated; audit/event requirements (no new ProvisioningEvent types added); 9 open implementation TODOs.
+- Updated `decisions/README.md`: added ADR 0009 row.
+- Updated `decisions/0007-crm-owner-provisioning-token-mechanism.md`: resolved Facility creation TODO in Step 3a and Open Implementation TODOs with ADR 0009 reference.
+- Updated `decisions/0008-crm-to-tracker-provisioning-api-authentication.md`: replaced facility association dependency note with resolved facility field table (facility_name, facility_city, facility_state, license_number).
+- Updated `data_model.md`: added `provisioning_status` and `crm_facility_reference` fields to Facility entity; added FacilityProvisioningStatus enum; added four resident count concepts table.
+- Updated `features.md`: resolved facility creation TODO in CRM Owner account provisioning section; added ADR 0009 reference.
+- Updated `user_flows.md`: resolved facility creation TODO in Flow 0 Step 4; updated post-activation Step 8 to reflect pending_setup → active transition.
+- Updated `ai_memory.md`: resolved facility creation timing blocker in the CRM open questions section; added ADR 0009 entry.
+- Updated `compliance_notes.md`: extended CRM data boundary row with facility fields boundary and resident count concept distinctions.
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed. No Supabase schema changes.
+
 ## 2026-05-19 (task 0019 — accept ADR 0008)
 
 - ADR 0008 (CRM-to-tracker provisioning API authentication) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md`, `ai_memory.md`, and `data_model.md` proposed references updated in both mirrors. Task doc `0019-accept-adr-0008.md` created in done. No application code changed.

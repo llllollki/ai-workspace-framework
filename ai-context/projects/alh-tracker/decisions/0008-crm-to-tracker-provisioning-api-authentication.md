@@ -402,15 +402,21 @@ Phase 1 step 3b). The CRM cannot provision a non-owner account via this API.
 - `allocated_resident_count`: A CRM-managed commercial subscription concept (ADR 0005).
   The tracker provisioning endpoint has no function for this value.
 
-**Facility association (dependency on ADR 0007 TODO):** This request body does not include
-a tracker Facility ID. How the provisioning endpoint associates the new `User` record with
-the correct tracker `Facility` depends on the resolution of ADR 0007's open TODO: "whether
-the tracker Facility record is created at provisioning time or must pre-exist." If the
-Facility must pre-exist, a CRM-to-tracker facility mapping mechanism outside this request
-contract is required. If the Facility is created at provisioning time, the request body
-would need facility fields (e.g., facility name) that are not currently specified here.
-This is outside ADR 0008's scope but must be resolved before the provisioning endpoint is
-implemented.
+**Facility association (RESOLVED — ADR 0009, 2026-05-19):** The tracker Facility record
+is created by the provisioning API call. For `action = "provision"`, the request body
+must include the following additional facility fields (defined and governed by ADR 0009):
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `facility_name` | string | Required | Facility's commercial name from CRM. Max 200 chars. |
+| `facility_city` | string | Required | City. CA only at MVP. Max 100 chars. |
+| `facility_state` | string | Required | State abbreviation (e.g., `"CA"`). |
+| `license_number` | string | Optional | RCFE license placeholder from CRM. May be null/empty. Max 50 chars. |
+
+`X-CRM-Facility-Id` (already required per the headers table above) is used as the
+`crm_facility_reference` for idempotency and deduplication — it must not be duplicated in
+the body. The tracker never returns its internal `Facility.id` to the CRM. See ADR 0009
+for the full facility creation sequence, status lifecycle, and excluded fields.
 
 **What the request body must not contain:**
 - Tracker User IDs
