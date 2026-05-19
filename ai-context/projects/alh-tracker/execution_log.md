@@ -9,6 +9,18 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0023 — ADR 0010: pending setup facility RLS policy)
+
+- Architecture/design documentation task. Created ADR 0010 (pending setup facility RLS policy — status: proposed) resolving the RLS blocker identified in ADR 0009 Open Implementation TODOs.
+- Decision: quarantine model (Option A). All care-ops tables require both `User.account_status = 'active'` AND `Facility.provisioning_status = 'active'` for any client access. `invited`/`password_pending` users have no Supabase session (ADR 0007 — auth user created at activation time); RLS is a defensive layer. `ProvisioningToken` and `ProvisioningEvent` have zero client-accessible policies (default deny). `pending_setup → active` transitions atomically (ADR 0009); no `setup_incomplete` intermediate state. No residents may be created before facility is active. Limited setup mode (Option B) excluded as infeasible under ADR 0007 activation model. `suspended` read-only policy deferred to billing/suspension feature task.
+- ADR 0010 documents: facility and user account state access matrices; full care-ops table list; setup-safe table access (`users` self-read, `facilities` setup fields); activation transaction expectations and atomicity requirement; suspended/closed facility notes; family access implications (5 constraints); audit/provisioning event implications; `is_active_user_on_active_facility()` and `current_facility_id()` helper function specs; new table policies summary; 10 open implementation TODOs.
+- Updated `decisions/README.md`: added ADR 0010 row.
+- Updated `decisions/0009-tracker-facility-creation-during-crm-provisioning.md`: annotated RLS TODO as addressed by ADR 0010; updated `provisioning_status` lifecycle RLS note.
+- Updated `data_model.md`: added provisioning-state RLS note to security section; updated ProvisioningToken and ProvisioningEvent access control paragraphs with ADR 0010 references.
+- Updated `compliance_notes.md`: added provisioning-state RLS row to Data Handling Posture table.
+- Updated `ai_memory.md`: narrowed pending_setup RLS blocker entry to reflect ADR 0010 (proposed) addressing it.
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed. No Supabase schema changes.
+
 ## 2026-05-19 (task 0022 — accept ADR 0009)
 
 - ADR 0009 (tracker Facility record creation during CRM provisioning) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md`, `data_model.md`, `features.md`, `user_flows.md`, and `ai_memory.md` proposed references updated in both mirrors. Task doc `0022-accept-adr-0009.md` created in done. No application code changed.

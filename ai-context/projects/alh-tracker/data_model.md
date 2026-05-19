@@ -8,6 +8,8 @@ All entities that store care event data must support an audit trail: who created
 
 **Tenant isolation:** Every entity carries a `facility_id` foreign key. The production API must scope all queries by `facility_id` derived from the authenticated session — never from a client-supplied parameter. One facility's records must be unreachable by any other facility's authenticated users.
 
+**Provisioning-state RLS (ADR 0010 — proposed):** All care-ops tables require BOTH `User.account_status = 'active'` AND `Facility.provisioning_status = 'active'` for any client-side access. This is enforced via a Supabase helper function `is_active_user_on_active_facility()` (combined JOIN check, STABLE, SECURITY DEFINER) added to each care-ops table policy. `pending_setup`, `suspended`, and `closed` facilities have no client care-ops access (pending exact `suspended` policy design). `ProvisioningToken` and `ProvisioningEvent` have zero client-accessible policies (default deny). `invited` and `password_pending` users have no Supabase session — RLS is a defensive layer. See ADR 0010 for the full access matrix and helper function specs.
+
 **Sensitive data categories:** AllergiesTriggers (life-safety), CareLogEntry (health observations), WellnessObservation (health observations), ResidentContact / hipaa_release_status (PII + privacy-sensitive), FollowUp / ObservedCareTask (potential incident and medication-adjacent notes). These categories may constitute Protected Health Information (PHI) for HIPAA-covered facilities — see `compliance_notes.md` for HIPAA-adjacent risk assessment.
 
 **Encryption at rest:** The production database must have encryption at rest enabled. No application-level field encryption is required at MVP; database-level encryption is sufficient.
@@ -132,7 +134,7 @@ An activation token stored as part of the tracker-side provisioning flow. The cu
 | used_at | TIMESTAMPTZ | NULL until activation completes. Set atomically at successful activation. |
 | created_at | TIMESTAMPTZ | Record creation time. |
 
-**Access control:** This table must not be accessible via client-side Supabase queries. All reads and writes must go through tracker backend server-side functions with service-role access. RLS must deny all client-originated access.
+**Access control:** This table must not be accessible via client-side Supabase queries. All reads and writes must go through tracker backend server-side functions with service-role access. RLS must deny all client-originated access. RLS policy: enable RLS with no client-accessible policies (default deny for `authenticated` and `anon` roles). See ADR 0010.
 
 **Resend behavior:** Previous active token is expired (`expires_at = NOW()`); a new token is generated. Rate limit: maximum 3 resends per 24 hours per owner account (TODO: exact implementation pending).
 
@@ -156,7 +158,7 @@ Append-only record of all provisioning lifecycle events for CRM-initiated owner 
 | metadata | JSONB nullable | Additional context (e.g., failure reason for `activation_failed`). Must not contain PHI, care data, raw tokens, or facility care identifiers. |
 | created_at | TIMESTAMPTZ | Event timestamp. Append-only — no updates or deletes permitted. |
 
-**Access control:** Same database-level enforcement as `AuditTrail`: revoke UPDATE and DELETE on this table from the application user; use a write-only role for inserts.
+**Access control:** Same database-level enforcement as `AuditTrail`: revoke UPDATE and DELETE on this table from the application user; use a write-only role for inserts. RLS policy: enable RLS with no client-accessible policies during MVP (service-role only for all access). A narrow owner/admin SELECT policy may be added in a future phase. See ADR 0010.
 
 ---
 

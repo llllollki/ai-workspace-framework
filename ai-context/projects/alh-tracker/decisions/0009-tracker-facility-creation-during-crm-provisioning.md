@@ -319,7 +319,9 @@ the facility's operational state through the provisioning lifecycle.
 - RLS behavior for `pending_setup` facilities: the owner account (`account_status =
   invited` or `password_pending`) must not have read or write access to care-operations
   data for the facility. Only provisioning-scoped access is needed before activation.
-  **TODO: RLS policy for pending_setup state requires implementation-time design.**
+  **ADDRESSED by ADR 0010 (2026-05-19 — proposed): quarantine model. All care-ops tables
+  require `User.account_status = 'active'` AND `Facility.provisioning_status = 'active'`.
+  `invited`/`password_pending` users have no Supabase session (ADR 0007). See ADR 0010.**
 
 ---
 
@@ -450,10 +452,14 @@ This ADR does not define or change:
 
 ## Open Implementation TODOs
 
-- **TODO — RLS policy for pending_setup facilities:** The Row Level Security policy for
-  tracker Facility records in `pending_setup` state must be designed before the
-  provisioning endpoint is implemented. Owners in `invited` or `password_pending` state
-  must have no access to care-operations tables. Activation-scoped access only.
+- **ADDRESSED — RLS policy for pending_setup facilities (ADR 0010, 2026-05-19 — proposed):**
+  ADR 0010 defines the quarantine model: all care-ops tables require both
+  `User.account_status = 'active'` AND `Facility.provisioning_status = 'active'`.
+  `invited` and `password_pending` users have no Supabase session (auth user created at
+  activation time — ADR 0007), so RLS never applies to them in normal operation. RLS
+  policies are written defensively to enforce both conditions independently. `ProvisioningToken`
+  and `ProvisioningEvent` have zero client-accessible policies. See ADR 0010 for the
+  full access matrix, helper function specs, and open implementation TODOs.
 - **TODO — Orphaned Facility cleanup:** If a `pending_setup` Facility is never activated
   (owner never clicks the link; CRM revokes the invitation), the tracker Facility record
   remains in `pending_setup` indefinitely. A cleanup policy (e.g., mark as `abandoned`
