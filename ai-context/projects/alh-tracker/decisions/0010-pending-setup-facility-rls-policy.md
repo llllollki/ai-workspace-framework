@@ -1,7 +1,7 @@
 # 0010 — Pending Setup Facility RLS Policy
 
 **Date:** 2026-05-19
-**Status:** proposed
+**Status:** accepted
 **Supersedes:** The "TODO — RLS policy for pending_setup facilities" in ADR 0009
 Open Implementation TODOs
 **Superseded by:** n/a
@@ -221,9 +221,12 @@ Row is accessible when ALL of the following are true:
      [per compliance_notes.md role permissions table]
 ```
 
-The `is_active_user_on_active_facility()` helper encapsulates conditions 1 and 2
-and should be used in the USING clause of every care-ops policy to avoid repeating
-the subquery logic.
+The `is_active_user_on_active_facility()` helper encapsulates condition 2 — both
+the `account_status` and `provisioning_status` status checks — and must be used
+alongside condition 1 (`facility_id = current_facility_id()`) in the USING clause
+of every care-ops policy. All three conditions are required; omitting condition 1
+(`facility_id = current_facility_id()`) would break tenant isolation — an active
+user on one facility could access care-ops rows from another active facility.
 
 ### Care-ops tables this rule applies to
 
@@ -470,7 +473,10 @@ AS $$
 $$;
 ```
 
-**Usage:** Used in the USING clause for all care-ops table RLS policies.
+**Usage:** Used in the USING clause for all care-ops table RLS policies alongside
+`facility_id = current_facility_id()` and the applicable role check. Do not use
+`is_active_user_on_active_facility()` alone — it does not enforce row-level
+`facility_id` scoping and cannot substitute for the tenant isolation check.
 
 **SECURITY DEFINER note:** This function queries `users` and `facilities` as the
 function owner (with elevated read privileges) and returns only a boolean. This

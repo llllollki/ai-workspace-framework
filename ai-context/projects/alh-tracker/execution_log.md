@@ -9,6 +9,17 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0025 — accept ADR 0010)
+
+- ADR 0010 (pending setup facility RLS policy) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md`, `data_model.md`, `compliance_notes.md`, and `ai_memory.md` proposed references updated in both mirrors. Task doc `0025-accept-adr-0010.md` created in done. No application code changed.
+
+## 2026-05-19 (task 0024 — ADR 0010 architecture review)
+
+- Architecture review of ADR 0010 (pending setup facility RLS policy — status: proposed). Recommendation: **Accept with minor edits** (edits applied in this task).
+- No conflicts with ADR 0005/0006/0007/0008/0009 or compliance_notes.md found. All seven review focus areas passed. Documentation consistency confirmed (ADR 0009, data_model.md, compliance_notes.md, ai_memory.md, decisions/README.md all correct and consistent).
+- One documentation defect found and fixed: "encapsulates conditions 1 and 2" in the Care-Ops Table RLS Rule prose was misleading — the helper encapsulates condition 2 only; condition 1 (`facility_id = current_facility_id()`) must be a separate USING clause condition. Incorrect prose could cause an implementer to omit the tenant isolation check. Fixed in `decisions/0010-pending-setup-facility-rls-policy.md` and mirrored to `ai-workspace-framework`. Companion Usage note for `is_active_user_on_active_facility()` also updated to make the required companion condition explicit.
+- ADR 0010 status remains `proposed` pending explicit user acceptance. No application code changed.
+
 ## 2026-05-19 (task 0023 — ADR 0010: pending setup facility RLS policy)
 
 - Architecture/design documentation task. Created ADR 0010 (pending setup facility RLS policy — status: proposed) resolving the RLS blocker identified in ADR 0009 Open Implementation TODOs.
