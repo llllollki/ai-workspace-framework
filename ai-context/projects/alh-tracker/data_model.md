@@ -51,6 +51,7 @@ A person with access to alh-tracker for a given facility.
 | name | Display name |
 | email | Login email |
 | role | See Role enum below |
+| account_status | See AccountStatus enum below — tracks lifecycle for owner accounts provisioned via CRM (per ADR 0006, proposed). May not be needed as a separate field if Supabase Auth email confirmation state is used instead — see TODO below. |
 | is_active | Boolean |
 | created_at | Timestamp |
 | created_by | Foreign key → User (admin who created this account) |
@@ -65,6 +66,45 @@ A person with access to alh-tracker for a given facility.
 | `med_tech` | Can log observed care tasks; same event-log access as caregiver |
 
 Role granularity may be refined based on design partner feedback. See `ai_memory.md`.
+
+#### AccountStatus Enum (proposed — ADR 0006)
+
+Tracks the activation lifecycle for owner accounts provisioned via CRM.
+
+| Status | Notes |
+|---|---|
+| `invited` | Account created by CRM provisioning action; owner has not yet clicked the activation deep link |
+| `password_pending` | Owner clicked the deep link; activation flow in progress; password not yet set |
+| `active` | Owner completed activation; account is fully active |
+| `disabled` | Account disabled (account closure or ALH Tracker staff action) |
+
+**TODO:** Whether `account_status` belongs on the `User` table or is tracked via Supabase Auth's email confirmation state depends on the provisioning mechanism chosen (Supabase Auth invite API vs. custom provisioning_tokens table vs. manual admin step). See ADR 0006 and `ai_memory.md`.
+
+**TODO:** Whether this lifecycle applies to all User records or only to owner accounts provisioned via CRM is unresolved. Caregiver and admin accounts created directly within the app may bypass this lifecycle and be created as immediately active.
+
+---
+
+### ProvisioningToken (TODO — Conceptual, Not Yet Implemented)
+
+An activation token embedded in the deep link email sent to the facility owner after CRM provisioning. This entity is one possible implementation model — the actual storage mechanism depends on the provisioning approach chosen (see ADR 0006 and `ai_memory.md`).
+
+**Token security requirements (per ADR 0006):**
+- Opaque: randomly generated; no embedded data
+- Expiring: a defined TTL after which the token is invalid
+- One-time-use: consumed on first successful activation; cannot be reused
+- The URL must not contain facility IDs, resident IDs, care data, family IDs, or any identifiable information
+
+| Field | Notes |
+|---|---|
+| id | Primary key |
+| user_id | Foreign key → User (the invited owner account) |
+| facility_id | Foreign key → Facility (the associated facility) |
+| token_hash | Cryptographic hash of the token — the raw token is never stored |
+| expires_at | Timestamp — token is invalid after this time |
+| used_at | Timestamp — set when the owner completes activation (null until used) |
+| created_at | Timestamp |
+
+**TODO:** Token expiry period, resend behavior (can the owner request a new activation link?), and revocation (can CRM staff cancel an unactivated invite?) are unresolved.
 
 ---
 
@@ -440,18 +480,44 @@ The family portal remains deferred from MVP. The architectural decisions governi
 
 Having a ResidentContact record does not authorize family portal access. Authorization, if and when built, would be recorded in a FamilyAccessConsent record. The `hipaa_release_status` field on ResidentContact is an operational tracking field only — it records the status observed and noted by facility staff. It is not legal validation of a release and is not a substitute for a family portal consent grant.
 
-**Note on contact identity in the grant:** The `FamilyAccessConsent` stub below uses `contact_id → ResidentContact` as the link between a grant and a specific contact. The relationship between "family user eligible for owner/admin selection in the grant UI" and a `ResidentContact` record is pending Phase 2 design — the grant may be initiated from an existing ResidentContact record or through a separate family user account association model. In either case, family users are not records in the facility-facing staff `User` table (per ADR 0004 and ADR 0005). See `user_flows.md` Flow 12 for the conceptual grant flow description.
+**FamilyUser entity (ADR 0006 — proposed):** ADR 0006 defines `FamilyUser` as the family member's identity record in the Family Member App. A FamilyUser account may be created before the owner/admin approves access. The `FamilyAccessConsent` grant links to a `FamilyUser` record (not to a `ResidentContact` directly). A FamilyUser may or may not have a corresponding `ResidentContact` entry — these are separate records with separate purposes. See `FamilyUser` entity below and `user_flows.md` Flow 12.
+
+### FamilyUser (identity record — proposed, ADR 0006)
+
+The family member's account in the Family Member App. An identity record only — existence does not grant any resident data access.
+
+**Critical constraints (ADR 0004 Section 7, ADR 0006 Section 7):**
+- `FamilyUser` is NOT a record in the facility-facing `User` table. This is a hard constraint — adding a FamilyUser to the `User` table violates ADR 0004 Section 7.
+- `FamilyUser` is NOT a `FamilyAccessConsent` record. Account existence does not create any authorization to view resident data.
+- A `FamilyUser` with no active `FamilyAccessConsent` sees no resident wellbeing data, no care log summaries, no wellness observations, and receives no resident-related notifications.
+- `FamilyUser` authenticates through a mechanism separate from the facility-facing `User` authentication.
+
+| Field | Notes |
+|---|---|
+| id | Primary key |
+| email | Required — family member's login email |
+| full_name | Required |
+| phone | Required |
+| relationship_to_resident | Stated relationship (e.g., "Daughter"). Not legally verified. |
+| address | Required — TODO: whether required for all accounts or only for identity/relationship context is unresolved |
+| account_status | `pending` (account created; no active FamilyAccessConsent yet) / `active` (has at least one active grant) |
+| preferred_notification_method | TODO: notification model is unresolved |
+| created_at | Timestamp |
+
+**TODO:** FamilyUser authentication model (separate Supabase Auth project/tenant, separate auth table, or other mechanism) is unresolved.
+
+**TODO:** Whether FamilyUsers must be invited by owner/admin before they can create an account, or may self-register independently, is unresolved (ADR 0006).
 
 ### FamilyAccessConsent (stub)
 
-An explicit operator-granted access record allowing a specific family contact to view specific categories of resident care data. This record is the source of truth for whether a family contact has active access. Not yet implemented — blocked on counsel review of the consent model (task 0006).
+An explicit operator-granted access record allowing a specific FamilyUser to view specific categories of resident care data. This record is the source of truth for whether a family member has active access. Not yet implemented — blocked on counsel review of the consent model (task 0006).
 
 | Field | Notes |
 |---|---|
 | id | Primary key |
 | facility_id | Foreign key → Facility |
 | resident_id | Foreign key → Resident |
-| contact_id | Foreign key → ResidentContact (canonical entity — see Entities section) |
+| family_user_id | Foreign key → FamilyUser (the family member being granted access — see FamilyUser entity above). A FamilyUser may or may not also be listed as a ResidentContact; those are separate records. (Per ADR 0006 — proposed.) |
 | granted_by | Foreign key → User (must be `owner` or `admin` role — caregivers cannot grant family access) |
 | granted_at | Timestamp |
 | category_scope | JSON array — which log categories are shared (e.g., `["meal", "activity"]`). `incident` and `observed_care_task` categories require explicit opt-in; not included by default. |

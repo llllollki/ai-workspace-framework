@@ -61,6 +61,7 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | 0003 | Business model and ALH partner pricing | 2026-05-09 | Accepted |
 | 0004 | Family access architecture | 2026-05-09 | Accepted |
 | 0005 | CRM and mobile distribution strategy (three-surface model) | 2026-05-16 | Accepted |
+| 0006 | CRM owner provisioning and family account approval | 2026-05-18 | Proposed |
 
 ## Pending Future ADRs
 
@@ -68,5 +69,5 @@ Once the relevant Phase 0 tasks are resolved, the following decisions are likely
 
 - Shift model (fixed windows vs. operator-configured) — from task 0003
 - Caregiver authentication model — from task 0003
-- App delivery model (PWA vs. native vs. web + redirect) — from task 0009/CRM open questions
+- App delivery model (PWA vs. native vs. web + redirect) — from task 0009/CRM open questions. Note: ADR 0006 describes App Store / Google Play routing as the proposed/assumed provisioning flow for the owner activation deep link, but the app delivery model decision (native vs. PWA) has not been formalized. This ADR candidate remains open and must be resolved before Phase 2 implementation.
 - Data retention and archive policy — from task 0009

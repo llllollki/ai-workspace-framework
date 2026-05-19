@@ -49,9 +49,23 @@ Whether internal support staff may ever access resident-level care data for supp
 
 ### 4. CRM-to-tracker provisioning (principle)
 
-The onboarding flow begins in the CRM: internal staff creates the facility/customer record and configures the subscription. The facility owner then receives install instructions and creates their account in the tracker app. The tracker app Facility record carries an opaque reference to the CRM customer record for operational correlation only — this reference is not a data-sharing path. The CRM does not read from the tracker app database.
+The onboarding flow begins in the CRM: internal staff creates the facility/customer record, configures the allowable resident count, and provisions a Facility Tracker App account for the facility owner (as owner/admin role). This provisioning action creates a pending/invited account in the tracker app. The tracker app Facility record carries an opaque reference to the CRM customer record for operational correlation only — this reference is not a data-sharing path. The CRM does not read from the tracker app database.
 
-**TODO:** Implementation details of the provisioning handshake (invite token format, delivery mechanism, first-login confirmation) are pending CRM design. No schema decisions are made in this ADR.
+**Provisioning flow (conceptual — see ADR 0006 for full decision):**
+1. CRM staff creates the facility customer record and configures the subscription.
+2. CRM staff provisions a Facility Tracker App account for the facility owner (pending/invited state).
+3. The system sends a confirmation email to the facility owner containing an opaque, expiring, one-time-use deep link for account activation.
+4. The deep link does not contain facility IDs, resident IDs, or any care data.
+5. When clicked, the deep link routes based on app installation state:
+   - If the app is not installed: routes to the App Store or Google Play (see distribution assumption note below).
+   - If the app is installed and no password has been set: opens to the account-activation / create-password screen.
+   - If the app is installed and the account is already active: opens to the login page.
+6. After successful login, the owner has full Facility Tracker App capability for that facility.
+7. The owner's tracker app account does not grant CRM access — the CRM and tracker app are separate surfaces with separate authentication models.
+
+**Distribution assumption:** Step 5 describes App Store / Google Play routing, which assumes native iOS/Android distribution. The app delivery model (PWA vs. native vs. web + redirect) is not decided in this ADR. It is a pending ADR candidate listed in `decisions\README.md`. Document this as the proposed/assumed provisioning flow — native distribution must be formalized before implementation.
+
+**Implementation TODOs (not resolved in this ADR or ADR 0006):** Token expiry rules, one-time-use enforcement, resend behavior, revocation mechanism, whether Supabase Auth invite API or a custom token table is used, iOS Universal Links vs. Android App Links behavior difference, and whether one owner account can span multiple facilities are all unresolved. See `ai_memory.md`.
 
 ### 5. Payment provider boundary (principle)
 

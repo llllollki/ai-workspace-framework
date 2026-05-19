@@ -311,6 +311,17 @@ The CRM MVP is implemented as a separate route tree (`/crm`) within the existing
 
 ### CRM Capability Areas — Conceptual / TODO
 
+**Owner account provisioning (proposed — ADR 0006)**
+- CRM staff provisions a Facility Tracker App account for the facility owner as part of the onboarding workflow
+- The created account is in an `invited` state — the owner has not yet set a password or activated the account
+- The system sends a confirmation email to the owner's email address containing an activation deep link
+- Deep link is opaque, expiring, and one-time-use; contains no facility IDs, resident IDs, or care data in the URL
+- Three deep link routing cases: (1) app not installed → routes to App Store / Google Play to install; (2) app installed, account not yet activated → opens create-password / account-activation screen; (3) app installed, account already active → opens login page
+- App Store / Google Play routing assumes native iOS/Android distribution — app delivery model (PWA vs. native) is a pending ADR and must be resolved before this routing is implemented
+- CRM provisioning is a forward write only — CRM staff gain no access to tracker app care data, resident records, or shift logs by performing this action
+- TODO: exact provisioning mechanism is unresolved (options: Supabase Auth invite API, custom provisioning_tokens table, or manual admin step — see ADR 0006 and ai_memory.md)
+- TODO: token expiry period, resend behavior, and revocation (CRM staff canceling an unactivated invite) are unresolved
+
 **Facility records**
 - TODO: define customer record lifecycle (active, suspended, churned) beyond the current archive pattern
 
@@ -333,7 +344,8 @@ The CRM MVP is implemented as a separate route tree (`/crm`) within the existing
 
 **Onboarding tracking**
 - Record onboarding status after facility owner signs the ALH Tracker agreement
-- Track onboarding milestones: agreement signed, app install instructions sent, first login, first resident added
+- Track onboarding milestones: agreement signed, owner account provisioned (invited state), activation deep link sent, first login, first resident added
+- The "install instructions sent" milestone in the CRM onboarding stage enum is superseded by the owner account provisioning model (ADR 0006) — TODO: update `CrmOnboardingStage` enum and CRM UI when provisioning is implemented
 - TODO: onboarding status states and who owns each step (internal staff vs. facility owner self-serve vs. hybrid) are unresolved
 
 **Subscription and payment status**
@@ -362,13 +374,35 @@ The CRM MVP is implemented as a separate route tree (`/crm`) within the existing
 
 Facility owners and admins can grant specific family members read-only access to an approved wellbeing view for a specific resident. This grant is managed within the facility tracker app by the facility operator — it is not self-service for family members.
 
-### Family User Eligibility
+### Family User Eligibility and Account Model (ADR 0006 — proposed)
 
-A family user becomes eligible to appear in the owner/admin's grant flow only after completing an invitation, verification, or approved onboarding process associated with the facility.
+A family member may install the Family Member App and create a `FamilyUser` account before the facility owner/admin has approved their access. Account creation creates a `FamilyUser` identity record only — it does not grant any resident data access.
 
-**TODO:** The exact mechanism by which a family user becomes associated with a facility for selection purposes (e.g., invitation by the owner from a contact record, email verification flow, separate family app onboarding) is unresolved and pending Phase 2 design and counsel review.
+**Account creation does not equal data access.** A family member who has created a FamilyUser account but has no active `FamilyAccessConsent` record sees no resident wellbeing data, no care log summaries, no wellness observations, and receives no resident-related notifications. The app shows a pending/no-access state after login.
 
-**Important — family users are not facility staff users:** Family users are not records in the facility-facing staff `User` table. The family member app is a planned separate Phase 2 mobile/tablet surface with its own authentication model (per ADR 0004 and ADR 0005). Family contacts listed in a resident's emergency contacts are not automatically eligible for family app access.
+A FamilyUser becomes eligible to appear in the owner/admin's grant flow after creating an account. The owner/admin selects the FamilyUser from a pending request queue or by proactive search.
+
+**FamilyUser is not a facility staff user:** `FamilyUser` records are not in the facility-facing staff `User` table (ADR 0004 Section 7). The Family Member App is a planned separate Phase 2 mobile/tablet surface with its own authentication model (per ADR 0004 and ADR 0005). Family contacts listed in a resident's emergency contacts are not automatically granted family app access.
+
+**TODO:** Whether family members must be invited by owner/admin before they can create a FamilyUser account, or may self-register independently, is unresolved (per ADR 0006).
+
+**TODO:** How a family member finds the correct facility at self-signup (invitation code, facility search, or invitation-only model) is unresolved and may require Phase 2 design and counsel review.
+
+### Owner/Admin Family Access Management (Phase 2 — proposed)
+
+Facility owners and admins need a dedicated management surface to review, approve, and revoke family access. This surface is separate from the resident profile edit flows.
+
+**Pending requests:** Owner/admin sees a list of FamilyUsers who have submitted an access request for a resident at this facility. Each pending request shows the family member's name, stated relationship, and the resident they are requesting access to. Owner/admin approves or rejects each request independently. Approval opens the full grant flow (Flow 12 per ADR 0004 dual acknowledgment). Rejection behavior (notification to FamilyUser, record of rejection) is TODO.
+
+**Active grants:** Owner/admin sees all active `FamilyAccessConsent` records for the facility: family member, resident, category scope, grant date. Can drill into any grant to view details. Can revoke any active grant.
+
+**Revoked grants:** Read-only history of revoked grants. Audited.
+
+**Proactive grant initiation:** Owner/admin can initiate a grant for a resident without waiting for a FamilyUser access request — e.g., when the owner knows the family member and wants to set up access preemptively. Owner selects or searches for the FamilyUser by name or email.
+
+**TODO:** Whether owner only or both owner and admin may approve family access is unresolved (noted in ADR 0006).
+
+**TODO:** Whether approval is at the facility level (FamilyUser ↔ facility) or resident level (FamilyUser ↔ resident) or both is unresolved.
 
 ### Grant Flow (Conceptual — Phase 2)
 
@@ -430,13 +464,14 @@ Revocations are audited (`FamilyAccessConsent.revoked_at` and `revoked_by`).
 
 ### Role Permissions Summary
 
-| Role | Can add / archive residents | Can edit profile sections | Can grant family access | Can revoke family access | Family access scope |
+| Role | Can add / archive residents | Can edit profile sections | Can grant / revoke family access | Can approve FamilyUser requests | Family access scope |
 |---|---|---|---|---|---|
-| Owner | Yes | Yes | Yes | Yes | N/A — manages grants |
-| Admin | Yes | Yes | Yes | Yes | N/A — manages grants |
+| Owner | Yes | Yes | Yes | Yes (TODO: confirm) | N/A — manages grants |
+| Admin | Yes | Yes | Yes | Yes (TODO: confirm) | N/A — manages grants |
 | Caregiver | No | No | No | No | N/A |
 | Med tech | No | No | No | No | N/A |
-| Family member | — | — | — | — | Read-only approved wellbeing view for granted resident(s) |
+| Family member (FamilyUser, no consent) | — | — | — | — | No data access; pending/no-access state in Family Member App |
+| Family member (FamilyUser, active FamilyAccessConsent) | — | — | — | — | Read-only approved wellbeing view for granted resident(s) only |
 | Internal CRM / ALH Tracker admin staff | — | — | — | — | Separate surface — must not access resident care data |
 
 ---

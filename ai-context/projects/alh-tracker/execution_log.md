@@ -9,6 +9,17 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-18 (task 0012 — CRM owner provisioning and family account flow)
+
+- Documentation-only task. Created ADR 0006 (CRM owner provisioning and family account approval — status: proposed, requires human review before accepted) in both mirrors. Updated ADR 0005 Section 4 (resolved the CRM-to-tracker provisioning handshake TODO with a 7-step conceptual flow). Updated `decisions/README.md` (added ADR 0006 row; clarified app delivery model ADR remains pending).
+- Rewrote `user_flows.md` Flow 0 (CRM onboarding + owner activation deep link with 3 routing cases), CRM Flow A Step 7 (provisioning action), and Family Member Onboarding (split into Phase A identity-only account creation and Phase B owner/admin approval). Added new Flow 14 (Owner/Admin Family Access Management: pending/active/revoked grant views, proactive initiation).
+- Updated `features.md`: added CRM owner account provisioning to Conceptual/TODO section; updated onboarding milestones; rewrote Family User Eligibility to reflect FamilyUser self-signup (account ≠ data access); added Owner/Admin Family Access Management subsection; updated Role Permissions Summary table to distinguish FamilyUser-no-consent from FamilyUser-with-active-grant.
+- Updated `overview.md`: CRM surface description now includes owner account provisioning (forward write only); Family Member App description updated with FamilyUser account creation model and ADR references.
+- Updated `data_model.md`: added `account_status` field and AccountStatus enum to User entity; added ProvisioningToken conceptual entity (opaque/expiring/one-time-use token security properties); added FamilyUser entity (identity-only, NOT User table, NOT FamilyAccessConsent); updated FamilyAccessConsent to link via `family_user_id` (not contact_id).
+- Updated `ai_memory.md`: narrowed CRM provisioning handshake open question (conceptual flow resolved; implementation mechanism still open); added iOS Universal Links / Android App Links TODO; added Supabase Auth invite API compatibility TODO; added FamilyUser self-registration vs. invite-only and rejection behavior TODOs.
+- Updated `compliance_notes.md`: added FamilyUser pre-approval account language (no data access granted by account existence); added CRM forward-write-only boundary note; added owner activation token security row to Data Handling Posture table.
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No app code changed. No Supabase schema changes. No deployment.
+
 ## 2026-05-17 (task 0011 — CRM facility management)
 
 - Implemented CRM facility create, edit, archive, and allowable resident count management.

@@ -8,7 +8,7 @@ This file describes the primary user flows for alh-tracker at a task level. Scre
 
 **Actors:** ALH Tracker internal business/admin staff (CRM), then facility owner (tracker app)
 **Device:** CRM steps on desktop; facility owner steps on phone or tablet
-**Note:** This flow begins in the internal CRM. CRM details are stubs — implementation is TODO pending CRM design. See ADR 0005.
+**Updated:** 2026-05-18 (task 0012). See ADR 0005 Section 4 and ADR 0006 for the provisioning architecture decisions.
 
 ### CRM steps (internal ALH Tracker staff, desktop)
 
@@ -18,24 +18,42 @@ This file describes the primary user flows for alh-tracker at a task level. Scre
    - TODO: "Allowable resident count" may mean licensed capacity, subscription-tier limit, or active resident count — or all three as separate fields. Unresolved.
 3. Internal staff records the subscription and payment status in the CRM.
    - TODO: Payment provider and what data is stored in CRM vs. at the provider are unresolved.
-4. Internal staff marks onboarding status as "App install instructions sent" (or equivalent).
-5. Internal staff sends app download/install instructions to the facility owner for phone or tablet.
-   - TODO: Invite delivery mechanism (email, link, token) is pending CRM design.
+4. Internal staff provisions a Facility Tracker App account for the facility owner (as owner/admin role). This creates a pending/invited account in the tracker app. The CRM does not read from or write directly to tracker app care data tables — provisioning is a forward write only.
+   - TODO: The exact mechanism (Supabase Auth invite API, custom provisioning token table, or tracker app admin interface) is unresolved. See ADR 0006 Section 1.
+5. The system sends a confirmation email to the facility owner's registered email address. The email states that an account has been created and contains an activation deep link.
+   - The deep link contains an opaque, expiring, one-time-use token. It does not contain facility IDs, resident IDs, or care data.
+   - TODO: Token expiry period, resend behavior, and revocation rules are unresolved.
 
-### Facility owner steps (tracker app, phone or tablet)
+### Facility owner activation (triggered by the confirmation email)
 
-6. Facility owner installs the app on a phone or tablet.
-7. Facility owner creates an account in the tracker app.
-8. After login, the tracker app presents a blank tracker profile for that facility — no residents or routines pre-loaded.
-9. Facility owner configures shift periods (see task 0003 — fixed vs. operator-configured is an open question).
-10. Facility owner adds active residents: display name and room number.
-11. Facility owner configures each resident's routine: which event categories to track per shift period.
-12. Facility owner creates caregiver and admin accounts and assigns roles.
-13. Caregivers receive login credentials (or shared tablet PIN — see task 0003).
+6. The facility owner receives the confirmation email and clicks the activation deep link.
+
+   **Deep link routing (proposed — see distribution assumption):**
+   - If the app is not installed: owner is routed to the App Store (iOS) or Google Play (Android) to download and install the app.
+   - If the app is installed and the owner has not yet created a password: the app opens to the create-password / account-activation screen.
+   - If the app is installed and the account is already active: the app opens to the login page.
+
+   **Distribution assumption:** App Store / Google Play routing assumes native iOS/Android distribution. The app delivery model (PWA vs. native vs. web + redirect) is a pending ADR — see `decisions\README.md`. This is the proposed/assumed flow; native distribution must be formalized before implementation.
+
+   **iOS vs. Android deep link behavior:** iOS Universal Links and Android App Links work differently and require separate server-side configuration. This is an implementation TODO before Phase 2.
+
+7. Owner completes account activation: creates a password and confirms their profile information (full name, phone, facility relationship/role, mailing or business address; occupation/title is optional).
+   - TODO: Whether identity verification, license credential, or signed agreement reference is required before full access is granted is unresolved.
+
+8. After successful login, the tracker app presents a blank tracker profile for that facility — no residents or routines pre-loaded.
+9. The owner's tracker app account does not grant CRM access (per ADR 0005 and ADR 0006 Section 3).
+
+### Facility setup steps (tracker app, phone or tablet — post-login)
+
+10. Facility owner configures shift periods (see task 0003 — fixed vs. operator-configured is an open question).
+11. Facility owner adds active residents: display name and room number.
+12. Facility owner configures each resident's routine: which event categories to track per shift period.
+13. Facility owner creates caregiver and admin accounts and assigns roles.
+14. Caregivers receive login credentials (or shared tablet PIN — see task 0003).
 
 **Exit:** Caregivers can open a shift and begin logging.
 
-**Desktop note:** If the facility owner opens the tracker app from a desktop browser, they are directed to install/open the app on a phone or tablet (distribution policy — implementation details TODO).
+**Desktop note:** If the facility owner opens the tracker app from a desktop browser, they are directed to install/open the app on a phone or tablet (distribution policy — not a security or compliance control; implementation details TODO).
 
 ---
 
@@ -348,19 +366,23 @@ These flows describe the internal CRM used by ALH Tracker business/admin staff t
 **Actor:** ALH Tracker internal business/admin staff (not facility owners, caregivers, or family members).
 **CRM data scope:** Commercial relationship metadata only — no resident wellness/care logs.
 
-### CRM Flow A: Create and configure a facility customer record
+### CRM Flow A: Create, configure, and provision a facility customer record
 
 1. Internal staff receives a signed ALH Tracker agreement from a facility owner.
 2. Staff creates a new customer record in the CRM: facility owner name, contact information, facility name, license number.
 3. Staff configures allowable resident count for the facility.
    - TODO: Whether this is licensed capacity, subscription limit, or active count is unresolved.
-4. Staff sets onboarding status (e.g., Agreement signed, Instructions sent).
+4. Staff sets onboarding status (e.g., Agreement signed, Account created).
    - TODO: Onboarding status states and step ownership are unresolved.
 5. Staff records subscription tier and initial payment status.
    - TODO: Payment provider and data fields are unresolved.
 6. Staff records any initial support/admin notes.
+7. Staff provisions a Facility Tracker App account for the facility owner (pending/invited state). This triggers the system to send a confirmation email with an activation deep link to the facility owner.
+   - TODO: Exact provisioning mechanism (Supabase Auth invite API, custom token, or admin interface) is unresolved. See ADR 0006.
+   - The CRM does not gain access to care data or resident records through this action.
+   - Staff marks onboarding status to reflect that the account has been provisioned and the confirmation email sent.
 
-**Exit:** Customer record is live in the CRM. Staff proceeds to send app install instructions (see Flow 0).
+**Exit:** Customer record is live in the CRM. Facility owner has received a confirmation email with an activation deep link (see Flow 0). Staff monitors for first-login confirmation.
 
 ### CRM Flow B: Update onboarding and subscription status
 
@@ -385,29 +407,107 @@ These flows describe the internal CRM used by ALH Tracker business/admin staff t
 
 ## Family Member Onboarding Flow (Planned Phase 2)
 
-This flow describes how a family member gains access to the family member app. It is a Phase 2 planned surface — not part of the MVP facility tracker app. Implementation details are TODO pending design and counsel review. Data access architecture is governed by ADR 0004.
+This flow describes how a family member creates an account and, separately, gains approved access to resident data through the Family Member App. It is a Phase 2 planned surface — not part of the MVP facility tracker app and not part of the current `/family` web prototype in the existing React app. Implementation details are TODO pending design and counsel review. Data access architecture is governed by ADR 0004 and ADR 0006.
 
 **Device:** Phone or tablet (mobile/tablet-first; desktop users are directed to use phone/tablet).
-**Actor:** Family member; initiated by facility owner/admin.
+**Updated:** 2026-05-18 (task 0012) — account creation now documented as a step separate from access approval.
 
-1. Facility owner or admin authorizes family access per resident in the tracker app, creating a FamilyAccessConsent record (see ADR 0004 and `data_model.md`).
-2. Family member receives an invitation to download/install the family member app.
-   - TODO: Invite delivery mechanism (email, SMS, in-app link) is unresolved.
-   - TODO: Family member app delivery model (native app store, PWA, or web install) is unresolved.
-3. Family member installs the app on a phone or tablet.
-4. Family member creates their own account.
-   - TODO: Family member account creation mechanism (email magic link, OTP, password) is unresolved. Per ADR 0004, family contacts are not User records in the facility-facing User table.
-5. After login, family member sees a view-only wellbeing summary for their authorized resident(s).
+---
+
+### Phase A — Family member account creation (identity only)
+
+1. A family member installs the Family Member App on their phone or tablet.
+   - TODO: Whether account creation requires an invitation from the facility owner/admin or may be initiated independently (self-service) is unresolved. See ADR 0006 Section 5.
+   - TODO: Family member app delivery model (native app store, PWA, or web install) is unresolved — see pending ADR in `decisions\README.md`.
+   - **Note:** The Family Member App is a planned Phase 2 separate mobile/tablet surface. It is distinct from the current `/family` web prototype route in the existing React app.
+
+2. Family member creates a FamilyUser account.
+   - A FamilyUser account is an identity record only. It does NOT grant any resident data access. See ADR 0006 Section 5 and `data_model.md`.
+   - FamilyUser accounts are NOT records in the facility-facing staff `User` table (per ADR 0004 Section 7 and ADR 0006 Section 7).
+   - TODO: Account creation mechanism (email + password, email magic link, OTP) is unresolved.
+
+   Profile fields collected at account creation:
+   - Full name (required)
+   - Phone number (required)
+   - Email address (required)
+   - Relationship to resident (required; e.g., Daughter, Son, Spouse, Friend)
+   - Address (required — TODO: whether required for all accounts or only for identity/relationship verification is unresolved)
+   - Occupation (optional — TODO: whether needed at all or only for identity context is unresolved)
+   - Resident they are requesting access to (TODO: only collected if request-based access is allowed)
+   - Facility association (optional — if known at signup)
+   - Preferred notification method
+   - Emergency/contact role (optional, if applicable)
+   - Privacy/release status (optional, if known or facility-confirmed)
+
+   **Labeling guardrail:** Do not label any of the above fields in a way that implies legal authority, HIPAA validation, or consent verification unless counsel approves exact language.
+
+3. After creating a FamilyUser account and logging in, the family member sees no resident wellbeing data, no care log summaries, no wellness observations, and receives no resident-related notifications.
+   - The app presents a pending/no-access state, clearly communicating that access to resident data requires facility owner/admin approval.
+   - TODO: Whether the family member can submit a formal access request through the app at this step is unresolved.
+
+---
+
+### Phase B — Owner/admin approval (separate step — see also Flows 12, 13, and Flow 14)
+
+4. The facility owner or admin reviews pending FamilyUser accounts/requests via the Family Access Management screen (see Flow 14).
+
+5. Owner or admin approves access for a specific FamilyUser linked to a specific resident, completing the dual acknowledgment required by ADR 0004:
+   - Operator authorization: owner or admin creates a FamilyAccessConsent record (see Flow 12).
+   - Resident autonomy noted: operator records whether they considered the resident's preferences.
+
+6. After approval, the family member can view the approved wellbeing summary for their authorized resident(s).
    - Access is limited to the categories and access level granted by the FamilyAccessConsent record.
-   - Family members never see raw caregiver notes, incident records, observed care task records, or any data not explicitly authorized.
-6. Family member can communicate with the facility owner through the app.
-   - TODO: What communications are allowed (message types, channels, direction) is unresolved. Requires privacy/consent review before design.
-7. Family member receives important notifications through the app.
-   - TODO: What notification types are "important" and who authorizes them is unresolved.
+   - Family members never see raw caregiver notes, incident notes (`incident` category), observed care task notes (`observed_care_task` category), allergy/safety details, mobility/ADL details, staff names or user IDs, audit trail, or operational follow-up descriptions.
 
-**Consent note:** This flow requires dual authorization before any access is granted — operator authorization plus resident autonomy noted — per ADR 0004. Family access must not be granted automatically. Counsel review of the consent model is required before Phase 2 family portal implementation begins.
+7. Family member may receive approved notifications for their authorized resident(s).
+   - TODO: Notification categories and who authorizes them are unresolved. Notifications are approval-gated and scope-limited.
+
+8. Family member may communicate with the facility through approved channels.
+   - TODO: Message types, direction, channels, content, and moderation/audit requirements are unresolved. This feature must not be designed or built before counsel review.
+
+**Consent note:** Phase B requires dual authorization before any resident data is visible — operator authorization plus resident autonomy noted — per ADR 0004. Family access must not be granted automatically. Counsel review of the consent model is required before Phase 2 family portal implementation begins.
 
 **Desktop note:** If a family member opens the app from a desktop browser, they are directed to install/open the app on a phone or tablet (distribution policy — not a security or compliance control; implementation details TODO).
+
+---
+
+## Flow 14: Owner/Admin Family Access Management (Phase 2 — Not Yet Implemented)
+
+> **Phase 2 feature.** Not yet implemented. Depends on ADR 0006 being accepted and the FamilyUser entity being implemented. See `data_model.md` and `ai_memory.md`.
+
+**Actor:** Owner or admin
+**Device:** Phone or tablet (mobile/tablet-first)
+
+This flow covers the owner/admin's management of FamilyUser access requests, active grants, and revocations from a single management surface.
+
+1. Owner or admin navigates to the Family Access Management screen. This screen may be accessible from:
+   - A resident's profile page.
+   - A facility settings / user management area.
+   - TODO: Exact navigation path is a UX decision pending Phase 2 design.
+
+2. The management screen shows three sections:
+
+   **Pending requests** (if request-based access is allowed — TODO):
+   - FamilyUser accounts that have submitted a request for access to a resident at this facility.
+   - Each row shows: family member name, relationship, resident requested, date of request.
+   - Owner/admin can: approve (opens Flow 12 grant flow) or reject (TODO: rejection notification behavior is unresolved).
+
+   **Active grants:**
+   - FamilyUser accounts with active FamilyAccessConsent records.
+   - Each row shows: family member name, resident, category scope, access level, grant date.
+   - Owner/admin can: view grant details, edit scope (TODO: whether scope editing is in-place or requires revoke + re-grant is unresolved), revoke access (opens Flow 13).
+
+   **Revoked grants** (optional reference view):
+   - Historical revoked grants, preserved in the audit trail.
+
+3. Owner or admin can also initiate a new grant proactively (without a pending request):
+   - Owner/admin searches for a FamilyUser by name or email.
+   - TODO: Discovery/search mechanism depends on whether FamilyUsers must be associated with the facility before they appear — unresolved.
+   - On selection, proceeds to Flow 12 (grant flow).
+
+**Audit:** All approval, rejection, and revocation actions are audited in the AuditTrail (entity type: `family_access_consent`).
+
+**Guardrail:** Owner/admin may only manage family access for residents at their own facility. Cross-facility management is not permitted.
 
 ---
 
