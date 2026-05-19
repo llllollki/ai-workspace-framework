@@ -9,6 +9,15 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0027 — facility owner role naming ADR)
+
+- Architecture/design task. Resolved role naming discrepancy (blocker #5 from audit 0026). Discovered full three-layer inconsistency: DB `app_role` enum uses `facility_admin`; AuthProvider `mapToStoreRole()` maps `facility_admin` → `admin` (bug — owners presented as admins); `src/types/index.ts` `Role` type uses `owner`/`admin`; all docs/ADRs use `owner`/`admin`; two exported `AppRole` types with different values in different files.
+- Created ADR 0011 (proposed): rename `facility_admin` → `owner` in DB enum; add `admin` as new enum value; migrate existing rows; remove mapping layer. CRM provisioning assigns `role = 'owner'` directly. 2 RLS policy updates identified.
+- Updated `decisions/README.md`: added ADR 0011 row.
+- Updated `data_model.md`: added implementation note (ADR 0011 migration required); documented `auditor` and `family_member` DB-only roles.
+- Updated `ai_memory.md`: narrowed blocker #5 (decision made in ADR 0011; implementation still pending task 0027 schema migration backlog).
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed.
+
 ## 2026-05-19 (task 0026 — provisioning readiness audit)
 
 - Implementation readiness audit for CRM owner provisioning endpoint (ADRs 0006–0010). Read-only inspection of all 7 Supabase migrations, src/ (AuthProvider, Zustand CRM store, repository layer, CRM types and pages), .env.local.example, and vercel.json. No application code or migrations changed.

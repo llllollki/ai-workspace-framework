@@ -93,6 +93,20 @@ A person with access to alh-tracker for a given facility.
 
 Role granularity may be refined based on design partner feedback. See `ai_memory.md`.
 
+**Implementation note (ADR 0011 — proposed, 2026-05-19):** The current Supabase `app_role` DB
+enum uses `facility_admin` instead of `owner`. ADR 0011 resolves this by renaming `facility_admin`
+→ `owner` and adding `admin` as a new enum value. A schema migration is required before provisioning
+implementation begins (task 0027 backlog). Until the migration is applied, the application layer
+maps `facility_admin` → `admin` in `AuthProvider.mapToStoreRole()` — this mapping is a known bug
+(owners are incorrectly presented as `admin`). See ADR 0011 for full impact analysis.
+
+**Existing DB-only roles (not primary staff roles):**
+- `auditor` — present in `app_role` enum; used for internal read-only access to `audit_events`.
+  Not yet fully documented. Leave as-is; role permissions to be defined in a future doc update.
+- `family_member` — present in `app_role` enum; but ADR 0006 specifies that family members must
+  NOT be stored in the `users` table (they are a separate `FamilyUser` principal). Resolution
+  deferred to Phase 2 FamilyUser design. No RLS policy grants `family_member` access to care data.
+
 #### AccountStatus Enum (proposed — ADR 0006)
 
 Tracks the activation lifecycle for owner accounts provisioned via CRM.
