@@ -9,6 +9,15 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0026 — provisioning readiness audit)
+
+- Implementation readiness audit for CRM owner provisioning endpoint (ADRs 0006–0010). Read-only inspection of all 7 Supabase migrations, src/ (AuthProvider, Zustand CRM store, repository layer, CRM types and pages), .env.local.example, and vercel.json. No application code or migrations changed.
+- Key findings: no backend API layer exists (greenfield); 5 new enums + 4 new columns + 2 new tables required; `is_active_user_on_active_facility()` RLS helper missing; 13 care-ops policies need quarantine gate update; CRITICAL role naming discrepancy (`app_role` enum uses `facility_admin`, not `owner` as documented in ADRs); `users.created_by` column missing; 3 ADR 0010 table name mismatches vs. actual schema.
+- Created audit task doc `0026-provisioning-readiness-audit.md` in tasks/active.
+- Created backlog task candidates: `0027-provisioning-schema-and-rls-migrations.md`, `0028-provisioning-api-endpoint.md`, `0029-activation-endpoint-and-page.md`, `0030-crm-ui-provisioning-integration.md`, `0031-tracker-auth-frontend-changes.md`, `0032-provisioning-tests.md` in tasks/backlog.
+- Updated `ai_memory.md`: added 8 new provisioning implementation blockers section.
+- Changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed.
+
 ## 2026-05-19 (task 0025 — accept ADR 0010)
 
 - ADR 0010 (pending setup facility RLS policy) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md`, `data_model.md`, `compliance_notes.md`, and `ai_memory.md` proposed references updated in both mirrors. Task doc `0025-accept-adr-0010.md` created in done. No application code changed.

@@ -59,6 +59,53 @@ ADR 0005 (2026-05-16) accepted the three-surface product model and CRM architect
 - **Desktop access policy for facility owners:** Is desktop access to the facility tracker app a hard block (HTTP 403/redirect) or a soft redirect (page nudging users to mobile)? Does any facility owner/admin workflow require desktop access (e.g., facility setup, user management, reporting)?
 - **Internal support staff access to resident care data:** Can ALH Tracker business/admin staff ever access resident-level care data through the CRM for support purposes? If yes, what audited policy governs it? This access must not be enabled by default.
 
+### Provisioning implementation blockers — new, discovered in audit 0026 (2026-05-19)
+
+These blockers were found during the implementation readiness audit (task 0026) by inspecting
+the actual Supabase migrations and source code. None were previously documented.
+
+**CRITICAL — Role naming discrepancy (blocks Phase 1 schema migration):**
+The actual `app_role` enum in the database is `facility_admin, caregiver, med_tech, family_member, auditor`.
+ADR 0007 and data_model.md say provisioned accounts receive `role = owner`. There is no `owner` value
+in the enum. This must be resolved before any migration touches `users.role`. Options: rename
+`facility_admin` → `owner`, or update ADR 0007 + data_model.md to use `facility_admin`.
+See task 0027 Part B note and task 0026 blocker #5.
+
+**`users.created_by` column missing from schema:**
+ADR 0007 references this column for CRM-provisioned accounts, but it does not exist in any migration.
+Decision needed: sentinel value vs. nullable column vs. structural column. Can defer to addendum
+after other columns are added. See task 0027 Part B note and task 0026 blocker #6.
+
+**Schema naming discrepancies between ADRs and actual migrations:**
+- ADR 0010 "audit_trail" → actual table: `audit_events`
+- ADR 0010 "family_access_consent" → actual table: `family_resident_links`
+- ADR 0010 "shifts" → actual table: `shift_close_records`
+All RLS migration work (task 0027) must target the actual table names.
+
+**Tables in ADR 0010 care-ops gate list that do not yet exist in schema:**
+- `shifts` (different from `shift_close_records`), `routines`, `observed_care_tasks`
+The RLS migration must note these as deferred — apply the quarantine gate when those tables
+are eventually created.
+
+**Greenfield backend — no API layer exists:**
+No Vercel API routes, no Supabase Edge Functions, no `src/api/` or `supabase/functions/` directory.
+The provisioning endpoint (task 0028) and activation endpoint (task 0029) are entirely greenfield.
+
+**Endpoint hosting model unresolved (blocks Phase 2 provisioning API):**
+ADR 0008 open TODO. Vite SPA is not Next.js — Vercel API routes require framework migration.
+Supabase Edge Function recommended but Deno runtime must be verified. Decision needed before
+task 0028 begins. See task 0026 blocker #1.
+
+**Idempotency storage mechanism unresolved (blocks Phase 2):**
+ADR 0008 open TODO. In-process memory is excluded for distributed serverless. Options: Supabase
+`provisioning_idempotency_keys` table or Upstash Redis. See task 0026 blocker #2.
+
+**Transactional email service unresolved (blocks Phase 2):**
+ADR 0007 open TODO. No email service in codebase. Must be selected (Resend, SendGrid, Postmark,
+or Supabase) and SPF/DKIM/DMARC configured before activation emails can be sent. See task 0026 blocker #3.
+
+---
+
 ### Resident profile expansion and family access grants (2026-05-16)
 
 The following open questions were identified during documentation of resident profile management and facility-owner managed family access grants. These are not yet tracked under existing task numbers.
