@@ -1,7 +1,7 @@
 # 0007 — CRM Owner Provisioning Token Mechanism
 
 **Date:** 2026-05-18
-**Status:** proposed
+**Status:** accepted
 **Supersedes:** The provisioning mechanism TODO in ADR 0006 Section 1 ("TODO: The exact mechanism by which a CRM provisioning action creates a tracker app account is unresolved.")
 **Superseded by:** n/a
 
@@ -132,7 +132,7 @@ Rationale:
 8. Tracker backend activation endpoint:
    a. Receives `t=[raw_token]` from the URL query parameter.
    b. Computes `SHA-256(raw_token)`.
-   c. Looks up `ProvisioningToken WHERE token_hash = [computed_hash] AND used_at IS NULL AND expires_at > NOW()`. Uses constant-time comparison to prevent timing attacks.
+   c. Looks up `ProvisioningToken WHERE token_hash = [computed_hash] AND used_at IS NULL AND expires_at > NOW()`. Uses constant-time comparison to prevent timing attacks. **Atomicity requirement:** This lookup must use a row-level write lock (`SELECT ... FOR UPDATE` or equivalent) and execute within a database transaction that spans steps 8c through 8i. Without a row lock, two concurrent activation requests for the same token could both pass the validity check before either marks `used_at`.
    d. **If no matching token:** Returns an error. If the token appears to have expired (hash found but `expires_at <= NOW()`), surfaces a resend prompt. If hash not found or token malformed, surfaces a generic invalid-link error. **Do not distinguish used vs. expired vs. invalid in user-facing messages** (prevents token oracle attacks).
    e. **If matching token found:** Updates `User.account_status = password_pending`.
    f. Validates owner-submitted password (minimum complexity: 12+ characters with at least one uppercase, lowercase, and digit — per `compliance_notes.md` password policy).
@@ -252,6 +252,7 @@ The following fields should be added to `CrmFacility` when CRM persistence is im
 | `token_revoked` | CRM staff revocation action | event_type, user_id, facility_id, performed_by=crm_staff_id, performed_by_type=crm_staff, timestamp |
 | `activated` | Owner completes activation | event_type, user_id, facility_id, performed_by=user_id, performed_by_type=owner, token_id, timestamp |
 | `activation_failed` | Owner submits invalid/expired/used token | event_type, user_id (if derivable), token_id (if known), metadata=failure_reason. metadata must not contain the raw token or care data. |
+| `token_expired_passive` | **Requires a background cleanup job** — written when a token reaches `expires_at` with `used_at IS NULL` and no explicit CRM revocation or resend triggered it. Not written at the moment of expiry; detected by a scheduled sweep. **TODO: background expiry detection mechanism is unresolved. If no cleanup job is built, remove this event type from the ENUM before schema migration.** | event_type, user_id, facility_id, token_id, performed_by_type=system, timestamp. `performed_by` is a system identifier. |
 
 All events are written to `ProvisioningEvent`. The table is append-only. No event record may be updated or deleted.
 
@@ -315,3 +316,5 @@ This ADR does not define or change:
 - **TODO — `activation_failed` metadata security:** Ensure `activation_failed` event metadata never includes the raw token, PII beyond user_id, or any resident/care data.
 - **TODO — Token expiry period validation:** 72 hours is recommended. Validate with the product team that this is appropriate for the target user (facility owners who may be slow to check email, especially during busy periods).
 - **TODO — Provisioning API response reference format:** Define the exact format of `provisioning_reference` returned to the CRM — UUID, opaque slug, or other. Must be opaque and not encode tracker-internal IDs.
+- **TODO — Partial activation recovery:** If the Supabase Admin API `createUser` call (step 8g) succeeds but a subsequent step fails before `used_at = NOW()` is committed (step 8i), the next activation attempt will find `used_at IS NULL` but calling `createUser` again will fail because the auth user already exists. The activation endpoint must be idempotent: before calling `createUser`, check whether a Supabase auth user already exists for this email; if so, skip creation and proceed directly to account status update and token marking.
+- **TODO — `token_expired_passive` background job:** If the `token_expired_passive` event type is retained in the ENUM, a background or scheduled cleanup process must be designed to detect expired-but-unused tokens and write the event. The cleanup cadence, failure handling, and whether it runs at the database or application layer are unresolved.

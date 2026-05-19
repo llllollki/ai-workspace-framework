@@ -9,6 +9,17 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-18 (task 0016 — accept ADR 0007)
+
+- ADR 0007 (CRM owner provisioning token mechanism) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md` updated in both mirrors. Task doc `0016-accept-adr-0007.md` created and placed in done. No application code changed.
+
+## 2026-05-18 (task 0015 — ADR 0007 architecture review)
+
+- Architecture review of ADR 0007 (CRM owner provisioning token mechanism — status: proposed). Recommendation: Accept with minor edits. No conflicts with ADR 0004, 0005, or 0006 found. CRM/tracker boundary confirmed intact.
+- Three findings requiring edits before acceptance: (1) activation sequence lacked explicit atomicity requirement — fixed in ADR 0007 Phase 2 step 8c (SELECT FOR UPDATE + transaction spanning steps 8c–8i); (2) `token_expired_passive` event type was in the ENUM but missing from Audit/Event Requirements table — added row with background-job requirement and remove-if-not-built note; (3) partial activation recovery (Supabase createUser success + later failure) was unaddressed — added as Open Implementation TODO.
+- Two stale TODOs cleaned up in `user_flows.md`: Flow 0 step 5 (expiry/resend/revocation now resolved by ADR 0007) and CRM Flow A step 7 (provisioning mechanism now resolved by ADR 0007). One stale TODO block cleaned up in `features.md` (same).
+- All changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. ADR 0007 status remains `proposed` — pending explicit user acceptance. No app code changed. No Supabase schema changes.
+
 ## 2026-05-18 (task 0014 — CRM owner provisioning token mechanism, ADR 0007)
 
 - Architecture/design documentation task. Created ADR 0007 (CRM owner provisioning token mechanism — status: proposed) selecting Option B (custom `provisioning_tokens` table) over Supabase Auth invite API. Rationale: Supabase invite API requires CRM to hold tracker service-role key, violating ADR 0005 CRM/tracker boundary; custom table gives full lifecycle auditability and defers Supabase Auth user creation to activation time.

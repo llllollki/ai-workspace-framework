@@ -23,7 +23,8 @@ This file describes the primary user flows for alh-tracker at a task level. Scre
    - TODO: CRM-to-tracker API authentication method (API key vs. service JWT) is unresolved. See ADR 0007 Open Implementation TODOs.
 5. The system sends a confirmation email to the facility owner's registered email address. The email states that an account has been created and contains an activation deep link.
    - The deep link contains an opaque, expiring, one-time-use token. It does not contain facility IDs, resident IDs, or care data.
-   - TODO: Token expiry period, resend behavior, and revocation rules are unresolved.
+   - Token expiry: 72 hours. Resend: previous token is expired immediately and a new one generated. Revocation: CRM staff action — active token expired and owner account disabled. See ADR 0007 for full token lifecycle specification.
+   - TODO: Transactional email service selection and sender domain SPF/DKIM/DMARC configuration are unresolved. See ADR 0007 Open Implementation TODOs.
 
 ### Facility owner activation (triggered by the confirmation email)
 
@@ -379,7 +380,7 @@ These flows describe the internal CRM used by ALH Tracker business/admin staff t
    - TODO: Payment provider and data fields are unresolved.
 6. Staff records any initial support/admin notes.
 7. Staff provisions a Facility Tracker App account for the facility owner (pending/invited state). This triggers the system to send a confirmation email with an activation deep link to the facility owner.
-   - TODO: Exact provisioning mechanism (Supabase Auth invite API, custom token, or admin interface) is unresolved. See ADR 0006.
+   - **Mechanism (ADR 0007 — proposed):** Custom `provisioning_tokens` table. CRM calls the tracker provisioning API endpoint; all token creation, email delivery, and account lifecycle logic runs tracker-side. CRM receives only an opaque `provisioning_reference` and `provisioning_status`. See ADR 0007.
    - The CRM does not gain access to care data or resident records through this action.
    - Staff marks onboarding status to reflect that the account has been provisioned and the confirmation email sent.
 

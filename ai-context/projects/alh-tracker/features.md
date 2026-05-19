@@ -319,8 +319,9 @@ The CRM MVP is implemented as a separate route tree (`/crm`) within the existing
 - Three deep link routing cases: (1) app not installed → routes to App Store / Google Play to install; (2) app installed, account not yet activated → opens create-password / account-activation screen; (3) app installed, account already active → opens login page
 - App Store / Google Play routing assumes native iOS/Android distribution — app delivery model (PWA vs. native) is a pending ADR and must be resolved before this routing is implemented
 - CRM provisioning is a forward write only — CRM staff gain no access to tracker app care data, resident records, or shift logs by performing this action
-- TODO: exact provisioning mechanism is unresolved (options: Supabase Auth invite API, custom provisioning_tokens table, or manual admin step — see ADR 0006 and ai_memory.md)
-- TODO: token expiry period, resend behavior, and revocation (CRM staff canceling an unactivated invite) are unresolved
+- **Mechanism (ADR 0007 — proposed):** Custom `provisioning_tokens` table selected. CRM calls the tracker provisioning API endpoint; tracker backend manages all token and account lifecycle logic. CRM receives only an opaque `provisioning_reference` and `provisioning_status`. See ADR 0007.
+- Token expiry: 72 hours. Resend: previous token expired and new one generated. Revocation: CRM staff action; token expired and account disabled. See ADR 0007 for full token lifecycle specification.
+- TODO: CRM-to-tracker API authentication method (API key vs. service JWT) and transactional email service selection are unresolved. See ADR 0007 Open Implementation TODOs.
 
 **Facility records**
 - TODO: define customer record lifecycle (active, suspended, churned) beyond the current archive pattern
