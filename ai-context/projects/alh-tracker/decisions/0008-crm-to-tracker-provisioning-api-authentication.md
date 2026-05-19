@@ -1,7 +1,7 @@
 # 0008 — CRM-to-Tracker Provisioning API Authentication
 
 **Date:** 2026-05-19
-**Status:** proposed
+**Status:** accepted
 **Supersedes:** The CRM-to-tracker provisioning API authentication TODO in ADR 0007 Section — Open Implementation TODOs
 **Superseded by:** n/a
 
@@ -391,6 +391,26 @@ For `resend` and `revoke` actions, the tracker resolves the target account by
 `password_pending` account with the same email; if found, the endpoint returns the
 existing `provisioning_reference` without creating a duplicate (idempotent by email
 within the `invited` state).
+
+**Owner role:** CRM-provisioned accounts always receive `role = owner`. The role is not
+caller-specified — it is enforced server-side by the provisioning endpoint (per ADR 0007
+Phase 1 step 3b). The CRM cannot provision a non-owner account via this API.
+
+**Intentionally excluded fields:**
+- `phone`: Collected from the owner at activation time, not at provisioning time (ADR 0006
+  Section 4 — "Phone number: Required" is listed as an activation-time field).
+- `allocated_resident_count`: A CRM-managed commercial subscription concept (ADR 0005).
+  The tracker provisioning endpoint has no function for this value.
+
+**Facility association (dependency on ADR 0007 TODO):** This request body does not include
+a tracker Facility ID. How the provisioning endpoint associates the new `User` record with
+the correct tracker `Facility` depends on the resolution of ADR 0007's open TODO: "whether
+the tracker Facility record is created at provisioning time or must pre-exist." If the
+Facility must pre-exist, a CRM-to-tracker facility mapping mechanism outside this request
+contract is required. If the Facility is created at provisioning time, the request body
+would need facility fields (e.g., facility name) that are not currently specified here.
+This is outside ADR 0008's scope but must be resolved before the provisioning endpoint is
+implemented.
 
 **What the request body must not contain:**
 - Tracker User IDs

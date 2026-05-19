@@ -80,7 +80,7 @@ Tracks the activation lifecycle for owner accounts provisioned via CRM.
 
 **Provisioning mechanism (ADR 0007 — accepted):** The custom `provisioning_tokens` table approach (Option B) has been selected as the provisioning mechanism. `account_status` is tracked in the tracker `User` table, not via Supabase Auth's email confirmation state. The Supabase Auth user (`auth.users` entry) is created at activation time only — not at provisioning time. See ADR 0007.
 
-**CRM-to-tracker API authentication (ADR 0008 — proposed):** The CRM authenticates to the tracker provisioning endpoint using a rotating static API key (MVP), stored server-side only in Vercel environment variables. The tracker stores only the SHA-256 hash of valid keys. Phase 2 hardening path: short-lived HMAC-signed service JWT. The CRM must never receive the tracker Supabase service-role key. See ADR 0008.
+**CRM-to-tracker API authentication (ADR 0008 — accepted):** The CRM authenticates to the tracker provisioning endpoint using a rotating static API key (MVP), stored server-side only in Vercel environment variables. The tracker stores only the SHA-256 hash of valid keys. Phase 2 hardening path: short-lived HMAC-signed service JWT. The CRM must never receive the tracker Supabase service-role key. See ADR 0008.
 
 **TODO:** Whether this lifecycle applies to all User records or only to owner accounts provisioned via CRM is unresolved. Caregiver and admin accounts created directly within the app may bypass this lifecycle and be created as immediately active.
 

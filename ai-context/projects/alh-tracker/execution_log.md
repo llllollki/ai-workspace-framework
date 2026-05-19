@@ -9,6 +9,17 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0019 — accept ADR 0008)
+
+- ADR 0008 (CRM-to-tracker provisioning API authentication) accepted. Status updated from `proposed` to `accepted` in both mirrors. `decisions/README.md`, `ai_memory.md`, and `data_model.md` proposed references updated in both mirrors. Task doc `0019-accept-adr-0008.md` created in done. No application code changed.
+
+## 2026-05-19 (task 0018 — ADR 0008 architecture review)
+
+- Architecture review of ADR 0008 (CRM-to-tracker provisioning API authentication — status: proposed). Recommendation: Accept with minor edits.
+- No conflicts with ADR 0005/0006/0007 or compliance_notes.md found. All boundary checks passed. All documentation consistency checks passed. All 7 open TODOs correctly flagged.
+- Three documentation gaps fixed in ADR 0008 (both mirrors): (1) added owner role note — CRM-provisioned accounts always receive `role = owner`, server-enforced; (2) added facility association dependency note cross-referencing ADR 0007's facility TODO; (3) added "Intentionally excluded fields" note for `phone` (collected at activation) and `allocated_resident_count` (CRM-side concept).
+- ADR 0008 status remains `proposed`. Post-acceptance cleanup documented in task 0018 Outcome. No application code changed.
+
 ## 2026-05-19 (task 0017 — ADR 0008: CRM-to-tracker provisioning API authentication)
 
 - Architecture/design documentation task. Created ADR 0008 (CRM-to-tracker provisioning API authentication — status: proposed) resolving the authentication blocker deferred in ADR 0007.
