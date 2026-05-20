@@ -64,14 +64,14 @@ ADR 0005 (2026-05-16) accepted the three-surface product model and CRM architect
 These blockers were found during the implementation readiness audit (task 0026) by inspecting
 the actual Supabase migrations and source code. None were previously documented.
 
-**Role naming discrepancy (RESOLVED — ADR 0011 accepted, 2026-05-19):**
+**Role naming discrepancy (IMPLEMENTED — migration applied 2026-05-19, task 0030):**
 The actual `app_role` enum in the database is `facility_admin, caregiver, med_tech, family_member, auditor`.
 ADR 0007 and data_model.md say provisioned accounts receive `role = owner`. **Decision made in ADR 0011
 (accepted):** rename `facility_admin` → `owner` in the DB enum; add `admin` as a new enum value.
-Existing `facility_admin` rows migrate to `owner`. Implementation impacts: 1 schema migration, 2 RLS
-policy updates, AuthProvider.tsx `mapToStoreRole()` simplification, types/index.ts `AppRole` naming
-collision resolution. Still **blocks implementation** until migration is applied (task 0027 backlog).
-See ADR 0011 and task 0027-facility-owner-role-naming-adr.md (task 0027 active, done).
+Migration `20260101000007` applies `ALTER TYPE app_role RENAME VALUE 'facility_admin' TO 'owner'` and
+`ADD VALUE 'admin'`. AuthProvider.tsx renamed to `DbRole`, `mapToStoreRole()` updated and fallback
+hardened. `src/types/index.ts` dead `AnyRole` export removed. `db/schema.sql` updated.
+No remaining blocker. See ADR 0011 and task 0030.
 
 **`users.created_by` column missing from schema:**
 ADR 0007 references this column for CRM-provisioned accounts, but it does not exist in any migration.

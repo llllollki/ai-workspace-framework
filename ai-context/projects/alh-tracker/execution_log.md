@@ -9,6 +9,10 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0030 — Phase 1 schema/RLS migrations and role cleanup)
+
+- Applied Phase 1 provisioning schema + RLS foundations. Two new migrations: `20260101000007` (role enum rename `facility_admin`→`owner`, `admin` added, 3 provisioning enum types, `provisioning_status`/`crm_facility_reference` on facilities, `account_status` on users, `provisioning_tokens` and `provisioning_events` tables with zero client-accessible policies); `20260101000008` (`is_active_user_on_active_facility()` SECURITY DEFINER helper, care-ops quarantine gate applied to 13+ tables). TypeScript: `AuthProvider.tsx` `DbRole` rename + `mapToStoreRole()` hardened fallback; `src/types/index.ts` dead `AnyRole` removed; `src/data/seed.ts` demo user role fixed. `db/schema.sql` reference schema updated. Build clean. Task doc `0030-provisioning-schema-rls-migrations.md` created in done. `ai_memory.md` role-naming blocker updated to IMPLEMENTED.
+
 ## 2026-05-19 (task 0029 — Accept ADR 0011)
 
 - ADR 0011 accepted and role-naming references updated. Status changed `proposed` → `accepted` in `decisions/0011-facility-owner-role-naming.md`, `decisions/README.md`, and `ai_memory.md`. Task doc `0029-accept-adr-0011.md` created in done. Changes mirrored to `ai-workspace-framework`. No application code changed.
