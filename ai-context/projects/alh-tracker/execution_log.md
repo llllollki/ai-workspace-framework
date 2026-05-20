@@ -9,6 +9,10 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0029 — Accept ADR 0011)
+
+- ADR 0011 accepted and role-naming references updated. Status changed `proposed` → `accepted` in `decisions/0011-facility-owner-role-naming.md`, `decisions/README.md`, and `ai_memory.md`. Task doc `0029-accept-adr-0011.md` created in done. Changes mirrored to `ai-workspace-framework`. No application code changed.
+
 ## 2026-05-19 (task 0028 — ADR 0011 architecture review)
 
 - Architecture review of ADR 0011 (facility owner role naming — status: proposed). Recommendation: **Accept with minor edits** (edits applied in this task).

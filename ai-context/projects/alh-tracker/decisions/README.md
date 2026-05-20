@@ -66,7 +66,7 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | 0008 | CRM-to-tracker provisioning API authentication | 2026-05-19 | Accepted |
 | 0009 | Tracker Facility record creation during CRM provisioning | 2026-05-19 | Accepted |
 | 0010 | Pending setup facility RLS policy | 2026-05-19 | Accepted |
-| 0011 | Canonical facility staff role naming (`owner`/`admin` replace `facility_admin`) | 2026-05-19 | Proposed |
+| 0011 | Canonical facility staff role naming (`owner`/`admin` replace `facility_admin`) | 2026-05-19 | Accepted |
 
 ## Pending Future ADRs
 

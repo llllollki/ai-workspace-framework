@@ -1,7 +1,7 @@
 # 0011 — Canonical Facility Staff Role Naming
 
 **Date:** 2026-05-19
-**Status:** proposed
+**Status:** accepted
 **Supersedes:** n/a
 **Superseded by:** n/a
 

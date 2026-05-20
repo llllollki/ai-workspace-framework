@@ -64,10 +64,10 @@ ADR 0005 (2026-05-16) accepted the three-surface product model and CRM architect
 These blockers were found during the implementation readiness audit (task 0026) by inspecting
 the actual Supabase migrations and source code. None were previously documented.
 
-**Role naming discrepancy (NARROWED — ADR 0011 proposed, 2026-05-19):**
+**Role naming discrepancy (RESOLVED — ADR 0011 accepted, 2026-05-19):**
 The actual `app_role` enum in the database is `facility_admin, caregiver, med_tech, family_member, auditor`.
 ADR 0007 and data_model.md say provisioned accounts receive `role = owner`. **Decision made in ADR 0011
-(proposed):** rename `facility_admin` → `owner` in the DB enum; add `admin` as a new enum value.
+(accepted):** rename `facility_admin` → `owner` in the DB enum; add `admin` as a new enum value.
 Existing `facility_admin` rows migrate to `owner`. Implementation impacts: 1 schema migration, 2 RLS
 policy updates, AuthProvider.tsx `mapToStoreRole()` simplification, types/index.ts `AppRole` naming
 collision resolution. Still **blocks implementation** until migration is applied (task 0027 backlog).
