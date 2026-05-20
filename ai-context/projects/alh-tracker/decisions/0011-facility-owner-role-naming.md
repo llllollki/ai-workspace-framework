@@ -103,8 +103,11 @@ role values will match the application role values directly.
 - Aligns with the `mapToStoreRole()` bug fix: what the DB stores is what the app uses.
 
 **Cons:**
-- Requires a schema migration to rename the enum value in Postgres (ALTER TYPE ... RENAME VALUE).
-- All existing `facility_admin` rows in `users` must be updated to `owner` in the same migration.
+- Requires a schema migration (`ALTER TYPE app_role RENAME VALUE 'facility_admin' TO 'owner'`
+  plus `ADD VALUE 'admin'`). Migration is small; `RENAME VALUE` propagates to existing rows
+  automatically — no separate data migration needed.
+- `'facility_admin'` string literals in `AuthProvider.tsx` and `db/schema.sql` must be updated
+  in the same release as the migration.
 - Demo seed data and AuthProvider DEMO_AUTH_USER must be updated.
 
 **Verdict:** Recommended. Migration is small and targeted. The resulting model is clean and unambiguous.
@@ -239,32 +242,25 @@ shift operations.
 ### Schema migration (required before task 0027 Part B / task 0028)
 
 ```sql
--- Step 1: Add new enum values
-ALTER TYPE app_role ADD VALUE IF NOT EXISTS 'owner';
-ALTER TYPE app_role ADD VALUE IF NOT EXISTS 'admin';
--- Note: In Postgres, enum values can be added but existing values cannot be renamed
--- directly. The standard approach is:
---   1. Create new enum values
---   2. Update existing rows to new values
---   3. Drop old enum value by recreating the type (Postgres 15 does not support DROP VALUE;
---      use CREATE TYPE app_role_new ... AS ENUM (...), ALTER TABLE ... ALTER COLUMN role TYPE
---      app_role_new USING ..., DROP TYPE app_role, ALTER TYPE app_role_new RENAME TO app_role)
---   OR use a simpler approach that works in Postgres 15:
---      ALTER TYPE app_role ADD VALUE 'owner' AFTER 'med_tech';
---      ALTER TYPE app_role ADD VALUE 'admin' AFTER 'owner';
---      UPDATE users SET role = 'owner' WHERE role = 'facility_admin';
---      -- Old 'facility_admin' value remains in enum but has zero rows; functionally inert.
---      -- Clean removal requires type recreation (deferred to a later cleanup migration).
+-- Rename 'facility_admin' → 'owner'.
+-- ALTER TYPE ... RENAME VALUE is available in PostgreSQL 10+ and is fully transactional
+-- in PostgreSQL 15 (Supabase target). The rename automatically propagates to all existing
+-- rows in the `users` table — no separate UPDATE statement is required.
+ALTER TYPE app_role RENAME VALUE 'facility_admin' TO 'owner';
 
--- Step 2: Update all existing rows
-UPDATE users SET role = 'owner' WHERE role = 'facility_admin';
--- Verify: SELECT COUNT(*) FROM users WHERE role = 'facility_admin'; should be 0.
+-- Add 'admin' for delegated facility admin / house manager accounts.
+ALTER TYPE app_role ADD VALUE IF NOT EXISTS 'admin';
+
+-- Safety check (run as a DO block or verify manually after migration):
+-- SELECT COUNT(*) FROM users WHERE role::text = 'facility_admin'; -- must return 0
 ```
 
-**Note:** Postgres 15 does not support `ALTER TYPE ... DROP VALUE`. The cleanest production
-approach is to add new values, update rows, and leave the old value in the enum (functionally
-dead after the UPDATE). A cleanup migration to remove `facility_admin` entirely via type
-recreation can be done separately as a low-risk follow-up after confirming zero rows use it.
+**Note:** `ALTER TYPE ... RENAME VALUE` (PostgreSQL 10+) renames the enum label directly in
+`pg_enum`. All existing rows that stored the old value automatically reflect the new label
+on the next read — no `UPDATE users SET role = 'owner'` is needed. The `facility_admin`
+label is fully removed from the schema by the rename; no dead enum value is left behind.
+Both `RENAME VALUE` and `ADD VALUE` are fully transactional in PostgreSQL 12+ (including
+PostgreSQL 15 / Supabase), so the migration rolls back cleanly on failure.
 
 ### RLS policy updates (required in task 0027 Part E)
 
@@ -399,10 +395,9 @@ This ADR does not:
 
 **Harder / risks:**
 - Schema migration required before provisioning implementation can begin.
-- Must verify zero `facility_admin` rows in `users` before treating `facility_admin` as
-  deprecated in RLS policies (SELECT COUNT(*) check in migration).
-- The `facility_admin` enum value cannot be dropped in Postgres 15 without type recreation —
-  it will remain in the enum as a dead value until a cleanup migration is applied.
+- `RENAME VALUE` removes `facility_admin` from the enum. Any hardcoded `'facility_admin'`
+  string literals in application code (`AuthProvider.tsx`, `db/schema.sql`) will become
+  invalid after migration and must be updated in the same release.
 - Demo seed data must be reviewed for which user represents the owner vs. a delegated admin.
 
 ---
@@ -421,10 +416,13 @@ This ADR does not:
   if missing). Target: task 0031.
 - **TODO — `data_model.md` Role enum:** Add `auditor` as a documented DB role (separate from
   the four primary staff roles); add note that `facility_admin` was the legacy DB value
-  superseded by `owner` per this ADR. Target: companion doc update to this ADR.
+  superseded by `owner` per this ADR. Target: companion doc update to this ADR (done).
+- **TODO — `db/schema.sql`:** The reference schema file at `db/schema.sql` also defines
+  `app_role` with `facility_admin` (line 25) and references it in the `audit_read_admin`
+  policy (line 436). Update this file in the same implementation pass as the migration.
+  This file is not the applied migration, but keeping it stale causes confusion for any
+  developer using it as a reference. Target: task 0027 schema migration implementation.
 - **TODO — `family_member` in `app_role`:** Investigate whether any `users` rows have
   `role = 'family_member'` in any Supabase environment. If so, document and plan migration
-  as part of Phase 2 FamilyUser design. If not, leave as a dead enum value.
-- **TODO — Cleanup migration:** After all provisioning and auth implementations are complete
-  and `facility_admin` has zero rows in any environment, add a type-recreation migration to
-  remove `facility_admin` from the `app_role` enum permanently.
+  as part of Phase 2 FamilyUser design. If not, leave as an inert enum value (no rows use
+  it after the provisioning model separates FamilyUser from the staff `users` table).

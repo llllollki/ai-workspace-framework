@@ -9,6 +9,14 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-19 (task 0028 — ADR 0011 architecture review)
+
+- Architecture review of ADR 0011 (facility owner role naming — status: proposed). Recommendation: **Accept with minor edits** (edits applied in this task).
+- Two defects found and fixed: (1) migration section contained a factual error — claimed Postgres enum values "cannot be renamed directly"; `ALTER TYPE ... RENAME VALUE` has been available since PG10 and is fully transactional in PG15; migration SQL corrected to use `RENAME VALUE` + `ADD VALUE 'admin'`; removes `facility_admin` cleanly (no dead enum value); eliminates need for `UPDATE users` data migration. (2) `db/schema.sql` (reference production schema file) also defines `app_role` with `facility_admin` and uses it in `audit_read_admin` policy; not mentioned in ADR 0011 implementation TODOs — added.
+- No conflicts with ADR 0006/0007/0010 or data_model.md found. All cross-references consistent.
+- Task doc `0028-adr-0011-architecture-review.md` created in done. Task `0027-facility-owner-role-naming-adr.md` moved from active to done.
+- Changes mirrored to `C:\Projects\ai-workspace-framework\ai-context\`. No application code changed.
+
 ## 2026-05-19 (task 0027 — facility owner role naming ADR)
 
 - Architecture/design task. Resolved role naming discrepancy (blocker #5 from audit 0026). Discovered full three-layer inconsistency: DB `app_role` enum uses `facility_admin`; AuthProvider `mapToStoreRole()` maps `facility_admin` → `admin` (bug — owners presented as admins); `src/types/index.ts` `Role` type uses `owner`/`admin`; all docs/ADRs use `owner`/`admin`; two exported `AppRole` types with different values in different files.
