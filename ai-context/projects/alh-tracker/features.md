@@ -637,10 +637,19 @@ Caregivers do not write the handoff from scratch.
 
 ### Phase 2: Visibility and Retention
 
-- Family access portal (pending task 0006 architecture)
-- Richer owner/admin analytics and export
-- Follow-up resolution tracking
-- Push/SMS notifications for follow-up items
+**Blocked (do not implement without resolving):**
+- Family access portal — blocked on counsel review of consent model, FamilyUser design, and app delivery ADR (hard block per task 0006 and ADR 0004/0005/0006)
+- Family-to-facility messaging — counsel-blocked
+- Push/SMS notifications for family — notification categories unresolved; counsel required
+- App delivery model (PWA vs. native) and deep-link routing — pending ADR
+
+**Implemented (2026-05-25):**
+- Follow-up resolution tracking — start / resolve / carry-forward with priority/status filters: already complete in `src/pages/FollowUps.tsx`
+- Owner/admin date-range care log CSV export — implemented in `src/pages/DataManagement.tsx`; queries repository `getFacilityCareLogEntries` for a user-selected date range; downloads CSV with Date, Time, Resident, Room, Category, Status, Note columns; includes in-UI disclaimer (not a regulatory record or RCFE documentation); works in both demo and Supabase modes; addresses production security prerequisite #10 (data export); commit `TBD`
+
+**Still pending (safe, unblocked):**
+- Richer owner/admin analytics dashboard (historical trends, weekly shift summaries, per-resident exception rates)
+- Push/SMS notifications for follow-up items to owner/admin (notification infrastructure not yet built; model unresolved for family, safe for owner/admin-only internal alerts — design needed)
 
 ### Phase 3: Compliance Path
 
