@@ -645,7 +645,7 @@ Caregivers do not write the handoff from scratch.
 
 **Implemented (2026-05-25):**
 - Follow-up resolution tracking — start / resolve / carry-forward with priority/status filters: already complete in `src/pages/FollowUps.tsx`
-- Owner/admin date-range care log CSV export — implemented in `src/pages/DataManagement.tsx`; queries repository `getFacilityCareLogEntries` for a user-selected date range; downloads CSV with Date, Time, Resident, Room, Category, Status, Note columns; includes in-UI disclaimer (not a regulatory record or RCFE documentation); works in both demo and Supabase modes; addresses production security prerequisite #10 (data export); commit `TBD`
+- Owner/admin date-range care log CSV export — implemented in `src/pages/DataManagement.tsx`; queries repository `getFacilityCareLogEntries` for a user-selected date range; downloads CSV with Date, Time, Resident, Room, Category, Status, Note columns; includes in-UI disclaimer (not a regulatory record or RCFE documentation); works in both demo and Supabase modes; addresses production security prerequisite #10 (data export); commit `4a78d91`
 
 **Still pending (safe, unblocked):**
 - Richer owner/admin analytics dashboard (historical trends, weekly shift summaries, per-resident exception rates)
