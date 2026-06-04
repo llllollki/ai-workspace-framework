@@ -1,0 +1,12 @@
+# Egress allowlist — WebFetch is permitted only to these domains (and their subdomains).
+# Raw network CLI (curl/wget/iwr/irm/nc/scp/rsync) is denied in settings.json regardless.
+# Resident/PII data must never be sent outbound, even to a domain listed here.
+docs.anthropic.com
+docs.claude.com
+supabase.com
+docs.github.com
+github.com
+vercel.com
+react.dev
+developer.mozilla.org
+nodejs.org

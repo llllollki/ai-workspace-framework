@@ -83,6 +83,23 @@ This keeps changes to `.claude/**` and the framework reviewable even though the 
 technically bypass GitHub branch protection. `git push --force`/`-f` remains on the never-autonomous
 list regardless of branch.
 
+## Egress control (data-exfiltration defense)
+
+Resident/PII data must never leave the workspace. Two layers enforce this:
+
+- **Raw network CLI is denied** in `.claude/settings.json` (`curl`, `wget`, `Invoke-WebRequest`/
+  `iwr`, `Invoke-RestMethod`/`irm`, `nc`, `scp`, `rsync`) — these can POST to any host and are the
+  primary exfiltration vector.
+- **WebFetch is allowlisted** by `.claude/hooks/egress-guard.ps1` (PreToolUse, matcher `WebFetch`):
+  a fetch is blocked (exit 2) unless its host is in `.claude/egress-allowlist.txt` (domain +
+  subdomains). Add a trusted documentation domain there to permit it.
+
+WebFetch is GET-only, but a URL can smuggle data in its path/query — so the allowlist bounds *where*
+the agent can reach, and the standing rule remains: never put resident/PII data into any outbound
+request, even to an allowlisted domain. This complements the untrusted-content / provenance rule:
+an injected instruction cannot cause exfiltration when egress is denied by default. Codex (no hook)
+must honor the allowlist as written policy.
+
 ## Audit
 
 Before and after every destructive op, append to `.claude/audit-log.jsonl` (append-only):

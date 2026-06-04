@@ -8,6 +8,7 @@
 /.claude/*
 !/.claude/settings.json
 !/.claude/allow-list.json
+!/.claude/egress-allowlist.txt
 !/.claude/hooks/
 !/.claude/skills/
 

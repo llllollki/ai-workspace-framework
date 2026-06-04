@@ -7,6 +7,22 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.7 — 2026-06-04
+
+**Egress control (data-exfiltration defense)** — catalog-informed hardening: "egress control" is a
+top isolation feature across awesome-ai-coding-tools; here it protects resident/PII data.
+
+### Created
+
+- `.claude\hooks\egress-guard.ps1` — PreToolUse hook (matcher `WebFetch`) that blocks fetches to any
+  host not in the egress allowlist.
+- `.claude\egress-allowlist.txt` — domain allowlist for WebFetch (trusted documentation sources).
+
+### Changed
+
+- `.claude\settings.json` — deny raw network CLI (`curl`/`wget`/`iwr`/`irm`/`nc`/`scp`/`rsync`),
+  allow WebFetch only to allowlisted documentation domains, and register the egress hook.
+- `ai-context\global\enforcement_design.md` — added the Egress control section.
 ## v0.6 — 2026-06-04
 
 **Worktree isolation for write-capable subagents** (catalog-informed hardening: git-worktree
