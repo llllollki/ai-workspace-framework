@@ -7,6 +7,43 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.4 — 2026-06-04
+
+**Added ship + safety layer so Claude Code and Codex can autonomously reach production-ready +
+deployed with real (harness-enforced) guardrails and a cost budget.** (Task: framework/0001;
+items 1–3 of 6 — deploy-blocker floor. Items 4–6 are the next batch.)
+
+### Created
+
+- `ai-context\global\enforcement_design.md` — human/Codex reference for the permission policy:
+  op classes, scoped/expiring allow-list semantics, never-autonomous list, RLS/PII hard-stop,
+  audit, and the out-of-model backstops the human must configure.
+- `ai-context\orchestration\definition_of_done.md` — the DoD gate, typed command-variable status
+  model (DEFINED/TODO/N/A), per-project `REQUIRED_FLOOR`, and per-project command scaffolding.
+- `ai-context\skills\core\verify_and_ship_v1.md` — Codex-readable mirror of the verify-and-ship
+  skill (step order, retry policy, prod-deploy gate, smoke assertions, logging).
+- `.claude\settings.json`, `.claude\hooks\pretooluse-guard.ps1`, `.claude\allow-list.json`,
+  `.claude\skills\verify-and-ship\SKILL.md` — Claude Code enforcement + auto-invoked skill.
+  **Outside the documented Allowed Write Scope**; created under explicit owner authorization as the
+  enforcement seatbelt (see task framework/0001).
+
+### Changed
+
+- `ai-context\global\agent_rules.md` — added Safety Layer (enforced) and Token/Cost Budget +
+  Model Tiering sections.
+- `ai-context\orchestration\execution_rules.md` — added the Definition-of-Done gate as a hard
+  precondition before any task moves to `tasks\done\`.
+- `ai-context\skills\skills_index.md`, `ai-context\orchestration\routing_rules.md` — registered
+  `verify_and_ship_v1`.
+- `ai-context\README.md`, `CLAUDE.md`, `AGENTS.md` — pointers to the enforcement + DoD layer.
+
+### Not changed
+
+- Application source, config, dependency, environment, deployment, data, and generated files —
+  unchanged.
+
+---
+
 ## v0.3 - 2026-05-16
 
 **Added global subagent guidance for Claude Code and Codex.**

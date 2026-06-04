@@ -21,6 +21,23 @@ c:\Projects\
     AGENTS.md                 ← project-level agent pointer
 ```
 
+## Safety and Shipping Policy (Codex must honor as written rules)
+
+Codex has no `.claude/settings.json` or PreToolUse hook enforcement. Follow this policy manually:
+
+- **Deny-by-default destructive ops.** Do not run a gated op — `deploy`, `db_migration`,
+  `force_push`, `secret_change` — without a matching, active, scoped entry in `.claude/allow-list.json`
+  (match op class + target env + grant; production needs a non-past `expires` and never `standing`).
+- **Never-autonomous** (no entry can grant): prod data deletion, secret rotation, force-push to
+  protected branches, deleting backups, disabling RLS/auth, changing billing/DNS → `needs input:`.
+- **RLS / PII hard-stop** and **untrusted-content / provenance** rules apply — see
+  `ai-context\global\enforcement_design.md` and `ai-context\global\agent_rules.md`.
+- **Definition of Done.** Not `done` until `ai-context\orchestration\definition_of_done.md` passes;
+  follow `ai-context\skills\core\verify_and_ship_v1.md`.
+- **Cost budget + model tiering.** Bounded runs (default N=1), read-less, lowest adequate model /
+  reasoning effort per task tier (`ai-context\global\agent_rules.md`).
+- **Never edit the enforcement files or allow-list.** Lacking a permission → STOP, `needs input:`.
+
 ## How to Route
 
 - For global behavior rules, including when Codex-style agents should use subagents or parallel workers: read `ai-context\global\agent_rules.md`

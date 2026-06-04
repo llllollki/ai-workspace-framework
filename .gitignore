@@ -2,9 +2,14 @@
 # Anchored to repo root (/) so nested ai-context/*/AssistedLivingHelp/ dirs are NOT excluded.
 /AssistedLivingHelp/
 
-# Claude Code machine-local memory — not portable, not framework content
-# Anchored to repo root (/) so only top-level .claude/ is excluded.
-/.claude/
+# Claude Code: machine-local content (memory, history, audit log) is NOT portable.
+# But the ENFORCEMENT SEATBELT is framework content and IS tracked (negations below).
+# Anchored to repo root (/) so only top-level .claude/ is affected.
+/.claude/*
+!/.claude/settings.json
+!/.claude/allow-list.json
+!/.claude/hooks/
+!/.claude/skills/
 
 # Environment and secrets
 .env

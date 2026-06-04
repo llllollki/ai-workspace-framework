@@ -1,0 +1,10 @@
+# Enforcement seatbelt — these paths require owner review before merge.
+# This file only has teeth when branch protection on `main` has
+# "Require a pull request before merging" + "Require review from Code Owners" enabled
+# (GitHub: Settings → Branches → Branch protection rules). Configure that in the UI/API;
+# it cannot be set by a git push.
+
+/.claude/                                   @llllollki
+/.github/CODEOWNERS                          @llllollki
+/ai-context/global/enforcement_design.md     @llllollki
+/ai-context/orchestration/definition_of_done.md  @llllollki

@@ -40,10 +40,20 @@ This file defines runtime behavior rules for agents during task execution.
 - If two sources conflict, stop and report — do not choose silently.
 - If implementation would touch a file outside the allowed scope, stop and report.
 
+## Definition-of-Done Gate (hard precondition)
+
+- A task may NOT move to `tasks\done\` until the Definition-of-Done gate in
+  `orchestration\definition_of_done.md` passes: every `DEFINED` gate step ran and passed,
+  acceptance criteria are met, and (if deploy is in scope) post-deploy smoke passed.
+- Run the gate via the `verify-and-ship` skill (`skills\core\verify_and_ship_v1.md`). Never mark
+  `done` on any failure; a failed task stays in `active\` with the failing step recorded.
+- Deploy and migration steps obey the permission policy in `global\enforcement_design.md`.
+
 ## After Task Completion
 
 _Substitute `<project>` with the current project name at runtime._
 
+- Confirm the Definition-of-Done gate passed (above) before any of the steps below.
 - Update the task document status to done.
 - Move the completed task to `tasks\done\<project>\`.
 - Update `projects\<project>\ai_memory.md` if the task resolved an open question.

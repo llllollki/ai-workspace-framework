@@ -29,6 +29,7 @@ This file defines how to match task types to skills.
 | Generate a UI component | `generate_ui_component_v1` | `skills\core\generate_ui_component_v1.md` |
 | Write an API endpoint | `write_api_endpoint_v1` | `skills\core\write_api_endpoint_v1.md` |
 | Debug an issue | `debug_issue_v1` | `skills\core\debug_issue_v1.md` |
+| Verify / ship / deploy / mark a task done | `verify_and_ship_v1` | `skills\core\verify_and_ship_v1.md` |
 | Design a dashboard | `design_dashboard_v1` | `skills\domain\design_dashboard_v1.md` |
 | Build an auth flow | `build_auth_flow_v1` | `skills\domain\build_auth_flow_v1.md` |
 | AssistedLivingHelp custom logic | `custom_logic_v1` | `skills\project\AssistedLivingHelp\custom_logic_v1.md` |

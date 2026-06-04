@@ -22,6 +22,7 @@ General-purpose skills that apply across projects.
 | `generate_ui_component` | v1 | `core\generate_ui_component_v1.md` | Generate a new UI component |
 | `write_api_endpoint` | v1 | `core\write_api_endpoint_v1.md` | Write a new API endpoint |
 | `debug_issue` | v1 | `core\debug_issue_v1.md` | Debug and diagnose an issue |
+| `verify_and_ship` | v1 | `core\verify_and_ship_v1.md` | Run the Definition-of-Done gate (preflight→typecheck→lint→test→build→migrate→RLS→deploy→smoke) before marking done/deploying. Claude Code auto-invokes the mirror at `.claude/skills/verify-and-ship/SKILL.md` |
 
 ## Domain Skills
 
@@ -41,6 +42,12 @@ Skills specific to a project.
 | Skill | Version | File | Purpose |
 |---|---|---|---|
 | `custom_logic` | v1 | `project\AssistedLivingHelp\custom_logic_v1.md` | Custom matching and workflow logic for AssistedLivingHelp |
+
+### alh-tracker
+
+| Skill | Version | File | Purpose |
+|---|---|---|---|
+| `mobile_tablet_ui` | v1 | `project\alh-tracker\mobile_tablet_ui_v1.md` | Keep Facility Tracker App mobile/tablet UI changes consistent |
 
 ---
 
