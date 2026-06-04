@@ -7,6 +7,26 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.6 — 2026-06-04
+
+**Worktree isolation for write-capable subagents** (catalog-informed hardening: git-worktree
+isolation is the recurring safe-agent pattern in awesome-ai-coding-tools).
+
+### Changed
+
+- `ai-context\global\agent_rules.md` — added a rule to run write-capable / build-or-migrate /
+  parallel subagents on an isolated git worktree (Claude Code `isolation: "worktree"`; others
+  `git worktree add`) so they cannot corrupt the live tree, `.claude/**`, or another worker's edits.
+- `ai-context\orchestration\execution_rules.md` — Subagent Execution now prefers worktree isolation
+  for any file-writing or build/migration subagent.
+
+### Not changed
+
+- Application source, config, dependency, environment, deployment, data, and generated files —
+  unchanged.
+
+---
+
 ## v0.5 — 2026-06-04
 
 **Completed the ship & safety upgrade (items 4–6 of task framework/0001): deployment runbook,
