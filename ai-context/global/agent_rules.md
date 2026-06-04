@@ -77,6 +77,12 @@ such enforcement and must honor them as written policy. Full design: `global\enf
   or touches resident/PII/PHI tables. Never copy/dump/log resident or PII rows.
 - **Audit.** Append to `.claude/audit-log.jsonl` before and after every destructive op; if the
   audit entry can't be written, do not perform the op.
+- **Git workflow (agent-via-PR).** Never push to `main`/`master` — the PreToolUse hook blocks it.
+  Work on a feature branch and open a pull request for owner / Code-Owners review; the owner merges.
+  This is how enforcement-file and framework changes stay reviewed even though the agent runs with
+  the owner's git credentials (which can bypass branch protection). To push a new branch and surface
+  the PR link: `git push -u origin <branch>` then open the compare URL git prints (`gh` is not
+  installed in this workspace).
 - **Secrets hygiene.** Never load `.env`/keys into context; reference secrets by name; redact
   tokens/keys/connection-strings from logs and task docs.
 

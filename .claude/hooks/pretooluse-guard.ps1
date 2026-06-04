@@ -42,12 +42,22 @@ foreach ($p in $never) {
   }
 }
 
+# --- Agent-via-PR: never push to a protected branch; use a feature branch + PR ---
+if ($c -match '\bgit\s+push\b') {
+  $branch = ''
+  try { $branch = (& git -C $projectDir rev-parse --abbrev-ref HEAD 2>$null) } catch { $branch = '' }
+  $branch = ([string]$branch).Trim()
+  if ($branch -eq 'main' -or $branch -eq 'master') {
+    Block "Agent-via-PR workflow: do not push to '$branch'. Create a feature branch and open a pull request for owner review."
+  }
+  # pushing a feature branch is allowed -> fall through (not gated).
+}
+
 # --- GATED (require a matching, active allow-list entry) ---
 # op_class -> substrings that identify it
 $gated = @{
   'deploy'       = @('vercel deploy', 'vercel --prod', 'vercel deploy --prod', 'npm run deploy')
   'db_migration' = @('supabase db push', 'supabase migration up')
-  'force_push'   = @('git push')   # plain push is gated; --force already blocked above
   'secret_change'= @('supabase secrets set', 'vercel env add')
 }
 
