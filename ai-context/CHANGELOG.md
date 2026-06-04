@@ -23,6 +23,18 @@ top isolation feature across awesome-ai-coding-tools; here it protects resident/
 - `.claude\settings.json` — deny raw network CLI (`curl`/`wget`/`iwr`/`irm`/`nc`/`scp`/`rsync`),
   allow WebFetch only to allowlisted documentation domains, and register the egress hook.
 - `ai-context\global\enforcement_design.md` — added the Egress control section.
+## v0.6 — 2026-06-04
+
+**Worktree isolation for write-capable subagents** (catalog-informed hardening: git-worktree
+isolation is the recurring safe-agent pattern in awesome-ai-coding-tools).
+
+### Changed
+
+- `ai-context\global\agent_rules.md` — added a rule to run write-capable / build-or-migrate /
+  parallel subagents on an isolated git worktree (Claude Code `isolation: "worktree"`; others
+  `git worktree add`) so they cannot corrupt the live tree, `.claude/**`, or another worker's edits.
+- `ai-context\orchestration\execution_rules.md` — Subagent Execution now prefers worktree isolation
+  for any file-writing or build/migration subagent.
 
 ### Not changed
 

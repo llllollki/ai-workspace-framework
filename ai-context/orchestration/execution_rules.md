@@ -31,6 +31,7 @@ This file defines runtime behavior rules for agents during task execution.
 - Follow the subagent policy in `global\agent_rules.md` for every task, whether or not the user prompt mentions subagents.
 - For broad implementation, assessment, migration, review, deployment, or verification tasks, pause before editing and split independent workstreams across subagents when the runtime supports it.
 - The main agent owns coordination: define each subagent's scope, avoid overlapping write areas, review results, integrate changes, run checks, commit, push, and deploy when deployment is part of the task.
+- Prefer worktree isolation for any subagent that writes files or runs builds/migrations (see `global\agent_rules.md`), so failed or conflicting work never touches the live tree or the enforcement files.
 - If subagents would help but the runtime has no subagent tool, say so explicitly and continue serially.
 - If subagents are intentionally not used, keep the reason brief and concrete.
 
