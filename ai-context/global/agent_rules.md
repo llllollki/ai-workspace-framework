@@ -41,6 +41,7 @@ These rules apply to Claude Code, Codex, and any other agent runtime that suppor
 - Good default workstreams include independent codebase exploration, database/RLS work, frontend implementation, documentation updates, deployment preparation, and verification or build-failure investigation.
 - Do not create subagents for small, single-file, tightly coupled, or design-sensitive changes where coordination overhead is greater than the work itself. This is an explicit exception, not the default.
 - When subagents are used, assign each one a clear ownership area, avoid overlapping file edits, and have the main agent review, integrate, run checks, and deploy when deployment is part of the task.
+- **Isolate write-capable subagents in a git worktree.** When a subagent will write files, run builds/migrations, or do parallel work that could conflict, run it on an isolated worktree (Claude Code: Agent `isolation: "worktree"`; Codex / other runtimes: `git worktree add`) so it operates on a throwaway checkout and cannot corrupt the live tree, the enforcement files (`.claude/**`), or another worker's edits. Read-only exploration subagents do not need a worktree. The main agent reviews the worktree diff before integrating, and discards the worktree on failure.
 - If the runtime does not support subagents or parallel workers, proceed serially and state that limitation clearly when the task is broad enough that subagents would otherwise have been used.
 - These rules apply across existing projects, new projects, and framework maintenance tasks.
 
