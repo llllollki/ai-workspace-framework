@@ -7,6 +7,37 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.5 — 2026-06-04
+
+**Completed the ship & safety upgrade (items 4–6 of task framework/0001): deployment runbook,
+source-of-truth reconciliation, and stale-pointer fixes.**
+
+### Created
+
+- `ai-context\global\deployment.md` — deployment runbook: environments, canonical deploy sequence
+  (migrate → RLS-verify → deploy → smoke), rollback, and per-project sections (alh-tracker
+  concrete; AssistedLivingHelp TODO pending path confirmation).
+- `ai-context\source_of_truth.md` — documents the two-tree duplication (canonical repo
+  `ai-workspace-framework` vs working copy `ai-context\`), recommends consolidation, records the
+  `CLAUDE.md`/`AGENTS.md` "update together" rule, and flags `printing\` as outside the projects table.
+
+### Changed
+
+- Root `CLAUDE.md` / `AGENTS.md` — reconciled so the repo and live workspace trees are identical.
+- `ai-context\skills\domain\build_auth_flow_v1.md`,
+  `ai-context\skills\project\AssistedLivingHelp\custom_logic_v1.md` — repointed stale
+  `Source: AssistedLivingHelp\CLAUDE.md` references to `projects\AssistedLivingHelp\overview.md`.
+- `ai-context\README.md` — added the deployment runbook and source-of-truth to navigation.
+
+### Not changed
+
+- Migration-provenance notes ("Migrated from `AssistedLivingHelp\CLAUDE.md`") retained as
+  historical record.
+- Application source, config, dependency, environment, deployment, data, and generated files —
+  unchanged.
+
+---
+
 ## v0.4 — 2026-06-04
 
 **Added ship + safety layer so Claude Code and Codex can autonomously reach production-ready +

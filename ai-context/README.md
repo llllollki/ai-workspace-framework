@@ -28,6 +28,8 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | Understanding global agent behavior, including subagent usage | `global\agent_rules.md` |
 | Verifying / shipping / deploying / marking a task done | `orchestration\definition_of_done.md` + `skills\core\verify_and_ship_v1.md` |
 | Understanding safety enforcement and the allow-list | `global\enforcement_design.md` (live: `.claude\settings.json` + `.claude\hooks\`) |
+| Deploying / rolling back a project | `global\deployment.md` |
+| Which framework tree is canonical (repo vs working copy) | `source_of_truth.md` |
 | Checking coding standards | `global\coding_standards.md` |
 | Checking API patterns | `global\api_patterns.md` |
 | Checking UI components | `global\ui_components.md` |

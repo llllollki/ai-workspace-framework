@@ -29,6 +29,6 @@ Use this skill when implementing:
 - Use `ca_ccld_registry` as the primary Phase 1 facility data source. See `data_model.md`.
 - Phase 1 scope is limited to the five hospital-anchored launch markets.
 
-Source: `AssistedLivingHelp\CLAUDE.md`
+Source: `projects\AssistedLivingHelp\overview.md` (and the other project context files listed under Inputs Required); originally migrated from the project brief.
 
 <!-- TODO: Expand with concrete matching algorithm rules and outreach workflow rules once the implementation phase begins. -->

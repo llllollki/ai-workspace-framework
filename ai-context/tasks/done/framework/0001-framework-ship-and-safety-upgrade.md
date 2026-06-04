@@ -1,8 +1,9 @@
 # Task 0001 — Framework Ship & Safety Upgrade
 
 **Scope:** workspace framework (spans AssistedLivingHelp + alh-tracker)
-**Status:** in progress
+**Status:** done
 **Started:** 2026-06-04
+**Completed:** 2026-06-04
 **Owner role:** Technical Architect
 **Reviewers:** Security / DevOps, Compliance / Privacy Counsel
 
@@ -39,9 +40,9 @@ This run delivers the **deploy-blocker floor (items 1–3)**, then STOPS per the
 - [x] 3. Verify-and-ship skill — `.claude/skills/verify-and-ship/SKILL.md` + ai-context mirror +
       `skills_index.md` + `routing_rules.md` registration
 - [x] Cross-compat — `CLAUDE.md` / `AGENTS.md` enforcement pointers + `README.md` + `CHANGELOG.md`
-- [ ] 4. Deployment runbook (`global/deployment.md`) — **next batch**
-- [ ] 5. Single source of truth — flag `ai-workspace-framework\` + `printing\` — **next batch**
-- [ ] 6. Fix stale pointers (skills citing `AssistedLivingHelp\CLAUDE.md`) — **next batch**
+- [x] 4. Deployment runbook (`global/deployment.md`) — env, deploy sequence, rollback, per-project
+- [x] 5. Single source of truth — `source_of_truth.md` (repo canonical; reconciled CLAUDE/AGENTS; flagged `printing\`)
+- [x] 6. Fix stale pointers — `build_auth_flow_v1.md` + `custom_logic_v1.md` repointed to `overview.md`
 
 ### subagent_fallback
 
@@ -60,5 +61,12 @@ Ran serially (no subagents). Reason: the doc edits are tightly coupled and cross
 
 ## Outcome
 
-**2026-06-04 — Floor (items 1–3) implemented.** See diff summary in execution handoff. Next batch:
-items 4–6.
+**2026-06-04 — Floor (items 1–3) implemented and pushed** to `ai-workspace-framework` (commit
+`34ec527`). Enforcement hook tested (gated/never ops blocked; valid scoped entry allowed + audited).
+
+**2026-06-04 — Items 4–6 completed.** Deployment runbook (`global/deployment.md`), source-of-truth
+recommendation (`source_of_truth.md`), and skill stale-pointer fixes. Root `CLAUDE.md`/`AGENTS.md`
+reconciled across both trees (commit `b4d6290`).
+
+**Remaining out-of-model backstops (owner-owned):** branch protection done; still open — a
+least-privilege Supabase role (can't disable RLS / read PII) and an append-only/external audit sink.

@@ -31,6 +31,6 @@ Use this skill when implementing login, signup, session management, role checks,
 - Internal admin must be staff-only.
 - Database-level policies must enforce staff membership checks, not merely any authenticated user.
 
-Source: `AssistedLivingHelp\CLAUDE.md` — Security And Access Control section
+Source: `projects\AssistedLivingHelp\overview.md` — Security And Access Control (under Compliance And Legal Guardrails); originally migrated from the project brief.
 
 <!-- TODO: Update with the confirmed Supabase role model once defined. -->
