@@ -68,6 +68,21 @@ RLS policy, disables row-level security, changes `GRANT`/role membership, alters
 `WITH CHECK`, adds `SECURITY DEFINER`, or touches a resident/PII/PHI table. Never copy/dump/log
 resident or PII rows. Smoke tests use synthetic fixtures only.
 
+## Git workflow (agent-via-PR)
+
+Branch protection on `main` requires PRs, but the owner's credentials can bypass it — and an agent
+runs with those credentials. So enforcement is moved local: the PreToolUse hook **blocks `git push`
+whenever the current branch is `main`/`master`**. Agents must therefore:
+
+1. Work on a feature branch (`git checkout -b <branch>`).
+2. `git push -u origin <branch>` (allowed; feature-branch pushes are not gated).
+3. Open a PR from the compare URL git prints (`gh` is not installed here) for owner / Code-Owners
+   review. The owner reviews and merges.
+
+This keeps changes to `.claude/**` and the framework reviewable even though the agent could
+technically bypass GitHub branch protection. `git push --force`/`-f` remains on the never-autonomous
+list regardless of branch.
+
 ## Audit
 
 Before and after every destructive op, append to `.claude/audit-log.jsonl` (append-only):
