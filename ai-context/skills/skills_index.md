@@ -32,6 +32,7 @@ Skills for specific problem domains.
 |---|---|---|---|
 | `design_dashboard` | v1 | `domain\design_dashboard_v1.md` | Design an internal dashboard layout |
 | `build_auth_flow` | v1 | `domain\build_auth_flow_v1.md` | Build an authentication flow |
+| `build_luxury_site` | v1 | `domain\build_luxury_site_v1.md` | Build a luxury / immersive brand-experience site (cinematic scroll storytelling, refined motion). Claude Code auto-invokes the mirror at `.claude/skills/build-luxury-site/SKILL.md` |
 
 ## Project Skills
 

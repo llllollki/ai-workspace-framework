@@ -7,6 +7,30 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.8 — 2026-06-04
+
+**Added a luxury / immersive brand-site design skill** (reference class: Cartier *Watches & Wonders*).
+
+### Created
+
+- `.claude\skills\build-luxury-site\SKILL.md` — Claude-auto-invoked design skill: editorial luxury
+  design language, scroll-driven motion system (Lenis + GSAP/ScrollTrigger), recommended stack,
+  section blueprint, performance budget (LCP/CLS), accessibility (`prefers-reduced-motion` required)
+  + i18n, and a Definition-of-Done tie-in.
+- `ai-context\skills\domain\build_luxury_site_v1.md` — Codex-readable mirror of the same skill.
+
+### Changed
+
+- `ai-context\skills\skills_index.md`, `ai-context\orchestration\routing_rules.md` — registered
+  `build_luxury_site_v1`.
+
+### Not changed
+
+- Application source, config, dependency, environment, deployment, data, and generated files —
+  unchanged.
+
+---
+
 ## v0.7 — 2026-06-04
 
 **Egress control (data-exfiltration defense)** — catalog-informed hardening: "egress control" is a
