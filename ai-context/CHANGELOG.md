@@ -7,6 +7,33 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.9 — 2026-06-04
+
+**Added a health/care mobile & tablet app design skill** — calm, accessible, PHI-safe UI design for
+phones and tablets (reference: AI health app design).
+
+### Created
+
+- `.claude\skills\design-health-mobile-app\SKILL.md` — Claude-auto-invoked design skill, cleanly
+  sectioned (design-language statement, token system, layout/navigation, touch/type/contrast,
+  components, health data-viz honesty contract, status/color model, AI-feature UX, accessibility,
+  data entry & offline, shared-tablet/kiosk, PHI/PII guardrails, anti-overclaim copy rules,
+  anti-generic, Definition of Done, self-verify checklist).
+- `ai-context\skills\domain\design_health_mobile_app_v1.md` — Codex-readable mirror.
+
+### Changed
+
+- `ai-context\skills\skills_index.md`, `ai-context\orchestration\routing_rules.md` — registered
+  `design_health_mobile_app_v1`. The skill defers to the project skill
+  `project\alh-tracker\mobile_tablet_ui_v1.md` for alh-tracker screens.
+
+### Not changed
+
+- Application source, config, dependency, environment, deployment, data, and generated files —
+  unchanged.
+
+---
+
 ## v0.8 — 2026-06-04
 
 **Added a luxury / immersive brand-site design skill** (reference class: Cartier *Watches & Wonders*).

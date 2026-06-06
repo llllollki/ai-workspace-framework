@@ -33,6 +33,7 @@ This file defines how to match task types to skills.
 | Design a dashboard | `design_dashboard_v1` | `skills\domain\design_dashboard_v1.md` |
 | Build an auth flow | `build_auth_flow_v1` | `skills\domain\build_auth_flow_v1.md` |
 | Build a luxury / immersive marketing or brand site | `build_luxury_site_v1` | `skills\domain\build_luxury_site_v1.md` |
+| Design a mobile / tablet health or care app UI | `design_health_mobile_app_v1` | `skills\domain\design_health_mobile_app_v1.md` |
 | AssistedLivingHelp custom logic | `custom_logic_v1` | `skills\project\AssistedLivingHelp\custom_logic_v1.md` |
 
 ## Fallback
