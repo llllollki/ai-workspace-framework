@@ -7,6 +7,34 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.10 — 2026-06-04
+
+**Added a wellness / health-tracking app design skill** — energetic fresh green-to-yellow gradient
+aesthetic for consumer fitness/wellness trackers (reference: a health-tracking app + a lime/yellow
+gradient palette).
+
+### Created
+
+- `.claude\skills\design-wellness-tracker-app\SKILL.md` — Claude-auto-invoked aesthetic skill: fresh
+  green-yellow color system (with hard contrast guardrails — deep ink on light, yellow decorative
+  only, status colors kept distinct from the brand green/yellow), activity-ring signature element,
+  motivational/gamification patterns with reduced-motion restraint. **Builds on**
+  `design_health_mobile_app` (inherits its tokens / a11y / data-viz honesty / PHI / DoD rules rather
+  than duplicating them).
+- `ai-context\skills\domain\design_wellness_tracker_app_v1.md` — Codex-readable mirror.
+
+### Changed
+
+- `ai-context\skills\skills_index.md`, `ai-context\orchestration\routing_rules.md` — registered
+  `design_wellness_tracker_app_v1`.
+
+### Not changed
+
+- Application source, config, dependency, environment, deployment, data, and generated files —
+  unchanged.
+
+---
+
 ## v0.9 — 2026-06-04
 
 **Added a health/care mobile & tablet app design skill** — calm, accessible, PHI-safe UI design for
