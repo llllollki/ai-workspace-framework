@@ -7,6 +7,30 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.11 — 2026-06-07
+
+**Added durable project gotchas support and strengthened test planning and DoD coverage rules.**
+
+### Created
+
+- `ai-context\projects\alh-tracker\gotchas.md` — recall-first registry of durable technical traps
+  (Supabase SIGNED_IN on tab refocus, ALT+Tab modal close, RLS GRANT 403s, auth redirect loops),
+  distinct from `ai_memory.md` (volatile) and `reflection.md` (post-task retrospective).
+
+### Changed
+
+- `ai-context\orchestration\context_rules.md` — added optional per-project `gotchas.md` support and loaded it for alh-tracker debugging, auth, and RLS/provisioning task types only.
+- `ai-context\orchestration\execution_rules.md` — added a proactive save rule for non-obvious or repeat failure-class fixes, with anti-nag trigger criteria.
+- `ai-context\orchestration\planning_rules.md` — required "tests for this change" as a planning line item and acceptance criteria item, with `templates\test_file_v1.md` as the coverage-doc format.
+- `ai-context\orchestration\definition_of_done.md` — clarified that feature tasks cannot be done without tests covering the new behavior and defined what broadened `TEST_CMD` means for alh-tracker.
+- `ai-context\global\agent_rules.md` — added the principle to write tests with the feature, not after.
+
+### Agent-neutral
+
+- All new rule text is runtime-neutral (no Claude Code / Codex-specific tool names), so both runtimes read identical rules.
+
+---
+
 ## v0.10 — 2026-06-04
 
 **Added a wellness / health-tracking app design skill** — energetic fresh green-to-yellow gradient

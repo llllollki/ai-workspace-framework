@@ -31,7 +31,7 @@ This file defines how agents should decompose tasks into subtasks before beginni
 2. Load project context using the sequence in `context_rules.md`.
 3. Apply the subagent planning gate from `global\agent_rules.md`, even if the user did not request subagents.
 4. Decompose the task into a numbered list of discrete subtasks.
-5. For each subtask, identify: owner role, input dependencies, output artifact, acceptance check, and whether it is safe to delegate to a subagent or parallel worker.
+5. For each subtask, identify: owner role, input dependencies, output artifact, acceptance check, tests needed, and whether it is safe to delegate to a subagent or parallel worker.
 6. If at least two subtasks can run independently and the runtime supports subagents, assign those subtasks to subagents by default.
 7. Identify which skills apply to each subtask (see `routing_rules.md`).
 8. Write the plan into the task document under a `## Plan` section before beginning.
@@ -72,6 +72,8 @@ Reviewers:
 ### Plan section format: checklist vs. narrative
 
 Use the `- [ ] subtask` checklist format when subtasks are independently executable and need progress tracking (e.g., a multi-file migration, a feature with distinct layers). This format works well for tasks where items can be checked off as work proceeds.
+
+- Acceptance criteria should include a required line item for tests covering the new behavior. Use `templates\test_file_v1.md` as the coverage-doc format when describing the planned test artifacts.
 
 Use a narrative or headed subsection format (e.g., `### API behavior`, `### Data persistence`) when the plan is primarily reference material — spec details, field tables, error response shapes — that needs to be consulted during implementation rather than checked off. This was validated during the `POST /api/leads` implementation, where the plan sections served as implementation guidance rather than a progress checklist.
 

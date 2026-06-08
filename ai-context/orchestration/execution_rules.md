@@ -59,6 +59,7 @@ _Substitute `<project>` with the current project name at runtime._
 - Move the completed task to `tasks\done\<project>\`.
 - Update `projects\<project>\ai_memory.md` if the task resolved an open question.
 - Update `projects\<project>\execution_log.md` with a one-line summary of the mechanical action taken.
+- If a fix re-addresses a class of problem already seen or resolves a non-obvious trap, proactively ask the user before closing the task whether to save it to the project's `gotchas.md`. Prompt only when either (a) the same failure class has appeared before, or (b) the root cause was non-obvious and cost real debugging time. Do not prompt for routine, self-explanatory fixes.
 - Write retrospective notes to `projects\<project>\reflection.md` if the task revealed a pattern worth remembering.
 
 <!-- TODO: Refine execution rules as team workflow patterns become established. -->

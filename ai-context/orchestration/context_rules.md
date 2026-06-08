@@ -56,6 +56,9 @@ Load additional files based on task type (see project-specific tables below).
 | Data model work | `projects\alh-tracker\data_model.md` |
 | Feature work | `projects\alh-tracker\features.md`, `projects\alh-tracker\user_flows.md` |
 | Compliance / regulatory work | `projects\alh-tracker\compliance_notes.md` |
+| Debugging / troubleshooting | `projects\alh-tracker\gotchas.md` |
+| Authentication / auth work | `projects\alh-tracker\gotchas.md` |
+| RLS / provisioning | `projects\alh-tracker\gotchas.md` |
 | Active task | `tasks\active\alh-tracker\<task-file>.md` |
 | Working context / open questions | `projects\alh-tracker\ai_memory.md` |
 
@@ -64,6 +67,7 @@ Load additional files based on task type (see project-specific tables below).
 - Load only what the task requires. Do not load all project files for every task.
 - Always load `global\agent_rules.md`, `planning_rules.md`, and `execution_rules.md` before implementation so the subagent gate is applied consistently.
 - Always load `overview.md` before project-specific work; it contains compliance and scope constraints.
+- Some projects may optionally define `projects\<project>\gotchas.md` to capture durable technical traps in a structured recall-first format. When present, include it only for the task types that need durable trap recall rather than loading it for every task.
 - Before modifying `ai_memory.md`, check for stale entries and remove resolved items.
 
 <!-- TODO: Refine context loading sequences as task patterns become clearer. -->
