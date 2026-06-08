@@ -35,6 +35,8 @@ so the floor can never be silently skipped.
 
 Do not guess commands. Unknown = `TODO`, never invented.
 
+Feature tasks cannot be marked done without tests covering the new behavior. When a project has a `TEST_CMD`, it should reflect coverage for the new feature area and not be skipped as a routine follow-up.
+
 ## Per-project scaffolding
 
 ### alh-tracker (Vite + React + TS + Supabase; deploy: Vercel)
@@ -52,6 +54,8 @@ DEPLOY_CMD     = TODO  # confirm exact Vercel CLI/flags (preview vs --prod)
 SMOKE_CMD      = TODO  # GET / ->200; auth round-trip; RLS positive; RLS anon-denied
 REQUIRED_FLOOR = [BUILD_CMD]        # TEST_CMD joins floor once a real `test` script exists
 ```
+
+For alh-tracker, "broadened" means the configured `TEST_CMD` covers the new feature area beyond the existing provisioning-only slice. Until broader coverage exists, `TEST_CMD` remains partial and off the required floor.
 
 ### AssistedLivingHelp (Next.js-ish web+API, SQLite) — PATH NOT CONFIRMED
 

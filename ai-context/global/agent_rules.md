@@ -109,6 +109,7 @@ such enforcement and must honor them as written policy. Full design: `global\enf
 - If existing documents conflict, stop and report the conflict rather than choosing silently.
 - Do not reinterpret, modernize, or reconcile existing business context.
 - Preserve exact wording from source documents when migrating content.
+- Write tests with the feature, not after. Delayed test coverage increases the risk of repeat-fix commits and regression cycles for complex issues such as auth guards and modal behavior.
 
 ### Escalation
 
