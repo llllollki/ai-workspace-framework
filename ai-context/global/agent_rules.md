@@ -36,6 +36,7 @@ This file defines behavioral rules for AI agents (Claude Code, Codex, and others
 These rules apply to Claude Code, Codex, and any other agent runtime that supports subagents, parallel workers, or delegated agent tasks.
 
 - Subagent consideration is mandatory for every task, even when the user prompt does not mention subagents.
+- The full subagent planning gate (`orchestration\planning_rules.md`) applies only when a task spans 3+ files, 2+ layers (db/api/ui), or includes verification or deploy. For smaller tasks, a one-line `serial: small task` note in the plan or working notes satisfies the gate. The policy for tasks above the threshold is unchanged.
 - At the start of each task, decide whether at least two parts of the work can run independently and be merged safely.
 - If the runtime supports subagents or parallel workers and independent workstreams exist, use them by default.
 - Good default workstreams include independent codebase exploration, database/RLS work, frontend implementation, documentation updates, deployment preparation, and verification or build-failure investigation.

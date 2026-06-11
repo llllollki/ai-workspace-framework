@@ -19,7 +19,8 @@ It is read by Claude Code, Codex, and other agents to understand project context
 
 | What you are doing | Read first |
 |---|---|
-| Starting a new task | `orchestration\planning_rules.md` |
+| Starting any task (default per-task preamble) | `core_rules.md` + `projects\<project>\overview.md` |
+| Starting a new task (planning-heavy) | `orchestration\planning_rules.md` |
 | Selecting a skill | `skills\skills_index.md` |
 | Understanding AssistedLivingHelp | `projects\AssistedLivingHelp\overview.md` |
 | Understanding alh-tracker | `projects\alh-tracker\overview.md` |
@@ -30,6 +31,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | Understanding safety enforcement and the allow-list | `global\enforcement_design.md` (live: `.claude\settings.json` + `.claude\hooks\`) |
 | Deploying / rolling back a project | `global\deployment.md` |
 | Which framework tree is canonical (repo vs working copy) | `source_of_truth.md` |
+| Checking framework structural consistency (references, task IDs, CLAUDE/AGENTS sync) | `setup\lint_framework.ps1` (docs: `setup\lint_framework.md`) |
 | Checking coding standards | `global\coding_standards.md` |
 | Checking API patterns | `global\api_patterns.md` |
 | Checking UI components | `global\ui_components.md` |
@@ -39,6 +41,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | File | Responsibility |
 |---|---|
 | `README.md` | This file — navigation index |
+| `core_rules.md` | Per-task digest of the must-know rules — the default per-task preamble |
 | `CHANGELOG.md` | Framework-level documentation structure changes only (not business or code changes) |
 
 ## Projects Index

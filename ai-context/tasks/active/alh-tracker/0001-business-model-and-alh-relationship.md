@@ -35,10 +35,11 @@ Specifically:
 - [x] Review AssistedLivingHelp BD pricing tiers (`business_development.md`): Starter $299–$499, Growth $699–$999, Concierge $500–$1,500
 - [x] Assess typical willingness-to-pay for small RCFE operators (6–20 residents); context: these are often sole-operator homes with thin margins
 - [x] Define alh-tracker standalone pricing range and model
-- [ ] Define ALH partner discount or bundle policy — direction set (bundled or heavily discounted); exact rate and structure not yet finalized
+- [x] Define ALH partner discount or bundle policy — $49/month founding partner rate finalized in ADR 0003 (accepted 2026-05-09)
 - [x] Define the commercial and data boundary between products (commercial relationship shared; resident care data not)
 - [x] Write a brief recommendation document
-- [ ] Record durable decisions as ADRs in `decisions\` — 2 partial ADRs created (data boundary, pricing model type); full pricing ADR pending rate finalization
+- [x] Record durable decisions as ADRs in `decisions\` — ADR 0001 (data boundary), ADR 0002 (pricing model type), ADR 0003 (ALH partner pricing and shared billing) all accepted
+- [ ] Owner validation packet: complete pricing sensitivity probe (Section 6b) and support/onboarding model assessment (Section 6d)
 - [ ] Update `ai_memory.md`: remove resolved open questions — pending task closure
 
 ---
@@ -226,23 +227,121 @@ Each phase transition requires Product / Program Lead sign-off.
 
 **Data boundary enforcement risk:** An inadvertent query path that exposes care data to the ALH platform causes privacy harm, regulatory exposure, and facility trust destruction. The boundary must be enforced at the architecture level — not just in policy. This must be verified before any cross-product integration is built.
 
-**Open questions that block task closure:**
+**Open questions — updated 2026-05-24:**
 
-| Question | Blocks |
+| Question | Status | Blocks |
+|---|---|---|
+| Non-ALH price point validated ($149 recommended; not locked) | ⬜ Open — requires design partner pricing probe (Section 6b) | Phase 2 standalone beta pricing; full pricing ADR |
+| Support model at $99–$149/month — what is sustainable? | ⬜ Open — owner must assess before Phase 3 (Section 6d) | Phase 3 commercial launch readiness |
+| ALH partner pricing rate and structure | ✅ Resolved — $49/month founding partner rate, ADR 0003 (2026-05-09) | — |
+| Shared onboarding/billing workflow between ALH and alh-tracker | ✅ Resolved — ADR 0003 + ADR 0005 | — |
+| Founding partner rate communicated before pilot conversation concludes | ✅ Rate decided ($49/month — ADR 0003); communication is an owner execution step | — |
+
+---
+
+### 6. Owner Validation Packet
+
+This section converts the remaining open items into an owner-executable action plan. All ADR-backed decisions are final. The two items requiring owner action are standalone pricing validation and the support/onboarding model assessment.
+
+#### 6a — Status Summary: Decided vs. Open
+
+| Item | Decision | Status |
+|---|---|---|
+| Pricing model type | Flat monthly per-facility; no per-resident component | ✅ Decided — ADR 0002 |
+| Design partner pricing | Free — no charges during design partner phase | ✅ Decided — ADR 0003 |
+| ALH partner Phase 1 pilot | Free — invite-only, no charge during pilot | ✅ Decided — ADR 0003 |
+| ALH partner founding partner commercial rate | $49/month, communicated before pilot conversation concludes | ✅ Decided — ADR 0003 |
+| Shared onboarding/billing between ALH and alh-tracker | None at MVP; internal CRM manages onboarding | ✅ Decided — ADR 0003 + ADR 0005 |
+| Data boundary | Resident care data siloed; only alh_partner boolean crosses the boundary | ✅ Decided — ADR 0001 |
+| BD timing | Design partner framing only in ALH BD conversations; not a product pitch | ✅ Decided — task 0001 Section 2 |
+| Non-ALH standalone price point | Working assumption: $149/month recommended ($99–$199 working range) | ⬜ Open — requires design partner validation |
+| Support model at $99–$149/month | Not yet defined | ⬜ Open — owner must assess before Phase 3 commercial launch |
+
+Do not reopen decided items without a documented reason and a corresponding ADR update.
+
+#### 6b — Pricing Sensitivity Probe (Owner-Executable at Design Partner Site Visit)
+
+These questions are aligned with task 0002 Section 6 (validation checklist) and the pricing probe rows in task 0002 Section 4b (on-site observation checklist). Ask them in this order, after rapport is established and after the LOI is in place. Do not name any price in initial outreach or before the LOI is signed.
+
+**Question sequence:**
+
+1. **Software spend anchor (do NOT name a number first):**
+   > "What does your current software spend for this facility look like? Anything you pay for — scheduling, billing, phone systems, payroll, anything."
+   - Listen for: total monthly software budget; whether any care-ops software is already in use; how the operator thinks about software cost relative to staff cost.
+
+2. **Unprompted value probe:**
+   > "If something reliably replaced your paper binder and saved you or your caregivers 30 minutes of documentation per shift — what's that worth to you?"
+   - Listen for: a dollar figure named by the owner unprompted; "a lot" or "not much" signals; comparisons to staff hourly cost.
+   - Do not prompt or suggest a number. Record the owner's own framing verbatim.
+
+3. **Price range calibration (use ONLY after Q2 — never lead with this):**
+   > "A tool like this typically runs $99–$149/month for a facility your size. Does that feel in the right range, too high, or almost too cheap to believe?"
+   - Listen for: explicit reaction to the range; comparison to any current tools; "I'd pay that" vs. "that's a stretch."
+   - Record the owner's exact phrasing — this is pricing evidence.
+
+4. **Adoption blocker (regardless of price reaction):**
+   > "What would make you say no to software for this — even if the price was right?"
+   - Listen for: setup friction, caregiver resistance, training burden, tech skepticism, concern about CDSS documentation, concern about software reliability.
+
+5. **ALH relationship check (context-setting, not sales):**
+   > "Is your facility working with AssistedLivingHelp, or with other placement agencies?"
+   - Listen for: existing ALH relationship (determines which pricing path applies — $49/month ALH founding partner vs. $99–$149/month standalone).
+
+**After the visit:** Record answers to Q1–Q5 in the design partner tracker (task 0002 Section 4b). Pricing findings become actionable when at least 2–3 design partner conversations are complete.
+
+#### 6c — Decision Thresholds for $149/Month
+
+| Evidence from design partner conversations | Decision |
 |---|---|
-| Exact ALH partner pricing rate and structure (free? $49–$79/month? bundled in specific ALH tier?) | ADR for full business model; Phase 1 ALH pilot planning |
-| Non-ALH price point validated ($149 recommended; not locked) | Phase 2 standalone beta pricing; ADR |
-| Shared onboarding or billing workflow between ALH and alh-tracker? (not yet addressed) | Phase 1 technical and commercial planning |
-| Support model at $99–$149/month — what is sustainable? | Phase 3 commercial launch readiness |
-| What founding partner rate and duration do ALH pilot participants lock in? | Phase 1 partner communications |
+| 3+ conversations; majority find $99–$149 "reasonable"; none refuse to continue over price | Lock $149/month as Phase 2 standalone launch price |
+| 2+ find $149 "high" or "I'd want to think about it"; majority comfortable at $99 | Lower to $99/month for Phase 2; explore tiered pricing by facility size for Phase 3 |
+| Majority volunteer a number above $150 unprompted in Q2 | Test $179/month for Phase 2; A/B $149 vs $179 in Phase 3 |
+| Zero partners willing to give a price opinion; extreme deflection at Q3 | Re-examine product value pitch — this is a positioning signal, not a price signal |
+| Support cost analysis (Section 6d) shows $99/month is unsustainable | Adjust minimum before Phase 3 regardless of design partner responses |
+
+Do not raise above $199/month without a formal pricing review and at least one pilot cohort data point.
+
+#### 6d — Support and Onboarding Workload (Owner Must Answer Before Phase 3)
+
+These are operational questions the owner must answer — not market research. They determine whether the current support model is sustainable at $99–$149/month per facility.
+
+| Question | Why it matters |
+|---|---|
+| Who handles inbound support requests? Email only? Phone? Chat? | At $99–$149/month per facility, phone or chat support likely is not sustainable. Email-only is the baseline model unless unit economics improve. |
+| What is the expected setup time per new facility (resident records, routines, caregiver accounts)? | High setup time means each new customer requires significant staff time, compressing margin at low prices. |
+| Who sets up each facility's Facility Tracker App account — does the owner self-serve, or do internal CRM staff provision it? | ADR 0005 puts provisioning on internal CRM staff. Determines how many facilities one person can onboard per week. |
+| What is the maximum number of new facilities the team can onboard per month without a new hire? | Sets the Phase 3 growth ceiling; determines whether onboarding must be rationed or a hire planned. |
+| At $49/month, do ALH partners generate a support burden that offsets the reduced revenue? | ALH partners at $49/month create a margin risk if their support volume exceeds standalone customers paying 2–3× more. |
+
+Complete this assessment before Phase 3 commercial launch — these questions do not block the design partner phase.
+
+#### 6e — ALH Partner Talking Points (Decided — Do Not Reopen Pricing)
+
+The $49/month founding partner rate is final per ADR 0003. ALH partner pricing is not a design partner validation item — it is decided policy to be communicated when a pilot conversation moves to commercial terms.
+
+**Approved framing for ALH BD conversations:**
+
+> "We're building a shift log and handoff tool for RCFE operators. If you're interested in being an early design partner as we develop it, we'd love to have your input."
+
+> "ALH partners who move to a paid plan will get a founding partner rate. I'll communicate the specifics before you commit to anything."
+
+> "The data stays with your facility. We don't share resident care information with anyone, including AssistedLivingHelp."
+
+**What must not be said:**
+- Do not communicate the $49/month rate during outreach — share it when a commercial discussion begins, not before
+- Do not say "alh-tracker is included with your ALH listing" — it is not bundled into any current ALH tier
+- Do not promise features, launch dates, CDSS compliance coverage, MAR functionality, or Title 22 documentation support
+- Do not use the word "free" without the "design partner phase" qualifier — it can imply the product will always be free
+- Do not quote any pricing before the LOI is signed
 
 ---
 
 **Remaining to close this task:**
-- [ ] ALH partner pricing rate and structure finalized
-- [ ] Non-ALH price point confirmed (or $149 validated and accepted as launch price)
+- [x] ALH partner pricing rate and structure finalized — $49/month founding partner rate decided in ADR 0003 (accepted 2026-05-09)
+- [ ] Non-ALH price point confirmed — requires 2–3 design partner pricing probe conversations (Section 6b; blocked on task 0002 execution)
 - [x] Shared onboarding/billing workflow question answered — ADR 0003 (2026-05-09) decided no shared system at MVP; ALH partner identified by `alh_partner` boolean only. ADR 0005 (2026-05-16) establishes the internal CRM as the commercial management layer.
 - [x] Full business model ADR recorded in `decisions\` (`0003-business-model-alh-pricing.md`) — ADR 0003 accepted 2026-05-09.
+- [ ] Owner validation packet completed: pricing probe results from 2–3 conversations documented (Section 6b) + support/onboarding model answered (Section 6d)
 - [ ] Resolved open questions removed from `ai_memory.md`
 
-> **Blocked on external execution (2026-05-16):** Remaining open items (non-ALH price validation, ALH rate finalization) require design partner pricing probe during site visit. These cannot be resolved without a committed design partner — task 0001 is blocked pending task 0002 execution.
+> **Blocked on external execution (2026-05-16, updated 2026-05-24):** ALH partner rate is finalized (ADR 0003 — $49/month). Remaining open items: (1) non-ALH standalone price validation — requires 2–3 design partner pricing sensitivity probe conversations (Section 6b, aligned with task 0002 Section 6); (2) support/onboarding workload model — owner must answer Section 6d questions before Phase 3. Neither can be resolved without a committed design partner. Task 0001 is blocked pending task 0002 execution.

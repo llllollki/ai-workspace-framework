@@ -29,7 +29,7 @@ This file defines how agents should decompose tasks into subtasks before beginni
 
 1. Read the task document to understand the goal and acceptance criteria.
 2. Load project context using the sequence in `context_rules.md`.
-3. Apply the subagent planning gate from `global\agent_rules.md`, even if the user did not request subagents.
+3. Apply the subagent planning gate (below), even if the user did not request subagents; for tasks below the gate threshold a one-line `serial: small task` note suffices.
 4. Decompose the task into a numbered list of discrete subtasks.
 5. For each subtask, identify: owner role, input dependencies, output artifact, acceptance check, tests needed, and whether it is safe to delegate to a subagent or parallel worker.
 6. If at least two subtasks can run independently and the runtime supports subagents, assign those subtasks to subagents by default.
@@ -39,7 +39,11 @@ This file defines how agents should decompose tasks into subtasks before beginni
 
 ## Subagent Planning Gate
 
-Before implementation on any existing or new project, the main agent must answer these questions:
+The full gate below applies when a task spans 3+ files, 2+ layers (db/api/ui), or includes
+verification or deploy. For smaller tasks, a one-line `serial: small task` note in the plan
+or working notes satisfies the gate; the policy for tasks above the threshold is unchanged.
+
+Before implementation on any task above the threshold, the main agent must answer these questions:
 
 - Are there two or more independent workstreams?
 - Can those workstreams be assigned non-overlapping file ownership or read-only investigation scopes?
@@ -49,6 +53,10 @@ Before implementation on any existing or new project, the main agent must answer
 If the answer is yes, use subagents or parallel workers by default.
 
 If the answer is no, proceed serially and briefly record the reason in the plan or working notes. Valid reasons include: the task is small, single-file, tightly coupled, design-sensitive, or the runtime has no subagent capability.
+
+## Task ID Allocation
+
+- Task IDs are allocated once per project from the next unused number across all three lifecycle dirs (`tasks\active`, `tasks\backlog`, `tasks\done`) — an ID is never reused for a different task and a task keeps its ID when it moves between lifecycle dirs (`setup\lint_framework.ps1` checks this).
 
 ## Task Document Structure
 

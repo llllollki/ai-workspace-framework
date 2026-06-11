@@ -40,3 +40,20 @@ Until one is adopted, every framework change must be applied to **both** trees i
 - **`c:\Projects\printing\`** carries its own `CLAUDE.md`/`AGENTS.md` but is **not** in the workspace
   Projects table (`CLAUDE.md` root). Decide: add it to the workspace projects, or confirm it is an
   independent project outside this framework's scope. _TODO — owner decision._
+
+## Open owner decisions
+
+Consolidated list of decisions only the owner can make (status as of 2026-06-11):
+
+1. **AssistedLivingHelp `PROJECT_PATH`.** `c:\Projects\AssistedLivingHelp` is empty/absent; a
+   `c:\Projects\alh\` dir may be the application. Until confirmed, the Definition-of-Done gate
+   for AssistedLivingHelp returns `needs input` (see `orchestration\definition_of_done.md`).
+   needs input: confirm the AssistedLivingHelp application path and package manager.
+2. **`printing\` project scope.** It carries its own `CLAUDE.md`/`AGENTS.md` but is not in the
+   workspace Projects table (see "Other directories to confirm" above).
+   needs input: add `printing\` to the workspace projects, or declare it out of scope.
+3. **Source-of-truth option 1 adoption.** The preferred recommendation above — make
+   `c:\Projects\ai-context\` a checkout of the `ai-workspace-framework` repo so there is exactly
+   one tree and no manual mirroring. Adopting it would also unblock the protected-branch +
+   CODEOWNERS backstop in `global\enforcement_design.md`.
+   needs input: adopt option 1 (single checkout), or confirm option 2 (one-way sync discipline).

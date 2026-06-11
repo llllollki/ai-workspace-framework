@@ -14,18 +14,18 @@ These items must be resolved before any real resident data enters production und
 
 **Status:** No policy defined
 **Source:** Task 0009 — `tasks/active/alh-tracker/0009-retention-deletion-policy.md`
-**Blocked by:** Counsel answers to Q1, Q2, Q4, Q6 in `0004-counsel-handoff-packet.md`
+**Blocked by:** Counsel answers to Q1, Q2, Q4, Q6 in `0038-counsel-handoff-packet.md`
 
 No retention policy exists at the Supabase production database level. Account closure behavior, caregiver deactivation/anonymization policy, and Supabase PITR backup retention alignment are all undefined. Until counsel answers the Priority 1 questions, no real resident data may enter production under any commercial relationship.
 
-**Next action:** Route `0004-counsel-handoff-packet.md` to counsel immediately. Task 0009 is covered by the same engagement — no separate outreach needed.
+**Next action:** Route `0038-counsel-handoff-packet.md` to counsel immediately. Task 0009 is covered by the same engagement — no separate outreach needed.
 
 ---
 
 ### 2. HIPAA BAA Posture
 
 **Status:** Unresolved
-**Source:** `projects/alh-tracker/ai_memory.md` (HIPAA BAA posture section); task `0004-counsel-handoff-packet.md` Question 2c
+**Source:** `projects/alh-tracker/ai_memory.md` (HIPAA BAA posture section); task `0038-counsel-handoff-packet.md` Question 2c
 
 Whether alh-tracker must offer a HIPAA Business Associate Agreement to facility operators is open. Until this is resolved, the product must not represent itself as HIPAA-covered or BAA-eligible in any commercial context.
 
@@ -41,7 +41,7 @@ Whether alh-tracker must offer a HIPAA Business Associate Agreement to facility 
 
 The ToS draft is preliminary only. It must not be used in any commercial context until counsel has reviewed and approved it. Each open provision in the draft is explicitly mapped to the counsel question that must resolve it.
 
-**Next action:** Send `tos_draft_for_counsel.md` alongside `0004-counsel-handoff-packet.md` in the same counsel engagement.
+**Next action:** Send `tos_draft_for_counsel.md` alongside `0038-counsel-handoff-packet.md` in the same counsel engagement.
 
 ---
 
@@ -105,7 +105,7 @@ $149/month is the recommended point in the $99–$199/month working range. It is
 
 ---
 
-**Items 1–3 share one counsel engagement.** Routing `0004-counsel-handoff-packet.md` alongside `tos_draft_for_counsel.md` covers all three. Routing is the single highest-leverage action available right now.
+**Items 1–3 share one counsel engagement.** Routing `0038-counsel-handoff-packet.md` alongside `tos_draft_for_counsel.md` covers all three. Routing is the single highest-leverage action available right now.
 
 **Item 4** does not block any Phase 0 work — it only blocks Phase 1 kickoff.
 

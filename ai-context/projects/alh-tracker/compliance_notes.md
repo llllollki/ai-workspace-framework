@@ -357,6 +357,7 @@ See `ai_memory.md` for the working list of unresolved items. Key items requiring
 - Deletion is subject to counsel-confirmed minimum retention periods (see ToS draft, Section 3)
 - AuditTrail records must not be deleted before their minimum retention period — pending counsel answer
 - Account closure data deletion must follow the notice and timeline defined in ToS Section 4 — pending counsel answer
+- A preliminary policy draft covering data category retention recommendations, account closure behavior, archive/delete/anonymize framework, implementation implications, and additional counsel questions was produced 2026-05-23 under task 0009 Notes. That draft is PRELIMINARY — NOT LEGAL ADVICE — and requires counsel approval before any retention period, purge job, or account closure workflow is implemented. Do not use those periods or procedures in production automation or ToS commitments without prior counsel confirmation.
 
 ### HIPAA-Adjacent Risk Assessment
 
@@ -408,6 +409,14 @@ These are in addition to the open compliance questions above. All require counse
 - **CCPA/CPPA for family contacts**: When family access (Phase 2) is built, are family contacts California "consumers" with CCPA/CPPA rights (access, deletion, portability) with respect to information about them stored in the ResidentContact entity?
 - **Data minimization**: Are any of the current data fields in the ResidentContact or AllergiesTriggers entities beyond the minimum required, such that collecting them increases risk without clear operational necessity?
 - **Security certifications**: Is SOC 2 Type II or any other security certification required or expected by RCFE operators at this scale before they will sign a commercial agreement?
+- **CPPA/CCPA deletion vs. Title 22 retention (Q-R1)**: When a data subject submits a CPPA/CCPA deletion request, can that request override the vendor's Title 22 retention obligation? Specifically: must a caregiver's identity be removed from AuditTrail references if they submit a deletion request, even while referenced care records are within a 3-year retention window?
+- **Audit trail immutability vs. data subject deletion rights (Q-R2)**: The `audit_events` table is append-only by design. If CPPA/CCPA deletion applies to information in audit events, is the product's inability to delete those events a violation? Or does the retention obligation override the consumer deletion right in this context?
+- **PITR backups as retention mechanism (Q-R3)**: Do Supabase PITR backup copies constitute "copies" of records for retention compliance? Must retained records be immediately queryable, or is encrypted cold storage archiving with a retrieval SLA acceptable?
+- **§ 87465 destruction records applied to a software vendor (Q-R4)**: As a vendor that never physically holds medication records, does alh-tracker have any obligation under § 87465 destruction records requirements? If yes, what counts as a "destruction record" in a software system?
+- **Per-resident vs. per-account retention clock (Q-R5)**: For § 87506 3-year post-service retention: is the clock measured per-resident from their departure date, or per-account from when the facility cancels service? If per-resident, what is the vendor's obligation to track individual resident departure dates?
+- **Vendor obligation to retain after account closure (Q-R6)**: If a facility cancels before the § 87506 window expires for some residents, is the vendor obligated to retain those records after the commercial relationship ends? Or does the obligation transfer to the facility operator at closure?
+- **Export format and content requirements on closure (Q-R7)**: Is the vendor legally obligated to provide a data export on account closure, or is this contractual? If legally required: what format, what content, and within what timeline?
+- **Backup retention and queryability (Q-R8)**: Is encrypted cold storage archiving (not immediately queryable) legally sufficient to satisfy a 3-year retention obligation, or must records remain in an active production database for the full period? If cold storage is permitted, what retrieval timeline is required?
 
 ---
 

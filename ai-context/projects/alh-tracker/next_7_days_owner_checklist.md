@@ -58,12 +58,12 @@
 **Owner:** Product / Program Lead (routes); Compliance / Privacy Counsel (answers)
 **Time:** 30–45 minutes to assemble and send
 **Source files:**
-- [0004-counsel-handoff-packet.md](../../../ai-workspace-framework/ai-context/tasks/active/alh-tracker/0004-counsel-handoff-packet.md) — primary brief; contains the suggested email cover note at the bottom
+- [0038-counsel-handoff-packet.md](../../../ai-workspace-framework/ai-context/tasks/active/alh-tracker/0038-counsel-handoff-packet.md) — primary brief; contains the suggested email cover note at the bottom
 - [tos_draft_for_counsel.md](tos_draft_for_counsel.md) — preliminary ToS draft; send alongside the packet
 - Supporting files listed in the packet's "What to send counsel" section
 
 **What to do:**
-1. Open `0004-counsel-handoff-packet.md` and scroll to "Suggested Email Cover Note to Counsel" at the bottom.
+1. Open `0038-counsel-handoff-packet.md` and scroll to "Suggested Email Cover Note to Counsel" at the bottom.
 2. Copy and adapt the suggested email. Fill in your name and counsel's name.
 3. Attach all five documents listed in the packet's Supporting Documents table.
 4. Send to California compliance/privacy counsel.
@@ -153,7 +153,7 @@
 |---|---|---|---|---|
 | 1 | Populate ALH warm contact list in tracker | 2–4 hrs | `design_partner_tracker.md` Section A | ≥3 rows with real contact info |
 | 2 | Verify CCLD status for public-directory candidates | 1–2 hrs | `design_partner_tracker.md` Sections B/C | Every row has CCLD-confirmed status or removed |
-| 3 | Route counsel packet | 30–45 min | `0004-counsel-handoff-packet.md` + `tos_draft_for_counsel.md` | Email sent; date logged |
+| 3 | Route counsel packet | 30–45 min | `0038-counsel-handoff-packet.md` + `tos_draft_for_counsel.md` | Email sent; date logged |
 | 4 | Send first warm outreach | 30 min | `design_partner_tracker.md` Section A (top row) | One message sent; tracker updated |
 | 5 | Confirm $49/month ALH founding rate | <5 min | `decisions/0003-business-model-alh-pricing.md` | ADR 0003 updated; BD team briefed |
 | 6 | Schedule TA review of offline spec | 10 min to schedule | `0008-device-and-offline-behavior.md` | Meeting on calendar; spec shared with TA |

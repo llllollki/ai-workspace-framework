@@ -67,6 +67,8 @@ Example: `0001-shift-model.md`, `0002-caregiver-auth.md`
 | 0009 | Tracker Facility record creation during CRM provisioning | 2026-05-19 | Accepted |
 | 0010 | Pending setup facility RLS policy | 2026-05-19 | Accepted |
 | 0011 | Canonical facility staff role naming (`owner`/`admin` replace `facility_admin`) | 2026-05-19 | Accepted |
+| 0012 | Phase 2 provisioning platform decisions (hosting, idempotency, email, created_by) | 2026-05-20 | Accepted |
+| 0013 | Provisioning auth-user creation timing (created at provisioning, not activation; `updateUserById` at activation) | 2026-05-20 | Accepted |
 
 ## Pending Future ADRs
 

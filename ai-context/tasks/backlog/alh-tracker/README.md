@@ -23,6 +23,6 @@ When a task is started, move it to `ai-context\tasks\active\alh-tracker\`.
 
 | Task | Title | Queue |
 |---|---|---|
-| 0009 | Data retention and archive policy | **Backlog** — HIGH priority pre-commercial-launch blocker |
-| 0010 | CRM design and open questions | **Backlog** — blocks all CRM design work |
-| 0011 | Resident profile data model expansion | **Backlog** — blocks task 0005 (data model finalization) |
+| 0009 | Retention and deletion policy | **Active** (merged into active 0009-retention-deletion-policy.md) — HIGH priority pre-commercial-launch blocker |
+| 0039 | CRM design and open questions | **Backlog** — blocks all CRM design work |
+| 0040 | Resident profile data model expansion | **Backlog** — blocks task 0005 (data model finalization) |

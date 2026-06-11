@@ -7,6 +7,33 @@ For project-specific documentation activity, see the relevant project's `executi
 
 ---
 
+## v0.12 — 2026-06-11
+
+**Framework lint, task ID remediation, core rules digest, proportional subagent gate, and staleness fixes** (external assessment follow-up).
+
+### Created
+
+- `setup\lint_framework.ps1` + `setup\lint_framework.md` — structural lint (exits nonzero with a per-finding report): `REF` referenced files exist; `ID` no task ID collisions; `DUP` no stale lifecycle duplicates; `SYNC` root `CLAUDE.md`/`AGENTS.md` byte-identical. Referenced from `ai-context\README.md`.
+- `ai-context\core_rules.md` — one-page digest of the must-know rules (subagent gate, safety/never-autonomous summary, DoD precondition, cost budget, escalation), cutting the default per-task preamble from 5+ files to 2.
+- `ai-context\skills\project\alh-tracker\mobile_tablet_ui_v1.md` — restored from the working copy; it was indexed but had never been mirrored into the repo. Matching row added to `orchestration\routing_rules.md`.
+
+### Changed
+
+- Task ID remediation (alh-tracker): renumbered `0004-counsel-handoff-packet` → `0038`, backlog `0010-crm-design-open-questions` → `0039`, backlog `0011-resident-profile-data-model-expansion` → `0040`, done `0028-adr-0011-architecture-review` → `0041`, done `0029-accept-adr-0011` → `0042` (provisioning tasks 0028/0029 keep their IDs — referenced by ADRs 0012/0013). Deleted stale lifecycle duplicates: backlog `0006`/`0008`/`0009`/`0032` copies and done `0027-provisioning-schema-and-rls-migrations` (superseded by done `0030`). Current references updated; historical log entries left as written.
+- `orchestration\planning_rules.md` — task ID allocation rule (next unused number across all three lifecycle dirs, never reused); subagent gate proportionality.
+- `global\agent_rules.md` — subagent gate proportionality: full gate only for tasks spanning 3+ files, 2+ layers (db/api/ui), or verification/deploy; smaller tasks record a one-line `serial: small task` note.
+- Root `CLAUDE.md`/`AGENTS.md` — rewritten as one identical agent-neutral entry point; byte-identity now enforced by the lint `SYNC` check.
+- `orchestration\context_rules.md` + `ai-context\README.md` — default loading sequence is now `core_rules.md` + project `overview.md`; full rule files load only for planning-heavy or safety-sensitive work.
+- `global\enforcement_design.md` — backstop checklist re-verified 2026-06-11 (`c:\Projects` still not a git repo; `gh` still not installed).
+- `orchestration\definition_of_done.md` — `RLS_VERIFY_CMD` flagged as the priority TODO for alh-tracker with the exact anon-SELECT-denied check spec (to be wired in a follow-up code task, then moved to `DEFINED` + `REQUIRED_FLOOR`).
+- `source_of_truth.md` — new "Open owner decisions" section (AssistedLivingHelp `PROJECT_PATH`, `printing\` scope, source-of-truth option 1) with a needs-input line for each.
+
+### Agent-neutral
+
+- All new and amended rule text is runtime-neutral; `CLAUDE.md` and `AGENTS.md` now carry identical content by construction.
+
+---
+
 ## v0.11 — 2026-06-07
 
 **Added durable project gotchas support and strengthened test planning and DoD coverage rules.**

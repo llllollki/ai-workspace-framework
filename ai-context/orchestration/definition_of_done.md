@@ -49,13 +49,28 @@ LINT_CMD       = TODO  # no ESLint configured -> tech-debt
 TEST_CMD       = npm run test:provisioning     # DEFINED but PARTIAL (only tests/provisioning); TODO broaden
 BUILD_CMD      = npm run build                 # DEFINED [FLOOR]
 MIGRATE_CMD    = supabase db push              # DEFINED; forward-only; NEVER auto-retry; precondition: project linked + SUPABASE_* env
-RLS_VERIFY_CMD = TODO  # add: anon client SELECT on protected table -> 0 rows/denied
+RLS_VERIFY_CMD = TODO  # PRIORITY TODO — spec below; wire in a follow-up code task
 DEPLOY_CMD     = TODO  # confirm exact Vercel CLI/flags (preview vs --prod)
 SMOKE_CMD      = TODO  # GET / ->200; auth round-trip; RLS positive; RLS anon-denied
 REQUIRED_FLOOR = [BUILD_CMD]        # TEST_CMD joins floor once a real `test` script exists
 ```
 
 For alh-tracker, "broadened" means the configured `TEST_CMD` covers the new feature area beyond the existing provisioning-only slice. Until broader coverage exists, `TEST_CMD` remains partial and off the required floor.
+
+#### RLS_VERIFY_CMD spec (priority TODO for alh-tracker)
+
+This is the highest-priority gate variable to wire next, because RLS is the tenant-isolation
+boundary for resident/PII data. The exact check to implement (in a follow-up **code** task,
+not a documentation task):
+
+- Add a script (suggested: `npm run verify:rls`) that creates a Supabase client with the
+  **anon key and no session**, runs a `SELECT` against a protected table (e.g. `residents`
+  or `care_log_entries`), and **passes only if** the result is 0 rows **or** a
+  permission-denied error. Any row returned = FAIL (exit nonzero).
+- The script must never log row contents — on failure it reports only the table name and
+  row count.
+- Once wired and passing: change `RLS_VERIFY_CMD` from `TODO` to `DEFINED` with the concrete
+  command string, and add it to `REQUIRED_FLOOR` so it can never be silently skipped.
 
 ### AssistedLivingHelp (Next.js-ish web+API, SQLite) — PATH NOT CONFIRMED
 

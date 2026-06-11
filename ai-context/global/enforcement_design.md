@@ -108,11 +108,17 @@ If the audit entry can't be written, do not perform the op.
 
 ## Out-of-model backstops the HUMAN must configure (TODO — not done by the agent)
 
-These make the in-prompt rules trustworthy even under model compromise. **Currently missing:**
+These make the in-prompt rules trustworthy even under model compromise. **Currently missing**
+(status re-verified 2026-06-11: `c:\Projects` is still not a git repo — only the canonical
+`c:\Projects\ai-workspace-framework` checkout is — and `gh` is still not installed, so PRs
+are opened from the compare URL that `git push` prints):
 
 - [ ] **Protected branch + CODEOWNERS** on `.claude/settings.json`, `.claude/hooks/**`,
       `.claude/allow-list.json`, `.claude/audit-log.jsonl` so the agent cannot edit its own
-      seatbelt. **Blocked: `c:\Projects` is not a git repo yet.**
+      seatbelt. **Blocked for the live working copy: `c:\Projects` is not a git repo**
+      (adopting source-of-truth option 1 — see `ai-context\source_of_truth.md` — would
+      unblock this by making the working copy a checkout of the protected repo). Can be
+      configured today on the `ai-workspace-framework` repo itself.
 - [ ] **Append-only audit store** (the agent can currently write `.claude/audit-log.jsonl`; for
       true tamper-evidence, ship it to an append-only/external sink).
 - [ ] **Least-privilege Supabase role** for the agent that cannot disable RLS or read PII tables.

@@ -225,6 +225,7 @@ The site visit is the single most valuable activity in Phase 0. Everything desig
 | Exceptions and incidents | How are missed care events, refusals, or incidents documented? Is there a separate incident log? |
 | Medication observation | How are medication tasks documented during a shift? Is there a separate log? How specific is the documentation? |
 | Caregiver device usage | Do caregivers use phones during shifts? For what? Do they text the owner? Use any apps? |
+| WiFi coverage | Is there WiFi in all care areas (common rooms, individual rooms, kitchen)? Is connectivity reliable during shifts? Ask caregivers if connectivity is ever an issue. Required input for the offline-tolerant spec (task 0008). |
 | Shared tablet or device | Is there a shared tablet or device on-site? Who uses it and for what? |
 | Time pressure | How busy does the handoff shift period feel? How long do caregivers have to complete documentation? |
 | Owner review | Does the owner review the paper binder? How often? What do they look for? |
@@ -265,6 +266,44 @@ The site visit is the single most valuable activity in Phase 0. Everything desig
 - Pain point quotes: verbatim caregiver or owner statements about what frustrates them.
 - Device observations: what devices were visible, what was used during the shift period.
 - Workflow gaps: things that clearly should be documented but weren't, or that were documented inconsistently.
+
+#### 4b. On-Site Observation Checklist
+
+Use during the visit to confirm all required inputs are captured before leaving. Tick each item as confirmed.
+
+**Preparation (before you arrive):**
+- [ ] LOI or verbal agreement in place before the visit
+- [ ] Site visit time, duration, and attendees confirmed with the owner
+- [ ] Reminder: do not photograph, record, or collect documents containing resident information
+
+**Process observations:**
+- [ ] How shift handoff is communicated (verbal, written, or both) — observed or owner-described
+- [ ] Paper binder / analog log structure (categories, how entries are dated and signed)
+- [ ] Approximate handoff duration
+- [ ] How incidents or missed care events are noted (separate log, same binder, or verbal only)
+- [ ] How medication-related tasks are logged (structure only — do not collect medication names, dosages, or resident-specific specifics)
+
+**Device and connectivity:**
+- [ ] Devices in use during the shift (phones, shared tablet, desktop)
+- [ ] WiFi coverage in care areas — reliable, intermittent, or none (critical for offline spec validation, task 0008)
+- [ ] Caregiver phone access policy — unrestricted, restricted, or shared-device-only
+
+**Shift model and auth (task 0003 inputs):**
+- [ ] Shift period structure — fixed windows (e.g., 7–3 / 3–11 / 11–7) or owner-configured?
+- [ ] What happens when a caregiver does not close out their shift?
+- [ ] Float / agency caregiver frequency and whether they follow the same process
+- [ ] Owner's instinct: individual accounts vs. shared device PIN
+
+**Pricing probe (owner conversation — ask after rapport is established):**
+- [ ] Current software spend for the facility (open-ended — do not name a dollar figure first)
+- [ ] What would make the owner refuse to adopt software for this process (adoption blockers beyond price)
+- [ ] Open willingness-to-pay probe: "What would you pay for something that reliably replaced the paper binder?"
+
+**Post-visit (complete within 24 hours):**
+- [ ] Structural notes written up (binder organization, categories, timing, device observations)
+- [ ] Verbatim pain point quotes captured
+- [ ] All Section 6 validation questions answered or flagged incomplete
+- [ ] Candidate tracker updated (status → Interested / Site visit scheduled / Committed)
 
 ---
 
@@ -323,8 +362,10 @@ This checklist defines what must be learned from the design partner engagement b
 | How does the facility handle float/agency staff — same process or different? | Determines whether shared PIN is needed alongside individual accounts |
 | What devices do caregivers use during shifts? Phone, shared tablet, or both? | Determines priority device profile and offline tolerance requirements |
 | Is there a shared tablet on-site, and who controls access to it? | Determines shared device session model requirements |
+| What is the WiFi coverage situation in care areas (common rooms, individual rooms, kitchen)? Is connectivity reliable during shifts? | Required offline spec input — task 0008 explicitly identified "actual WiFi quality at a real facility" as a validation item blocked on design partner observation |
+| Do caregivers have unrestricted access to personal phones during shifts, or is phone use restricted or shared-device-only? | If phone use is restricted, the mobile-first distribution model may not work for this facility type; informs device policy and offline spec assumptions |
 
-**Task 0003 cannot be activated until at least questions 1, 5, and 7 have clear answers from at least one real facility.**
+**Task 0003 cannot be activated until at least questions 1, 5, 7, and 9 (WiFi/connectivity) have clear answers from at least one real facility.**
 
 #### What must be learned before finalizing Task 0001 pricing
 

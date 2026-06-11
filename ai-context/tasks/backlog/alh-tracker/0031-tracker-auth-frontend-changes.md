@@ -2,7 +2,7 @@
 
 Status: backlog
 Created: 2026-05-19
-Depends on: 0027 (schema — account_status, provisioning_status columns), 0029 (activation endpoint creates sessions)
+Depends on: 0030 (schema — account_status, provisioning_status columns), 0029 (activation endpoint creates sessions)
 Parallel with: 0030 (CRM UI changes)
 Blocks: 0032
 Audit source: 0026
@@ -131,6 +131,6 @@ event and redirect to login with an appropriate message.
 
 ## Dependencies
 
-- 0027 must be complete (`users.account_status`, `facilities.provisioning_status` columns exist)
+- 0030 must be complete (`users.account_status`, `facilities.provisioning_status` columns exist)
 - 0029 must be complete (activation endpoint sets account_status and provisioning_status)
 - 0028 `revoke` action should call `auth.admin.signOut` (cross-task note — see section 5)
