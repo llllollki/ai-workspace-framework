@@ -30,6 +30,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | Understanding safety enforcement and the allow-list | `global\enforcement_design.md` (live: `.claude\settings.json` + `.claude\hooks\`) |
 | Deploying / rolling back a project | `global\deployment.md` |
 | Which framework tree is canonical (repo vs working copy) | `source_of_truth.md` |
+| Checking framework structural consistency (references, task IDs, CLAUDE/AGENTS sync) | `setup\lint_framework.ps1` (docs: `setup\lint_framework.md`) |
 | Checking coding standards | `global\coding_standards.md` |
 | Checking API patterns | `global\api_patterns.md` |
 | Checking UI components | `global\ui_components.md` |
