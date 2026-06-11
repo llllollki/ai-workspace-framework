@@ -58,7 +58,7 @@ A tracker-internal provisioning API endpoint accepts a provisioning request from
 - Full control over token lifecycle: expiry period, resend, revocation, and audit events are all tracker-managed.
 - Raw token never stored — only its SHA-256 hash. The URL is the only place the raw token appears.
 - Custom account states (`invited` → `password_pending` → `active`) are fully tracked in the tracker `User` table without Supabase state ambiguity.
-- Supabase Auth user created only on successful activation — no phantom auth entries for unactivated or revoked accounts.
+- **[Superseded by ADR 0013]** Originally stated: auth user created only on successful activation. Revised: auth user is created at provisioning time (unusable) due to `public.users.id FK → auth.users(id)`. Security intent preserved — see ADR 0013.
 - Every provisioning lifecycle event (provisioned, resent, revoked, activated, activation failed) can be written to a `ProvisioningEvent` append-only audit table.
 - The `ProvisioningToken` conceptual entity is already modeled in `data_model.md` — this ADR formalizes and promotes it.
 
@@ -136,7 +136,7 @@ Rationale:
    d. **If no matching token:** Returns an error. If the token appears to have expired (hash found but `expires_at <= NOW()`), surfaces a resend prompt. If hash not found or token malformed, surfaces a generic invalid-link error. **Do not distinguish used vs. expired vs. invalid in user-facing messages** (prevents token oracle attacks).
    e. **If matching token found:** Updates `User.account_status = password_pending`.
    f. Validates owner-submitted password (minimum complexity: 12+ characters with at least one uppercase, lowercase, and digit — per `compliance_notes.md` password policy).
-   g. Calls Supabase Admin API `auth.admin.createUser({ email, password, email_confirm: true })` to create the Supabase Auth user. This call runs server-side only, never from a browser client.
+   g. **[SUPERSEDED by ADR 0013]** Originally specified `auth.admin.createUser(...)`. The Supabase Auth user is created at provisioning time (not activation time) because `public.users.id` is a FK to `auth.users(id)`. Activation instead calls `auth.admin.updateUserById(user_id, { password: submitted_password, email_confirm: true })`. See ADR 0013 for the full analysis and corrected activation sequence.
    h. Updates `User.account_status = active`.
    i. Marks `ProvisioningToken.used_at = NOW()`.
    j. Writes `ProvisioningEvent: event_type = activated`, `performed_by_type = owner`.
@@ -291,7 +291,7 @@ This ADR does not define or change:
 **Easier:**
 - The CRM/tracker boundary is maintained cleanly. CRM calls a defined API endpoint; all token, auth, and audit logic is tracker-owned. No tracker Supabase credentials are exposed to the CRM.
 - Full token lifecycle audit is achievable with the `ProvisioningEvent` append-only table.
-- The Supabase Auth user is created only on successful activation — no phantom auth accounts for unactivated or revoked owners.
+- **[Superseded by ADR 0013]** The Supabase Auth user is created at provisioning time (not activation time) due to the `public.users.id FK → auth.users(id)` schema constraint. The auth user is created unusable (no password, email_confirm: false). Revocation bans the auth user; re-provision unbans it. The security intent is preserved — see ADR 0013.
 - Token security properties (opaque, expiring, one-time-use, hashed storage, constant-time lookup) are fully specified and implementable without dependency on Supabase's internal invitation token mechanics.
 - The `ProvisioningToken` entity already existed as a conceptual model in `data_model.md` — this ADR formalizes it.
 
@@ -316,5 +316,5 @@ This ADR does not define or change:
 - **TODO — `activation_failed` metadata security:** Ensure `activation_failed` event metadata never includes the raw token, PII beyond user_id, or any resident/care data.
 - **TODO — Token expiry period validation:** 72 hours is recommended. Validate with the product team that this is appropriate for the target user (facility owners who may be slow to check email, especially during busy periods).
 - **TODO — Provisioning API response reference format:** Define the exact format of `provisioning_reference` returned to the CRM — UUID, opaque slug, or other. Must be opaque and not encode tracker-internal IDs.
-- **TODO — Partial activation recovery:** If the Supabase Admin API `createUser` call (step 8g) succeeds but a subsequent step fails before `used_at = NOW()` is committed (step 8i), the next activation attempt will find `used_at IS NULL` but calling `createUser` again will fail because the auth user already exists. The activation endpoint must be idempotent: before calling `createUser`, check whether a Supabase auth user already exists for this email; if so, skip creation and proceed directly to account status update and token marking.
+- **RESOLVED — Partial activation recovery (ADR 0013, 2026-05-20):** The `createUser` call at activation (step 8g) was superseded by `updateUserById` (auth user already exists from provisioning time). `updateUserById` is idempotent — no pre-existence check needed. Partial recovery: if `updateUserById` succeeds but subsequent DB steps fail, the next attempt re-calls `updateUserById` (safe) and retries the DB steps. See ADR 0013.
 - **TODO — `token_expired_passive` background job:** If the `token_expired_passive` event type is retained in the ENUM, a background or scheduled cleanup process must be designed to detect expired-but-unused tokens and write the event. The cleanup cadence, failure handling, and whether it runs at the database or application layer are unresolved.

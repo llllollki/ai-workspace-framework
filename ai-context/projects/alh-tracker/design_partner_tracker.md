@@ -16,6 +16,38 @@
 
 ---
 
+## Quick Start — Owner's Next Actions
+
+> No outreach has been conducted. Section A (warm list) is not yet filled. Section B/C rows are pre-seeded from third-party directories and require CCLD verification before any contact is made.
+
+**Run these steps in order:**
+
+**Step 1 — Fill Section A from ALH CRM (30–60 min)**
+Open ALH facility partner or prospective contact list. Filter: RCFE license type, Temecula/Murrieta/Menifee/SW Riverside County, capacity 6–20. Add each match to Section A with owner contact info and known ALH relationship. Any ALH contact who also appears in Section B/C upgrades to Priority 1 or 2 — cross-reference and merge.
+
+**Step 2 — Verify top-priority Section B rows in CCLD (1–2 hrs)**
+Open the CCLD portal: **https://www.ccld.dss.ca.gov/carefacilitysearch/**
+For each Section B row you plan to contact: confirm license status = Licensed (active) and verify capacity. Do not contact any facility before CCLD confirmation. Update capacity column; remove any row with inactive license or capacity below 6.
+
+**Step 3 — Score and rank**
+After filling Section A and verifying Section B capacity, apply the scoring guide below. Move Priority 1 and 2 rows to the top of your outreach order.
+
+**Step 4 — Send first outreach message (one at a time)**
+- Section A / ALH contacts: use the warm email script — task 0002, Section 3, "Email / Text Message — Warm Introduction"
+- Section B / registry contacts: use the cold phone opener — task 0002, Section 3, "Cold Outreach — Phone Opener"
+- Send one message per facility. Wait 5 business days before a single follow-up. Follow up once only.
+
+**Step 5 — When a facility says yes**
+Schedule the site visit. Confirm the LOI outline (task 0002, Section 5) or a verbal equivalent before visiting. Run the visit using the site visit plan (task 0002, Section 4) and the on-site observation checklist (task 0002, Section 4b).
+
+**Key resources:**
+- Outreach scripts: task 0002, Section 3
+- Site visit plan and on-site checklist: task 0002, Sections 4 and 4b
+- LOI outline: task 0002, Section 5
+- Validation questions (task 0003 blockers + pricing probe): task 0002, Section 6
+
+---
+
 ## Scoring Guide
 
 | Score | Criteria |

@@ -70,6 +70,8 @@ The product must work on caregiver phones, shared tablets, and desktop. Network 
 - No Background Sync API dependency due to compatibility concerns on the target device class.
 - IndexedDB-backed queue for durability across tab close/reopen.
 
+**Spec refined 2026-05-23:** Idempotency key terminology clarified in queue structure; queue item validation rules documented. Design partner WiFi/site validation checklist (Section 6) and implementation test plan (Section 7) added. Task remains active pending human TA confirmation (AC #6) and design partner site visit.
+
 ---
 
 ## Outcome
@@ -155,7 +157,7 @@ In-memory state only is explicitly not sufficient.
 
 **Queue structure:** Each queued entry stores:
 - Full CareLogEntry payload (resident_id, routine_id, category, status, note, logged_at, shift_id)
-- Optimistic local ID (UUID generated client-side)
+- Idempotency key (UUID v4, generated client-side at the moment of queue write; used to prevent duplicate server writes on retry)
 - Queued-at timestamp
 - Sync status: `pending` | `syncing` | `synced` | `error`
 - Retry count (capped at 3 before surfacing as sync error)
@@ -163,6 +165,21 @@ In-memory state only is explicitly not sufficient.
 **Queue capacity:** Designed to hold up to 200 entries before sync. This covers a full 8-hour shift across 20 residents at 1 entry per resident per shift event — a realistic worst-case offline period.
 
 **Queue persistence guarantee:** The queue is never cleared until the server returns HTTP 201 (or 200) confirming the write. Client-side display of the entry as "saved" is optimistic; the server confirmation clears the queue.
+
+**Queue item validation:** Before a queue write is accepted, the following fields must pass validation. If any check fails, the entry is rejected immediately — no queue write occurs — and the caregiver is shown an error.
+
+| Field | Validation rule |
+|---|---|
+| `resident_id` | Non-null UUID |
+| `routine_id` | Non-null UUID |
+| `category` | Non-null; must be a valid CareLogCategory enum value |
+| `status` | Non-null; must be a valid CareLogStatus enum value |
+| `logged_at` | Non-null ISO 8601 timestamp; must be within ±24 hours of current device clock (guard against extreme clock skew) |
+| `shift_id` | Non-null UUID |
+| `note` | Optional; if present, max 2000 characters |
+| `idempotency_key` | Must be a valid UUID v4 (36-character, version 4 confirmed) |
+
+The `idempotency_key` is passed to the server with every sync request. The server must respond to a duplicate `idempotency_key` idempotently (HTTP 200/201 with the existing record, or HTTP 409 treated as success by the client) rather than with a server error. This ensures a retried sync request never produces a duplicate care log record.
 
 ---
 
@@ -272,12 +289,138 @@ The caregiver can dismiss one or confirm both (if they intentionally logged twic
 | Criterion | Status |
 |---|---|
 | 1. Device-tier matrix | ✅ Complete — Section 1 |
-| 2. Offline behavior specification | ✅ Complete — Section 2 (detection, indicator, queue, cached data, sync, conflict) |
+| 2. Offline behavior specification | ✅ Complete — Section 2 (detection, indicator, queue + idempotency keys + item validation, cached data, sync, conflict) |
 | 3. PWA specification | ✅ Complete — Section 3 |
 | 4. Minimum network requirement | ✅ Complete — Section 4 |
 | 5. Sync conflict scenario | ✅ Complete — Section 2F |
 | 6. Requirements reflected in technical architecture | ⏳ Pending — must be confirmed by Technical Architect at Phase 1 kickoff |
 | 7. `features.md` updated | ✅ Complete — offline behavior spec added to non-functional requirements |
+
+---
+
+### 6. Design Partner WiFi/Site Validation Checklist
+
+This checklist must be completed during each design partner site visit (task 0002). It informs whether the offline detection thresholds, queue capacity, and sync strategy are correctly calibrated for the actual facility environment. Findings may require updating the 30-second ping interval, 200-entry queue capacity, or the no-Background-Sync decision.
+
+**Before the visit:**
+- [ ] Confirm WiFi access will be available during the visit (or that the facility has WiFi at all)
+- [ ] Confirm which device types caregivers actually use: personal phones, facility-provided phones, shared tablet, or a mix
+
+**During the visit — WiFi coverage:**
+- [ ] Walk all areas where caregivers work: common room, individual resident rooms, kitchen, back bedrooms. Note any areas where a phone loses or drops signal.
+- [ ] Test signal in the areas caregivers most frequently use. The modeled scenario is: strong in common areas, weak in back bedrooms — confirm or correct this.
+- [ ] Ask caregivers: does WiFi ever cause problems during a shift? Do entries or messages ever fail to send?
+- [ ] Ask: has any record or note ever been lost because the phone went offline?
+- [ ] Ask: is there a mobile data fallback (personal hotspot, cellular data on caregiver phones) if facility WiFi fails?
+
+**During the visit — device and browser:**
+- [ ] Note caregiver device brands and approximate ages. Flag any device that appears older than Android 9 / iOS 14 (minimum browser baseline).
+- [ ] If a shared tablet is present: note brand, OS version, and how many caregivers share it per shift.
+- [ ] Open a browser on a caregiver device and confirm Chrome or Safari is available; note the version.
+- [ ] Confirm whether caregivers use personal phones or facility-provided devices. Facility-provided devices may have MDM profiles that affect PWA install behavior.
+
+**During the visit — offline posture validation:**
+- [ ] With WiFi disabled on a test device, confirm the offline banner appears within approximately 60 seconds (two ping cycles).
+- [ ] Log a test entry in offline mode. Confirm it persists after a tab close and reopen.
+- [ ] Re-enable WiFi. Confirm the sync banner appears and the queued entry clears.
+
+**Post-visit — findings to record:**
+- [ ] Document any dead spots found. Dead spots in caregiver work areas are load-bearing for the 30-second ping interval and 200-entry queue capacity.
+- [ ] Note whether any observed devices fall below the minimum browser baseline. Flag as a risk if found.
+- [ ] Check whether Background Sync API is available on the observed devices (Chrome DevTools → Application → Service Workers → Background Sync capability). Do not assume availability; this decision is currently locked as "no dependency" and should only be revisited if reliably confirmed at the facility.
+- [ ] Record the visit date, facility name, and primary caregiver contact in the design partner tracker (task 0002 Section 4b). Update this spec if real-world conditions differ materially from the modeled environment.
+
+---
+
+### 7. Implementation Test Plan
+
+No offline support is implemented yet (confirmed: package.json has no service worker library, no IndexedDB wrapper, no `vite-plugin-pwa`). This section defines the test coverage required before offline behavior can be marked production-ready. All items are prospective — tests are to be written in parallel with implementation, not after.
+
+#### 7A — Unit Tests (queue operations, validation, sync logic)
+
+Run in isolation; no browser, network, or Supabase connection required.
+
+| Test | What it verifies |
+|---|---|
+| Queue write — valid entry | Valid CareLogEntry writes to IndexedDB; idempotency key is a valid UUID v4; all required fields present |
+| Queue write — null resident_id rejected | Entry with null `resident_id` is rejected before queue write; error surfaced to caller |
+| Queue write — null routine_id rejected | Entry with null `routine_id` is rejected |
+| Queue write — invalid status enum rejected | Entry with unrecognized `status` value is rejected |
+| Queue write — note too long rejected | Entry with `note` > 2000 characters is rejected |
+| Queue write — clock skew rejected | Entry with `logged_at` more than 24 hours from current device clock is rejected |
+| Idempotency key — uniqueness | Each queue write generates a new UUID v4; no two queue entries share an idempotency key |
+| Idempotency key — format | Generated key passes UUID v4 format check (8-4-4-4-12 hex, version nibble = 4) |
+| Duplicate idempotency key — blocked | Attempting to enqueue a second entry with an existing idempotency key does not produce a second queue row |
+| Queue capacity at 200 | At 200 entries, the next write triggers a visible warning; no silent drop |
+| Status transition: pending → syncing → synced | Entry moves through all three states on a successful sync |
+| Status transition: syncing → error | Entry moves to error state after 3 retry failures |
+| Retry count increment | Each failure increments retry count by 1; count reaches 3 before error state is set |
+| Retry backoff schedule | Retry fires at 2s, 8s, 30s in order; no earlier retry fires |
+| FIFO flush order | Queue flushes in ascending `logged_at` order |
+| logged_at preserved through sync | `logged_at` set at queue write time equals the value in the outgoing sync payload |
+| created_at absent from payload | No `created_at` field in the outgoing sync payload; server sets it on write |
+| Batch cap at 10 | Queue of 11+ entries sends as two batches: 10 then the remainder |
+
+#### 7B — Integration Tests (queue + sync against test server)
+
+Require a running Supabase local instance or configured test double.
+
+| Test | What it verifies |
+|---|---|
+| Single entry syncs successfully | Entry sent; server returns 201; `logged_at` preserved on server record; entry cleared from queue |
+| Batch of 10 syncs completely | All 10 entries cleared from queue on success |
+| Batch of 11 splits correctly | Two batches (10 + 1); both complete without error |
+| Idempotent replay | Entry sent twice (simulated retry before first response received); server returns 200/201; no duplicate database row created |
+| Server 500 — retry and surface | Server returns 500; client retries at 2s, 8s, 30s; after 3 failures, entry enters error state and sync error banner is shown |
+| Server 409 — treated as success | Server returns 409 (duplicate idempotency key already accepted); client clears the queue entry; no duplicate in database |
+| Auth token expired during sync | Session token expires mid-sync; sync halts; queue preserved; caregiver prompted to re-authenticate |
+| Duplicate pair flagged for review | Two entries: same resident_id + routine_id + shift_id + within 15 minutes, different user_id — both written to database; "review needed" flag set |
+| Same-user duplicate — caregiver warned | Same user submits the same routine twice in one offline session; both written; sync completion screen shows review prompt |
+| Conflict resolution audited | Admin resolves a flagged duplicate; resolution action recorded in AuditTrail |
+
+#### 7C — Browser and Manual Tests (real device, real offline simulation)
+
+Require physical devices at the minimum browser baseline (Android 9+/Chrome 80+; iOS 14+/Safari).
+
+| Test | Device | What it verifies |
+|---|---|---|
+| Offline banner appears within 60s | Android phone, iOS phone | WiFi disabled; banner appears within two ping cycles |
+| Banner does not obscure log path | Phone (portrait) | Log entry touch targets remain ≥44px with banner visible |
+| Per-entry sync badge — appears offline | Phone | Entry logged offline shows pending badge immediately |
+| Per-entry sync badge — clears on sync | Phone | Badge clears after server confirmation |
+| Queue survives tab close | Phone | Entry logged offline; tab closed and reopened; entry still in queue |
+| Queue survives app background | Phone | Entry logged offline; app backgrounded 5 minutes; foregrounded; sync fires automatically |
+| Sync progress banner | Any | WiFi restored: "Syncing N entries..." then "All synced" for 3 seconds then hidden |
+| Sync error — requires acknowledgment | Any | Persistent server error: sync error banner requires explicit tap to dismiss |
+| Undo path — 5-second window | Phone | Log an entry; undo button visible for 5 seconds; tap removes entry from display and queue |
+| Shared tablet — current user visible | Tablet | Active user name visible without scrolling |
+| Desktop offline mode | Desktop | Banner and queue behave consistently on desktop |
+| PWA install prompt | Phone | Install prompt appears after first meaningful session; does not block use if dismissed |
+
+#### 7D — Failure and Retry Scenarios
+
+| Scenario | Expected behavior |
+|---|---|
+| Network drops mid-batch sync | Entire batch is re-queued and retried; no partial write accepted |
+| IndexedDB quota exceeded | Write rejected before it reaches the queue; explicit error shown to caregiver; no silent drop |
+| Device clock skew > 24 hours | Entry fails field validation before queue write; error surfaced to caregiver immediately |
+| Browser closed during active sync | On next app open, entries with status `syncing` reset to `pending` and retried |
+| Device sleep/wake during sync | On wake, `syncing` entries reset to `pending`; sync resumes cleanly |
+| All retries exhausted for one entry | That entry is marked `error`; sync continues for all other entries in the queue |
+| Queue near capacity after long offline period | All ≤200 entries sync in FIFO order; no capacity error; progress visible throughout |
+| Rapid reconnect/disconnect cycle | Transitions are debounced; no thrash loop between offline/online mode |
+
+#### 7E — Privacy and Security Checks
+
+| Check | What it verifies |
+|---|---|
+| No PHI in app shell cache | Cache API cache (static assets) contains no resident names, care observations, or health notes |
+| IndexedDB restricted to app origin | Queue is not readable from other browser origins |
+| Queue cleared on logout | Signing out clears or makes inaccessible the local queue; no residual PHI readable by the next user on the same device |
+| No cross-user queue visibility on shared tablet | After user A logs out and user B logs in, user B cannot see user A's unsynced entries in UI or DevTools |
+| No PHI in browser console | Resident names, note text, and routine details are never written to the browser console during queue operations |
+| Sync requests authenticated | All sync HTTP requests use the active session token; no unauthenticated sync path |
+| Token expiry halts sync (does not drop queue) | Expired session token causes sync to pause and prompt re-auth; queued entries are preserved |
 
 ---
 

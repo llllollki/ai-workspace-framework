@@ -69,6 +69,8 @@ The family portal is not an MVP feature. However, building the MVP data model wi
 - Same primary database with strict row-level authorization — no derived summary layer at this stage.
 - Family contacts are not Users — they authenticate separately via a future portal.
 
+**Phase 2 gate (2026-05-24):** No family-facing implementation should begin before: (1) counsel review of the consent model and resident autonomy posture (AC #7, task 0006 §2 and §5); (2) app delivery model ADR settled; (3) authentication mechanism decided. Task remains active — all three blockers are unresolved.
+
 ---
 
 ## Outcome

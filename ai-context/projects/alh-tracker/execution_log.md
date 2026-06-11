@@ -9,6 +9,30 @@ For durable decisions, use `decisions\`.
 
 ---
 
+## 2026-05-26 (repair — missing provisioning schema, migrations 0007–0011)
+
+- Ops fix task. Root cause: migrations 0007–0011 were marked applied via `supabase migration repair --status applied` but their SQL was never executed. `sweep_expired_provisioning_tokens()` failed at runtime with `ERROR: 42P01: relation "provisioning_events" does not exist`. Fix: created `supabase/migrations/20260101000017_repair_provisioning_schema.sql` — comprehensive idempotent repair covering all missing objects from 0007–0011: `user_account_status`, `facility_provisioning_status`, `provisioning_event_type` enums; `app_role` rename (`facility_admin` → `owner`) and `admin` value; `provisioning_status` column on `facilities`, `account_status` on `users`; `provisioning_tokens` table; `provisioning_events` table; `is_active_user_on_active_facility()` RLS helper; all staff-facing table policies updated with quarantine gate; `provisioning_idempotency_keys` table; `check_activation_token()` and `complete_owner_activation()` RPCs. Created `supabase/migrations/20260101000018_admin_role_policies.sql` — deferred the two policies referencing `'admin'` enum value (`admin_manage_family_links`, `audit_read_staff`) into a separate migration to satisfy PostgreSQL 55P04 constraint (cannot use newly-added enum value in same transaction it was added). Also fixed partial index predicate (`WHERE expires_at < NOW()` → removed; `NOW()` is STABLE not IMMUTABLE). Pushed via `supabase db push --linked` — both migrations applied successfully. All 19 migrations now in sync. Verified 2026-05-26: `SELECT public.sweep_expired_provisioning_tokens();` → `{"swept": 0, ...}` ✓; `cron.job` row exists with `schedule = '0 * * * *'`, `active = true` ✓. Provisioning schema fully operational.
+
+---
+
+## 2026-05-26 (repair — missing sweep RPC and sweep_heartbeat table)
+
+- Ops fix task. Root cause: `supabase migration repair --status applied` (from pg_cron task) recorded migrations 0012 and 0013 as applied in the tracking table but never executed their SQL against the remote DB. `sweep_expired_provisioning_tokens()` function and `sweep_heartbeat` table were absent despite the tracker showing them applied. Fix: created `supabase/migrations/20260101000016_repair_sweep_rpc_and_heartbeat.sql` — fully idempotent re-application of 0012 (`CREATE OR REPLACE FUNCTION`) and 0013 (`CREATE TABLE IF NOT EXISTS`) content. Pushed via `supabase db push --linked`. All 17 migrations now in sync. Operator must confirm in Supabase Dashboard SQL Editor: (1) `SELECT public.sweep_expired_provisioning_tokens();` → `{"swept": 0, ...}`; (2) `SELECT jobid, jobname, schedule, active FROM cron.job WHERE jobname = 'expire-provisioning-tokens';` → one row, active = true. No source code changed.
+
+---
+
+## 2026-05-26 (pg_cron schedule — passive provisioning-token expiry sweep)
+
+- Ops task. No application source changed. Created `supabase/migrations/20260101000015_pg_cron_schedule.sql`: enables `pg_cron` (IF NOT EXISTS), grants `cron` schema usage to `postgres`, schedules `sweep_expired_provisioning_tokens()` hourly at `0 * * * *` UTC via idempotent DO block. Remote DB had pre-existing schema but no migration tracking history — marked migrations 0000–0014 as applied via `supabase migration repair --status applied`, then pushed 0015 via `supabase db push --linked`. All 16 migrations now in sync (local = remote per `supabase migration list`). CLI cannot run SELECT queries without Docker/DB URL in this environment; cron job verification and manual sweep test must be confirmed in Supabase Dashboard SQL Editor. `sweep_heartbeat` is NOT updated by this SQL-cron path — only the `expire-tokens` Edge Function updates it. `supabase functions invoke` not available in CLI 2.101.0.
+
+---
+
+## 2026-05-26 (Edge Function deployment — provision-owner, activate-owner, expire-tokens)
+
+- Ops task. No application source changed. Supabase CLI (2.101.0 via npx) used to deploy three Edge Functions to project `ocofrmysgwvlfkltubzw`. Functions were pre-implemented in `supabase/functions/`; no code changes required. Secrets set: `CRM_API_KEY_V1_HASH`, `RESEND_API_KEY`, `RESEND_FROM_ADDRESS`, `ALERT_WEBHOOK_URL`, `TRACKER_BASE_URL=https://alh-tracker.vercel.app`. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are auto-injected by Supabase. Functions deployed: `provision-owner` (POST — provision/resend/revoke/status actions, CRM Bearer auth), `activate-owner` (GET preflight + POST activation, anon key), `expire-tokens` (sweep scheduled function). Verification: GET `https://ocofrmysgwvlfkltubzw.supabase.co/functions/v1/provision-owner` → 401 (expected — auth required, not 404). Vercel env vars needed: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `CRM_TRACKER_PROVISIONING_KEY`, `TRACKER_PROVISION_URL`, `ALERT_WEBHOOK_URL`. Note: `ALERT_WEBHOOK_URL` set as placeholder in Supabase secrets — update when a real webhook is available. `expire-tokens` requires a cron schedule in Supabase Dashboard (e.g., `0 * * * *`) to run automatically.
+
+---
+
 ## 2026-05-25 (Phase 2 readiness — date-range CSV export, blocked/safe assessment)
 
 - Phase 2 assessment and implementation task. Blocked items identified: family access portal (hard block — counsel + FamilyUser design + app delivery ADR), family messaging, family push/SMS notifications (unresolved model), app delivery ADR. Safe items identified: follow-up resolution tracking (already fully implemented in FollowUps.tsx), owner/admin data export (production prerequisite #10), richer analytics (deferred). Implemented Phase 2 slice: added date-range care log CSV export card to `src/pages/DataManagement.tsx` — date pickers (default last 7 days), fetches via `repository.getFacilityCareLogEntries` + `repository.getResidents`, generates CSV (Date/Time/Resident/Room/Category/Status/Note), in-UI regulatory disclaimer (not RCFE documentation). Build: `tsc && vite build`, 490.12 kB, FAIL: 0 WARN: 0. Updated `features.md` (Phase 2 blocked/implemented/pending breakdown). No family access, CRM, or compliance-sensitive files touched. Commit 4a78d91.
