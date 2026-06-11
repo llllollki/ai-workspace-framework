@@ -3,7 +3,7 @@
 Status: done
 Created: 2026-05-19
 Completed: 2026-05-20
-Depends on: 0027 (schema), 0028 (provisioning API live — ProvisioningToken exists)
+Depends on: 0030 (schema), 0028 (provisioning API live — ProvisioningToken exists)
 Blocks: 0032
 Audit source: 0026
 

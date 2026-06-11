@@ -419,7 +419,7 @@ Desk research complete (2026-05-05). Pending counsel review and sign-off. Key fi
 - PITR backup retention (Supabase Pro: 7-day PITR) is NOT sufficient if 3-year retention applies to the vendor. Application-level archiving or cold storage is required — DO NOT BUILD until counsel confirms retention periods.
 - Task 0009 remains active. None of task 0009's acceptance criteria can be satisfied without counsel answers to Q1, Q2, Q4, Q6, and Q-R1–Q-R8.
 
-**Counsel handoff packet consolidated (2026-05-23):** `0004-counsel-handoff-packet.md` updated to include Q-R1–Q-R8 from task 0009. Questions now organized into 5 priority groups: (1) pre-commercial launch blockers Q1–Q4, (2) retention/account closure Q-R3/Q-R5–Q-R8, (3) medication-adjacent/Title 22 Q-R4, (4) privacy/data subject rights Q-R1–Q-R2, (5) future family access Q5–Q9. Decisions-blocked table expanded; email cover note updated to reference full Q1–Q9 plus Q-R1–Q-R8 set. Packet ready to route to counsel in one engagement.
+**Counsel handoff packet consolidated (2026-05-23):** `0038-counsel-handoff-packet.md` updated to include Q-R1–Q-R8 from task 0009. Questions now organized into 5 priority groups: (1) pre-commercial launch blockers Q1–Q4, (2) retention/account closure Q-R3/Q-R5–Q-R8, (3) medication-adjacent/Title 22 Q-R4, (4) privacy/data subject rights Q-R1–Q-R2, (5) future family access Q5–Q9. Decisions-blocked table expanded; email cover note updated to reference full Q1–Q9 plus Q-R1–Q-R8 set. Packet ready to route to counsel in one engagement.
 
 ---
 

@@ -1,4 +1,4 @@
-# Task 0011 — Resident Profile Data Model Expansion
+# Task 0040 — Resident Profile Data Model Expansion
 
 **Project:** alh-tracker
 **Status:** backlog

@@ -50,6 +50,10 @@ If the answer is yes, use subagents or parallel workers by default.
 
 If the answer is no, proceed serially and briefly record the reason in the plan or working notes. Valid reasons include: the task is small, single-file, tightly coupled, design-sensitive, or the runtime has no subagent capability.
 
+## Task ID Allocation
+
+- Task IDs are allocated once per project from the next unused number across all three lifecycle dirs (`tasks\active`, `tasks\backlog`, `tasks\done`) — an ID is never reused for a different task and a task keeps its ID when it moves between lifecycle dirs (`setup\lint_framework.ps1` checks this).
+
 ## Task Document Structure
 
 Each task document should contain:

@@ -4,7 +4,7 @@ Status: done
 Created: 2026-05-19
 Closed: 2026-05-23
 Owner role: AI agent (main)
-Depends on: 0027, 0028, 0029, 0030, 0031 (all implementation phases complete)
+Depends on: 0028, 0029, 0030, 0031 (all implementation phases complete)
 Audit source: 0026
 
 ## Goal

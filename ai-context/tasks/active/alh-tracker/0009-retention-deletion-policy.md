@@ -25,7 +25,7 @@ This task is documentation-first: define the policy decisions required, route op
 
 ## Acceptance Criteria
 
-1. **Title 22 retention periods confirmed:** Counsel has confirmed which § 87506 (3-year post-service) and § 87465 (1-year medication records) retention obligations apply to alh-tracker as a software vendor — not just the facility licensee. (Counsel questions Q1 and Q2 in `0004-counsel-handoff-packet.md`.)
+1. **Title 22 retention periods confirmed:** Counsel has confirmed which § 87506 (3-year post-service) and § 87465 (1-year medication records) retention obligations apply to alh-tracker as a software vendor — not just the facility licensee. (Counsel questions Q1 and Q2 in `0038-counsel-handoff-packet.md`.)
 
 2. **Minimum retention policy documented by record type:** A written policy defines minimum retention periods for each alh-tracker record category:
    - CareLogEntry (shift log entries)
@@ -41,9 +41,9 @@ This task is documentation-first: define the policy decisions required, route op
    - Destruction/purge timing and mechanism
    - Export or return of records to the facility operator
    - Notice requirements to the facility operator
-   (Counsel question Q4 in `0004-counsel-handoff-packet.md`.)
+   (Counsel question Q4 in `0038-counsel-handoff-packet.md`.)
 
-4. **Caregiver deactivation and anonymization policy defined:** A documented and counsel-reviewed policy covers what happens to a caregiver User record when their account is deactivated, including whether AuditTrail entries may be anonymized and when. (Counsel question Q6 in `0004-counsel-handoff-packet.md`.)
+4. **Caregiver deactivation and anonymization policy defined:** A documented and counsel-reviewed policy covers what happens to a caregiver User record when their account is deactivated, including whether AuditTrail entries may be anonymized and when. (Counsel question Q6 in `0038-counsel-handoff-packet.md`.)
 
 5. **Supabase PITR backup retention verified:** Supabase Point-in-Time Recovery backup retention is verified to be at least as long as the longest counsel-confirmed minimum retention period for any record type stored in the database.
 
@@ -60,7 +60,7 @@ This task is documentation-first: define the policy decisions required, route op
 ## Plan
 
 - [x] Produce preliminary policy draft: schema audit, data category retention table, account closure behavior, archive/delete/anonymize framework, implementation implications, and additional counsel questions (task 0009 work, 2026-05-23). See Notes section below. This does not satisfy AC 1–7 — counsel approval is still required before any of the policy positions below may be treated as final.
-- [ ] Route this document alongside `0004-counsel-handoff-packet.md` — retention questions Q1, Q2, Q4, and Q6 in that packet directly map to AC 1, 3, and 4 of this task. Route Q-R1 through Q-R8 from the Notes section below in the same engagement. One counsel engagement covers both.
+- [ ] Route this document alongside `0038-counsel-handoff-packet.md` — retention questions Q1, Q2, Q4, and Q6 in that packet directly map to AC 1, 3, and 4 of this task. Route Q-R1 through Q-R8 from the Notes section below in the same engagement. One counsel engagement covers both.
 - [ ] Once counsel responds, record the confirmed retention periods by record type (AC 2) in the Outcome section of this document.
 - [ ] Once counsel responds, record the confirmed account closure policy (AC 3) in the Outcome section.
 - [ ] Once counsel responds, record the confirmed caregiver deactivation/anonymization policy (AC 4) in the Outcome section.
@@ -76,10 +76,10 @@ This task is documentation-first: define the policy decisions required, route op
 
 > **Pre-commercial-launch hard stop:** Real resident care data must not enter production under any commercial relationship until AC 1–7 are complete and counsel has confirmed the policy. The prototype at alh-tracker.vercel.app is demo-only (no auth, browser localStorage only) and holds no real data — it is not affected by this policy.
 
-**Counsel dependency:** This task does not introduce new counsel questions beyond those already in `0004-counsel-handoff-packet.md`. Questions Q1 (§ 87506 resident records), Q2 (§ 87465 medication records and HIPAA BAA), Q4 (account closure), and Q6 (caregiver identity preservation) directly answer the open items in ACs 1–4. Route this task to counsel in the same engagement as task 0004.
+**Counsel dependency:** This task does not introduce new counsel questions beyond those already in `0038-counsel-handoff-packet.md`. Questions Q1 (§ 87506 resident records), Q2 (§ 87465 medication records and HIPAA BAA), Q4 (account closure), and Q6 (caregiver identity preservation) directly answer the open items in ACs 1–4. Route this task to counsel in the same engagement as task 0004.
 
 **Title 22 preliminary findings (desk research only — not legal advice):**
-- § 87506 (resident records): 3-year post-service retention. Whether alh-tracker CareLogEntry records constitute "resident records" subject to this requirement is an open counsel question (Q1 in `0004-counsel-handoff-packet.md`).
+- § 87506 (resident records): 3-year post-service retention. Whether alh-tracker CareLogEntry records constitute "resident records" subject to this requirement is an open counsel question (Q1 in `0038-counsel-handoff-packet.md`).
 - § 87465 (medication records): 1-year retention; 3-year destruction records. Whether alh-tracker ObservedCareTask records (no dosage/medication name) constitute "medication records" is an open counsel question (Q2).
 - Preliminary interpretation: if § 87506 applies to the vendor, minimum retention is 3 years post-service; if § 87465 also applies, ObservedCareTask records may have a separate 1-year inner window. Counsel must confirm before these periods are implemented as policy. Do not treat these as final.
 
@@ -90,7 +90,7 @@ This task is documentation-first: define the policy decisions required, route op
 
 **Relationship to other tasks:**
 - Blocks task 0005 (data model finalization) — the data model cannot be finalized until retention/deletion policies are known, since those policies affect field-level design (soft-delete flags, retention timestamps, anonymization fields).
-- Linked to task 0004 — counsel questions Q1, Q2, Q4, Q6 in `0004-counsel-handoff-packet.md`.
+- Linked to task 0004 — counsel questions Q1, Q2, Q4, Q6 in `0038-counsel-handoff-packet.md`.
 - Linked to task 0001 — the Terms of Service and commercial launch readiness gate.
 - Linked to task 0008 — PITR configuration is part of the production infrastructure context for Phase 1.
 
@@ -231,7 +231,7 @@ When the counsel-confirmed retention window has expired for a record category, p
 
 ### Additional Counsel Questions (2026-05-23 — Supplement to Task 0004 Q1–Q9)
 
-> Route these questions alongside Q1–Q9 already in `0004-counsel-handoff-packet.md`. One engagement covers all.
+> Route these questions alongside Q1–Q9 already in `0038-counsel-handoff-packet.md`. One engagement covers all.
 
 **Q-R1 — CPPA/CCPA deletion requests vs. Title 22 retention obligations**
 When a data subject (facility operator, caregiver, or family contact) submits a CPPA/CCPA deletion request, can that request override alh-tracker's obligation to retain records for Title 22 retention periods? Specifically: if a caregiver submits a CCPA deletion request for their name and email address, must their identity be removed from AuditTrail references, even if doing so would compromise audit integrity for care records still within a 3-year retention window?

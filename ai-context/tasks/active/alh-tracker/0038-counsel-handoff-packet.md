@@ -218,7 +218,7 @@ Use or adapt this message when routing the packet. Do not deviate from the label
 >
 > I am attaching the following documents for your review:
 >
-> 1. **Counsel Handoff Packet** (`0004-counsel-handoff-packet.md`) — the primary brief. Describes the product, lists all questions in priority order, and identifies decisions we cannot make without your input. Updated 2026-05-23 to add retention/deletion and privacy questions Q-R1–Q-R8.
+> 1. **Counsel Handoff Packet** (`0038-counsel-handoff-packet.md`) — the primary brief. Describes the product, lists all questions in priority order, and identifies decisions we cannot make without your input. Updated 2026-05-23 to add retention/deletion and privacy questions Q-R1–Q-R8.
 > 2. **Terms of Service Draft** (`tos_draft_for_counsel.md`) — a preliminary data handling addendum. Each open provision is explicitly flagged with the question it depends on. Please review alongside the questions.
 > 3. **Title 22 Desk Research** (`0004-title-22-documentation-review.md`, Sections 3–6) — our preliminary mapping of § 87506, 87211, 87465, and 87411 against the product data model.
 > 4. **Compliance Notes** (`compliance_notes.md`) — product boundary statements, HIPAA posture, and preliminary research summary.

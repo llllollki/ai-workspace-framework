@@ -1,4 +1,4 @@
-# 0028 — ADR 0011 Architecture Review: Facility Owner Role Naming
+# 0041 — ADR 0011 Architecture Review: Facility Owner Role Naming
 
 Status: done
 Created: 2026-05-19

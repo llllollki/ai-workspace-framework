@@ -23,7 +23,7 @@ These decisions and specs are done. No further owner action is needed before Pha
 | BD timing: "design partner invitation" framing only before MVP ships | Decided | Task 0001 |
 | Family access architecture: read-only, dual-authorization, summary-default, deferred from MVP | Decided — ADR 0004 | `decisions/0004-family-access-architecture.md` |
 | Title 22 desk research (§ 87506, 87211, 87465, 87411) | Research complete — awaiting counsel | Task 0004 Outcome |
-| Counsel handoff packet | Written — ready to route | `0004-counsel-handoff-packet.md` |
+| Counsel handoff packet | Written — ready to route | `0038-counsel-handoff-packet.md` |
 | Design partner profile, outreach scripts, LOI outline, site visit plan | Written | Task 0002 Outcome |
 | Device / offline behavior spec (PWA, IndexedDB queue, conflict resolution) | Written — awaiting TA review | Task 0008 Outcome |
 | Family access data model stubs (ResidentContact, FamilyAccessConsent) | Finalized in schema | `data_model.md` |
@@ -297,7 +297,7 @@ Write a brief "Shift Workflow Observation Summary" covering:
 
 Assemble and send these files together:
 
-- [ ] `tasks/active/alh-tracker/0004-counsel-handoff-packet.md` — the primary brief. Includes product description, what the product is not, all questions in priority order, supporting document list, and decisions blocked pending counsel response. Send this first.
+- [ ] `tasks/active/alh-tracker/0038-counsel-handoff-packet.md` — the primary brief. Includes product description, what the product is not, all questions in priority order, supporting document list, and decisions blocked pending counsel response. Send this first.
 - [ ] `projects/alh-tracker/compliance_notes.md` — product boundary statements, HIPAA posture, medication boundary language, preliminary Title 22 research summary, and family access consent posture.
 - [ ] `projects/alh-tracker/data_model.md` — all entities, including CareLogEntry, ObservedCareTask, AuditTrail, Resident, User, Facility, ResidentContact, and FamilyAccessConsent with their current field definitions.
 - [ ] `tasks/active/alh-tracker/0004-title-22-documentation-review.md`, Sections 3–6 — full mapping of § 87506, 87211, 87465, and 87411 against the alh-tracker data model; extended language avoidance list; in-product disclosure drafts; structured question register.

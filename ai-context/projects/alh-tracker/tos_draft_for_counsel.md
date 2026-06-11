@@ -51,7 +51,7 @@ This addendum exists because resident care records created in alh-tracker may ha
 - § 87506 (resident records): 3 years post-service, if care log entries constitute resident records.
 - § 87465 (medication records): 1 year, if observed care task records constitute medication records.
 
-The vendor's obligations with respect to these retention periods have not been confirmed by counsel. **This provision will be completed after counsel answers Priority 1 Questions 1 and 2 in the counsel handoff packet (0004-counsel-handoff-packet.md).**
+The vendor's obligations with respect to these retention periods have not been confirmed by counsel. **This provision will be completed after counsel answers Priority 1 Questions 1 and 2 in the counsel handoff packet (0038-counsel-handoff-packet.md).**
 
 **3.3 Retention category — placeholder.**
 - [Placeholder: CareLogEntry retention period — to be completed after Q1 answer]
