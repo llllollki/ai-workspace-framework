@@ -19,7 +19,8 @@ It is read by Claude Code, Codex, and other agents to understand project context
 
 | What you are doing | Read first |
 |---|---|
-| Starting a new task | `orchestration\planning_rules.md` |
+| Starting any task (default per-task preamble) | `core_rules.md` + `projects\<project>\overview.md` |
+| Starting a new task (planning-heavy) | `orchestration\planning_rules.md` |
 | Selecting a skill | `skills\skills_index.md` |
 | Understanding AssistedLivingHelp | `projects\AssistedLivingHelp\overview.md` |
 | Understanding alh-tracker | `projects\alh-tracker\overview.md` |
@@ -40,6 +41,7 @@ It is read by Claude Code, Codex, and other agents to understand project context
 | File | Responsibility |
 |---|---|
 | `README.md` | This file — navigation index |
+| `core_rules.md` | Per-task digest of the must-know rules — the default per-task preamble |
 | `CHANGELOG.md` | Framework-level documentation structure changes only (not business or code changes) |
 
 ## Projects Index
