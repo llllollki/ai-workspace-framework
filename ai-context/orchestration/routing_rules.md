@@ -36,6 +36,7 @@ This file defines how to match task types to skills.
 | Design a mobile / tablet health or care app UI | `design_health_mobile_app_v1` | `skills\domain\design_health_mobile_app_v1.md` |
 | Design a consumer wellness / fitness tracking app UI (energetic, gradient) | `design_wellness_tracker_app_v1` | `skills\domain\design_wellness_tracker_app_v1.md` |
 | AssistedLivingHelp custom logic | `custom_logic_v1` | `skills\project\AssistedLivingHelp\custom_logic_v1.md` |
+| alh-tracker Facility Tracker App mobile / tablet UI changes | `mobile_tablet_ui_v1` | `skills\project\alh-tracker\mobile_tablet_ui_v1.md` |
 
 ## Fallback
 
